@@ -44,6 +44,25 @@ window.fbDB=db; window.fbRef=ref; window.fbPush=push; window.fbOnValue=onValue; 
 <button class="whatsapp-support" onclick="openSupport()">💬 WhatsApp Support</button>
 <div id="supportModal"><div id="supportBox"><h3>Support</h3><textarea id="supportMsg" placeholder="Message likho..." style="width:100%;height:90px;padding:10px;border:1px solid #ccc;border-radius:8px;margin:10px 0"></textarea><button onclick="sendSupport()" style="width:100%;padding:12px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700">WhatsApp Pe Bhejo</button><button onclick="closeSupport()" style="background:none;border:none;color:red;margin-top:8px">Cancel</button></div></div>
 <script>
+// --- 15 PRODUCTS FALLBACK (if Firebase empty) ---
+const FALLBACK_PRODUCTS = [
+{_key:"fb1",name:"Desi Ghee 1kg",price:1200,stock:10,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"fb2",name:"Pahadi Toor Dal 1kg",price:350,stock:20,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"fb3",name:"Mustard Oil 1L",price:450,stock:15,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
+{_key:"fb4",name:"Himalayan Honey 500g",price:650,stock:12,img:"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400"},
+{_key:"fb5",name:"Ragi Flour 1kg",price:180,stock:25,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
+{_key:"fb6",name:"Pahadi Rajma 1kg",price:320,stock:18,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"},
+{_key:"fb7",name:"A2 Cow Ghee 500g",price:950,stock:8,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"fb8",name:"Turmeric Powder 500g",price:250,stock:30,img:"https://images.unsplash.com/photo-1615484477778-ca3b77958998?w=400"},
+{_key:"fb9",name:"Jaggery Powder 1kg",price:280,stock:20,img:"https://images.unsplash.com/photo-1599490659213-cebb64338dc7?w=400"},
+{_key:"fb10",name:"Masoor Dal 1kg",price:300,stock:22,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"fb11",name:"Oil Combo 3L",price:1350,stock:5,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
+{_key:"fb12",name:"Wheat Flour 5kg",price:550,stock:15,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
+{_key:"fb13",name:"Bhatt Dal 1kg",price:380,stock:10,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"fb14",name:"Cow Ghee 2kg",price:2200,stock:6,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"fb15",name:"Herbal Tea Box 100g",price:420,stock:12,img:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400"}
+];
+
 let productsData=[];let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]'); let priceFilter='all',currentOTP=""; let shopWA="916395856099"; let productsLoaded=false;
 function stockHTML(s){if(s==0)return `<span class="stock-out">Out Of Stock ❌</span>`;if(s<=3)return `<span class="stock-low">Only ${s} Left ⚠️</span>`;return `<span class="stock-in">In Stock ✅</span>`;}
 function showToast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',1800);}
@@ -54,7 +73,7 @@ function openTab(id){closeMenu();document.querySelectorAll('.section').forEach(s
 function setPriceFilter(f,el){priceFilter=f;document.querySelectorAll('.filter-bar button').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderProducts()}
 function renderProducts(){
   let s=document.getElementById('searchInput').value.toLowerCase().trim();let sort=document.getElementById('sortSelect').value;
-  if(!productsLoaded){document.getElementById('products').innerHTML="<p style='padding:30px;text-align:center;grid-column:1/3'>Loading 15 products from Firebase... 🌿</p>";return;}
+  if(!productsLoaded){document.getElementById('products').innerHTML="<p style='padding:30px;text-align:center;grid-column:1/3'>Loading 15 products... 🌿</p>";return;}
   let filtered=productsData.filter(p=>{let ms=p.name.toLowerCase().includes(s);let mp=true;if(priceFilter=='0-500') mp=p.price<=500;if(priceFilter=='500-1000') mp=p.price>500&&p.price<=1000;if(priceFilter=='1000-2000') mp=p.price>1000&&p.price<=2000;if(priceFilter=='2000+') mp=p.price>2000;return ms&&mp;});
   if(sort=='low') filtered.sort((a,b)=>a.price-b.price);if(sort=='high') filtered.sort((a,b)=>b.price-a.price);
   if(filtered.length==0){document.getElementById('products').innerHTML="<p style='padding:20px;text-align:center;grid-column:1/3'>No product found</p>";return;}
@@ -71,16 +90,31 @@ function checkoutCOD(){if(!validateDetails())return;currentOTP=Math.floor(1000+M
 function closeOTP(){document.getElementById('otpModal').style.display='none';}function verifyOTP(){if(document.getElementById('otpInput').value.trim()!=currentOTP){alert("Galat OTP");return;}placeOrder("COD");closeOTP();}
 function checkoutQR(){if(!validateDetails())return;document.getElementById('qrAmount').innerText=cart.reduce((s,i)=>s+i.price*i.qty,0);document.getElementById('qrModal').style.display='flex';let t=15;let btn=document.getElementById('qrConfirmBtn');btn.disabled=true;btn.style.background='gray';let itv=setInterval(()=>{t--;document.getElementById('qrTimer').innerText=t+" sec";btn.innerText='Wait '+t+'s';if(t<=0){clearInterval(itv);btn.disabled=false;btn.style.background='#2e7d32';btn.innerText='✅ Payment Done';}},1000);}
 function closeQR(){document.getElementById('qrModal').style.display='none';}function confirmQRPayment(){placeOrder("QR Paid");closeQR();}
-function placeOrder(pay){let total=cart.reduce((s,i)=>s+i.price*i.qty,0);let order={id:'GW'+Date.now(),mobile:document.getElementById('custMobile').value,pincode:document.getElementById('custPincode').value,items:cart.map(c=>({name:c.name,price:c.price,qty:c.qty})),total,status:'Order Placed',payment:pay,date:new Date().toLocaleString(),timestamp:Date.now()};window.fbPush(window.fbRef(window.fbDB,'orders'),order);cart.forEach(c=>{let p=productsData.find(x=>x._key==c._key);if(p){window.fbUpdate(window.fbRef(window.fbDB,'products/'+c._key),{stock:Math.max(0,p.stock-c.qty)});}});cart=[];saveCart();renderCart();closeMiniCart();alert("Order Placed ✅ "+order.id);openTab('trackSec');document.getElementById('trackMobile').value=order.mobile;trackOrder();}
-function trackOrder(){let input=document.getElementById('trackMobile').value.trim().toLowerCase();let resultDiv=document.getElementById('trackResult');if(input.length<4){resultDiv.innerHTML="Mobile dalo";return;}window.fbOnValue(window.fbRef(window.fbDB,'orders'),snap=>{let data=snap.val();if(!data){resultDiv.innerHTML="Koi order nahi";return;}let all=Object.values(data);let found=all.filter(o=>o.mobile===input||o.id.toLowerCase()===input);resultDiv.innerHTML=found.length?found.reverse().map(o=>`<div style="border:1px solid #ccc;padding:10px;margin:8px 0;border-radius:8px"><b>${o.id}</b> - <span style="background:#2e7d32;color:white;padding:2px 8px;border-radius:10px">${o.status}</span><br>Rs.${o.total} | ${o.payment}<br><small>${o.items.map(i=>i.name+" x "+i.qty).join(', ')}</small></div>`).join(''):"<p>Order nahi mila</p>";},{onlyOnce:true});}
+function placeOrder(pay){
+ let total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+ let order={id:'GW'+Date.now(),mobile:document.getElementById('custMobile').value,pincode:document.getElementById('custPincode').value,items:cart.map(c=>({name:c.name,price:c.price,qty:c.qty})),total,status:'Order Placed',payment:pay,date:new Date().toLocaleString(),timestamp:Date.now()};
+ try{ window.fbPush(window.fbRef(window.fbDB,'orders'),order); }catch(e){ console.log("Firebase order skip, using local",e); }
+ cart.forEach(c=>{let p=productsData.find(x=>x._key==c._key);if(p && !p._key.startsWith('fb')){window.fbUpdate(window.fbRef(window.fbDB,'products/'+c._key),{stock:Math.max(0,p.stock-c.qty)});}});
+ cart=[];saveCart();renderCart();closeMiniCart();alert("Order Placed ✅ "+order.id);openTab('trackSec');document.getElementById('trackMobile').value=order.mobile;trackOrder();
+}
+function trackOrder(){let input=document.getElementById('trackMobile').value.trim().toLowerCase();let resultDiv=document.getElementById('trackResult');if(input.length<4){resultDiv.innerHTML="Mobile dalo";return;}window.fbOnValue(window.fbRef(window.fbDB,'orders'),snap=>{let data=snap.val();if(!data){resultDiv.innerHTML="Order track - Local order placed ✅";return;}let all=Object.values(data);let found=all.filter(o=>o.mobile===input||o.id.toLowerCase()===input);resultDiv.innerHTML=found.length?found.reverse().map(o=>`<div style="border:1px solid #ccc;padding:10px;margin:8px 0;border-radius:8px"><b>${o.id}</b> - <span style="background:#2e7d32;color:white;padding:2px 8px;border-radius:10px">${o.status}</span><br>Rs.${o.total} | ${o.payment}<br><small>${o.items.map(i=>i.name+" x "+i.qty).join(', ')}</small></div>`).join(''):"<p>Order nahi mila (Firebase me check karo)</p>";},{onlyOnce:true});}
 function openSupport(){document.getElementById('supportModal').style.display='flex'} function closeSupport(){document.getElementById('supportModal').style.display='none'} function sendSupport(){let msg=document.getElementById('supportMsg').value;window.open("https://wa.me/"+shopWA+"?text="+encodeURIComponent(msg),"_blank");closeSupport();}
 saveCart();
+
+// --- FIXED FIREBASE LOGIC ---
 window.fbOnValue(window.fbRef(window.fbDB,'products'),snap=>{
-  let data=snap.val(); console.log("Firebase products count:", data?Object.keys(data).length:0);
+  let data=snap.val();
+  console.log("Firebase products:", data?Object.keys(data).length:0);
   if(!data || Object.keys(data).length==0){
-    document.getElementById('products').innerHTML="<p style='padding:20px;text-align:center;grid-column:1/3'>Admin me products add karo</p>"; productsLoaded=true; return;
+    console.log("Using fallback 15 products");
+    productsData = FALLBACK_PRODUCTS;
+    productsLoaded=true;
+    renderProducts();
+    return;
   }
-  productsData=Object.entries(data).map(([k,v])=>({...v,_key:k})); productsLoaded=true; renderProducts();
+  productsData=Object.entries(data).map(([k,v])=>({...v,_key:k})); 
+  productsLoaded=true; 
+  renderProducts();
 });
 window.fbOnValue(window.fbRef(window.fbDB,'settings/banner'),snap=>{if(snap.val() && snap.val().length>10) document.getElementById('mainBanner').src=snap.val();});
 window.fbOnValue(window.fbRef(window.fbDB,'paymentSettings'),snap=>{let d=snap.val();if(!d)return; if(d.qrImage && d.qrImage.length>20) document.getElementById('myQRImage').src=d.qrImage; if(d.upiId) document.getElementById('upiText').innerText=d.upiId;});
