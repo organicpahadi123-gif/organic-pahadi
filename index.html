@@ -1,26 +1,86 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Gaon Organic</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#fffaf0}header{background:#2e7d32;color:#fff;padding:12px;display:flex;justify-content:space-between} .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px} .card{background:#fff;border-radius:12px;padding:8px;box-shadow:0 2px 5px #0002;text-align:center} .card img{width:100%;height:110px;object-fit:cover;border-radius:8px} .card button{background:#2e7d32;color:#fff;border:none;padding:8px;width:100%;border-radius:8px;margin-top:6px}</style></head><body>
-<header><b>🌿 Gaon Organic</b><span>☰</span></header>
-<div style="height:160px;background:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800') center/cover;display:flex;align-items:end;padding:15px;color:#fff;font-weight:800;text-shadow:0 2px 5px #000">Gaon Ki Shuddh Kheti</div>
+<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Gaon Organic - Gaon Ki Shuddh Kheti</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,Arial}body{background:#fffaf0;padding-bottom:120px}
+header{position:sticky;top:0;z-index:100;background:#2e7d32;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+#menuBtn{font-size:26px;background:none;border:none;color:#fff;cursor:pointer}
+#sideMenu{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#fff;box-shadow:-4px 0 15px #0003;z-index:200;transition:.3s;padding:20px}
+#sideMenu.active{right:0}#sideMenu a{display:block;padding:12px;border-bottom:1px solid #eee;color:#333;font-weight:600;text-decoration:none;cursor:pointer}
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#0005;display:none;z-index:150}
+.hero{position:relative;height:210px;overflow:hidden}.hero img{width:100%;height:100%;object-fit:cover}.hero-text{position:absolute;bottom:12px;left:15px;color:#fff;font-weight:800;font-size:19px;text-shadow:1px 1px 5px #000}
+.search{padding:10px;background:#fff;display:flex;gap:8px;position:sticky;top:52px;z-index:90;box-shadow:0 2px 5px #0001}.search input{flex:1;padding:11px;border:1px solid #ccc;border-radius:8px}.search select{padding:11px;border-radius:8px;border:1px solid #ccc}
+.filters{padding:10px;display:flex;gap:8px;overflow-x:auto;background:#f1f8e9}.filters button{white-space:nowrap;padding:7px 14px;border-radius:20px;border:1px solid #2e7d32;background:#fff;cursor:pointer}.filters button.active{background:#2e7d32;color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}.card{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 8px #0001;text-align:center}.card img{width:100%;height:120px;object-fit:cover;border-radius:8px;background:#eee}.card h3{font-size:12px;margin:6px 0;min-height:32px}
+.qty{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px}.qty button{width:32px;height:32px;border-radius:50%;border:1px solid #2e7d32;background:#fff;font-weight:800}
+.section{display:none;padding:16px;background:#fff;margin:12px;border-radius:12px}.section.active{display:block}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:10px 18px;border-radius:25px;display:none;z-index:600;font-size:13px}
+.wa{position:fixed;bottom:90px;right:16px;z-index:95;background:#25D366;color:#fff;padding:12px 16px;border-radius:30px;box-shadow:0 4px 15px #0004;border:none;font-weight:700;cursor:pointer}
+#miniCart{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:2px solid #2e7d32;box-shadow:0 -4px 15px #0002;padding:12px 16px;display:none;z-index:410;border-radius:16px 16px 0 0}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:#0008;display:none;justify-content:center;align-items:center;z-index:500}.box{background:#fff;padding:18px;border-radius:14px;width:92%;max-width:380px;text-align:center}
+</style></head><body>
+<div id="toast"></div>
+<header><h2>🌿 Gaon Organic</h2><button id="menuBtn">☰</button></header>
+<div id="overlay"></div><div id="sideMenu"><h3>Menu</h3><a onclick="openTab('cartSec')">🛒 Cart (<span id="cartCount">0</span>)</a><a onclick="openTab('trackSec')">📦 Track Order</a><a onclick="openSupport()">💬 WhatsApp Support</a><a onclick="closeMenu()" style="color:red">❌ Close</a></div>
+<div class="hero"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800"><div class="hero-text">Gaon Ki Shuddh Kheti Se Seedha Aapke Ghar</div></div>
+<div class="search"><input id="q" placeholder="Search Ghee, Dal..." oninput="render()"><select id="sort" onchange="render()"><option value="">Sort</option><option value="low">Low-High</option><option value="high">High-Low</option></select></div>
+<div class="filters" id="filters"></div>
 <div class="grid" id="grid"></div>
+
+<div id="cartSec" class="section"><h2>🛒 Your Cart</h2><div id="cartItems"></div><p style="margin-top:10px"><b>Total Rs.<span id="cartTotal">0</span></b></p><input id="mob" placeholder="Mobile No. (10 digit)" style="width:100%;padding:11px;margin:8px 0;border:1px solid #ccc;border-radius:8px"><input id="pin" placeholder="Pincode" style="width:100%;padding:11px;margin:8px 0;border:1px solid #ccc;border-radius:8px"><div style="display:flex;gap:8px;margin-top:10px"><button onclick="checkoutCOD()" style="flex:1;padding:13px;background:#ff9800;color:#fff;border:none;border-radius:8px;font-weight:700">COD (OTP)</button><button onclick="checkoutQR()" style="flex:1;padding:13px;background:#2e7d32;color:#fff;border:none;border-radius:8px;font-weight:700">QR Pay</button></div></div>
+<div id="trackSec" class="section"><h2>📦 Track Order</h2><input id="trackInput" placeholder="Mobile No. ya Order ID" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px"><button onclick="track()" style="width:100%;margin-top:10px;padding:13px;background:#2e7d32;color:#fff;border:none;border-radius:8px;font-weight:800">Check Karo</button><div id="trackResult" style="margin-top:12px"></div></div>
+<div id="miniCart"><div style="display:flex;justify-content:space-between;align-items:center"><div><b id="miniText"></b><br><small style="color:green">Cart me add ✅</small></div><div style="display:flex;gap:8px"><button onclick="openTab('cartSec');closeMini()" style="padding:10px 14px;background:#fff;border:1px solid #2e7d32;border-radius:8px;font-weight:700">View Cart</button><button onclick="openTab('cartSec');closeMini()" style="padding:10px 14px;background:#2e7d32;color:#fff;border:none;border-radius:8px;font-weight:700">Checkout</button></div></div></div>
+
+<div id="otpModal" class="modal"><div class="box"><h3>OTP Verify</h3><p>Mobile <b id="otpMob"></b> | OTP: <b id="otpShow">1234</b></p><input id="otpIn" placeholder="OTP" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;text-align:center;letter-spacing:5px;margin-top:8px"><button onclick="verify()" style="width:100%;margin-top:10px;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:8px">Verify & Order</button><button onclick="closeOTP()" style="background:none;border:none;color:red;margin-top:8px">Cancel</button></div></div>
+<div id="qrModal" class="modal"><div class="box"><h3>QR Payment</h3><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=gaonwala@upi" style="width:200px;height:200px;margin:10px auto;display:block;border:1px solid #ccc;border-radius:8px"><p style="font-weight:800;color:green">Rs.<span id="qrAmt">0</span> Pay Karo</p><p id="qrTimer" style="font-weight:800;color:#ff6f00">15 sec wait...</p><button id="qrBtn" disabled onclick="qrDone()" style="width:100%;padding:12px;background:gray;color:#fff;border:none;border-radius:8px">Wait...</button><button onclick="closeQR()" style="color:red;background:none;border:none;margin-top:8px">Cancel</button></div></div>
+
+<button class="wa" onclick="openSupport()">💬 WhatsApp Support</button>
+<div id="supportModal" class="modal"><div class="box"><h3>Support</h3><textarea id="supMsg" placeholder="Message likho..." style="width:100%;height:90px;padding:10px;border:1px solid #ccc;border-radius:8px;margin:10px 0"></textarea><button onclick="sendSup()" style="width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:8px;font-weight:700">WhatsApp Pe Bhejo</button><button onclick="closeSup()" style="background:none;border:none;color:red;margin-top:8px">Cancel</button></div></div>
+
 <script>
 let products=[
-{name:"Desi Ghee 1kg",price:1200,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
-{name:"Toor Dal 1kg",price:350,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
-{name:"Mustard Oil 1L",price:450,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
-{name:"Honey 500g",price:650,img:"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400"},
-{name:"Ragi Flour 1kg",price:180,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
-{name:"Rajma 1kg",price:320,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"},
-{name:"A2 Ghee 500g",price:950,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
-{name:"Haldi 500g",price:250,img:"https://images.unsplash.com/photo-1615484477778-ca3b77958998?w=400"},
-{name:"Jaggery 1kg",price:280,img:"https://images.unsplash.com/photo-1599490659213-cebb64338dc7?w=400"},
-{name:"Masoor Dal 1kg",price:300,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
-{name:"Oil Combo",price:1350,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
-{name:"Wheat Flour 5kg",price:550,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
-{name:"Bhatt Dal 1kg",price:380,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
-{name:"Ghee 2kg",price:2200,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
-{name:"Herbal Tea",price:420,img:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400"}
+{_key:"1",name:"Desi Ghee 1kg",price:1200,stock:10,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"2",name:"Pahadi Toor Dal 1kg",price:350,stock:20,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"3",name:"Mustard Oil 1L",price:450,stock:15,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
+{_key:"4",name:"Himalayan Honey 500g",price:650,stock:12,img:"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400"},
+{_key:"5",name:"Ragi Flour 1kg",price:180,stock:25,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
+{_key:"6",name:"Pahadi Rajma 1kg",price:320,stock:18,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"},
+{_key:"7",name:"A2 Cow Ghee 500g",price:950,stock:8,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"8",name:"Turmeric Powder 500g",price:250,stock:30,img:"https://images.unsplash.com/photo-1615484477778-ca3b77958998?w=400"},
+{_key:"9",name:"Jaggery Powder 1kg",price:280,stock:20,img:"https://images.unsplash.com/photo-1599490659213-cebb64338dc7?w=400"},
+{_key:"10",name:"Masoor Dal 1kg",price:300,stock:22,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"11",name:"Oil Combo 3L",price:1350,stock:5,img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400"},
+{_key:"12",name:"Wheat Flour 5kg",price:550,stock:15,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"},
+{_key:"13",name:"Bhatt Dal 1kg",price:380,stock:10,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"},
+{_key:"14",name:"Cow Ghee 2kg",price:2200,stock:6,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400"},
+{_key:"15",name:"Herbal Tea Box",price:420,stock:12,img:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400"}
 ];
-document.getElementById('grid').innerHTML=products.map(p=>`<div class="card"><img src="${p.img}"><h4 style="font-size:12px;margin:6px 0">${p.name}</h4><b style="color:green">₹${p.price}</b><button onclick="alert('${p.name} added ✅')">Add to Cart</button></div>`).join('');
+let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]');let priceFilter='all',otp="",WA="916395856099";
+let orders=JSON.parse(localStorage.getItem('gaon_orders')||'[]');
+function toast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',1800);}
+let menuBtn=document.getElementById('menuBtn'),sideMenu=document.getElementById('sideMenu'),overlay=document.getElementById('overlay');
+menuBtn.onclick=()=>{sideMenu.classList.add('active');overlay.style.display='block'};function closeMenu(){sideMenu.classList.remove('active');overlay.style.display='none'}overlay.onclick=closeMenu;
+function openTab(id){closeMenu();document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,document.getElementById(id).offsetTop-60);if(id==='cartSec')renderCart();}
+function initF(){let r=["All","0-500","500-1000","1000-2000","2000+"];document.getElementById('filters').innerHTML=r.map(x=>`<button onclick="setF('${x}',this)" class="${priceFilter===x?'active':''}">${x}</button>`).join('');}
+function setF(f,el){priceFilter=f;document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));el.classList.add('active');render();}
+function render(){
+ let q=document.getElementById('q').value.toLowerCase().trim();let sort=document.getElementById('sort').value;
+ let list=products.filter(p=>{let m=p.name.toLowerCase().includes(q);let pr=true;if(priceFilter==='0-500')pr=p.price<=500;else if(priceFilter==='500-1000')pr=p.price>500&&p.price<=1000;else if(priceFilter==='1000-2000')pr=p.price>1000&&p.price<=2000;else if(priceFilter==='2000+')pr=p.price>2000;return m&&pr;});
+ if(sort==='low')list.sort((a,b)=>a.price-b.price);if(sort==='high')list.sort((a,b)=>b.price-a.price);
+ document.getElementById('grid').innerHTML=list.map(p=>{let c=cart.find(x=>x._key===p._key);let btn=c?`<div class="qty"><button onclick="chg('${p._key}',-1)">-</button><span>${c.qty}</span><button onclick="chg('${p._key}',1)">+</button></div>`:`<button onclick="add('${p._key}')" style="width:100%;margin-top:8px;padding:9px;background:#2e7d32;color:#fff;border:none;border-radius:8px">Add to Cart</button>`;return `<div class="card"><img src="${p.img}"><h3>${p.name}</h3><p style="color:green;font-weight:700">Rs.${p.price}</p><div style="font-size:10px;color:green">In Stock ✅</div>${btn}</div>`}).join('');
+}
+function add(k){let p=products.find(x=>x._key===k);let c=cart.find(x=>x._key===k);if(c)c.qty++;else cart.push({...p,qty:1});save();toast(p.name+" add hua");render();mini();}
+function chg(k,d){let c=cart.find(x=>x._key===k);if(!c)return;c.qty+=d;if(c.qty<=0)cart=cart.filter(x=>x._key!==k);save();render();renderCart();mini();}
+function save(){localStorage.setItem('gaon_cart',JSON.stringify(cart));document.getElementById('cartCount').innerText=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartTotal').innerText=cart.reduce((s,i)=>s+i.price*i.qty,0);}
+function mini(){if(cart.length===0){closeMini();return;}document.getElementById('miniText').innerText=`${cart.reduce((s,i)=>s+i.qty,0)} Item | Rs.${cart.reduce((s,i)=>s+i.price*i.qty,0)}`;document.getElementById('miniCart').style.display='block';}
+function closeMini(){document.getElementById('miniCart').style.display='none';}
+function renderCart(){if(cart.length===0){document.getElementById('cartItems').innerHTML="<p>Cart khali hai</p>";document.getElementById('cartTotal').innerText=0;return;}document.getElementById('cartItems').innerHTML=cart.map(i=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:10px 0"><div><b>${i.name}</b><br>Rs.${i.price} x ${i.qty}</div><div class="qty"><button onclick="chg('${i._key}',-1)">-</button><span>${i.qty}</span><button onclick="chg('${i._key}',1)">+</button></div></div>`).join('');document.getElementById('cartTotal').innerText=cart.reduce((s,i)=>s+i.price*i.qty,0);}
+function valid(){let m=document.getElementById('mob').value.trim();let p=document.getElementById('pin').value.trim();if(cart.length===0){alert("Cart khali");return false}if(m.length!==10){alert("10 digit mobile dalo");return false}if(p.length<4){alert("Pincode dalo");return false}return true}
+function checkoutCOD(){if(!valid())return;otp=Math.floor(1000+Math.random()*9000).toString();document.getElementById('otpShow').innerText=otp;document.getElementById('otpMob').innerText=document.getElementById('mob').value;document.getElementById('otpModal').style.display='flex';}
+function closeOTP(){document.getElementById('otpModal').style.display='none';}function verify(){if(document.getElementById('otpIn').value.trim()!==otp){alert("Galat OTP");return;}place("COD");closeOTP();}
+function checkoutQR(){if(!valid())return;document.getElementById('qrAmt').innerText=cart.reduce((s,i)=>s+i.price*i.qty,0);document.getElementById('qrModal').style.display='flex';let t=15,btn=document.getElementById('qrBtn');btn.disabled=true;btn.style.background='gray';let iv=setInterval(()=>{t--;document.getElementById('qrTimer').innerText=t+" sec";btn.innerText='Wait '+t+'s';if(t<=0){clearInterval(iv);btn.disabled=false;btn.style.background='#2e7d32';btn.innerText='✅ Payment Done';}},1000);}
+function closeQR(){document.getElementById('qrModal').style.display='none';}function qrDone(){place("QR Paid");closeQR();}
+function place(pay){let total=cart.reduce((s,i)=>s+i.price*i.qty,0);let order={id:'GW'+Date.now(),mobile:document.getElementById('mob').value,pincode:document.getElementById('pin').value,items:cart.map(c=>c.name+" x "+c.qty),total,payment:pay,status:'Order Placed',date:new Date().toLocaleString()};orders.push(order);localStorage.setItem('gaon_orders',JSON.stringify(orders));cart=[];save();renderCart();closeMini();alert("Order Placed ✅ "+order.id+" - WhatsApp par message jayega");let msg=`Namaste Gaon Organic! Order ${order.id}%0ATotal: Rs.${total}%0AMobile: ${order.mobile}%0AItems: ${order.items.join(', ')}`;window.open(`https://wa.me/${WA}?text=${msg}`,'_blank');openTab('trackSec');document.getElementById('trackInput').value=order.mobile;track();}
+function track(){let inp=document.getElementById('trackInput').value.trim().toLowerCase();let res=document.getElementById('trackResult');if(inp.length<4){res.innerHTML="Mobile dalo";return;}let found=orders.filter(o=>o.mobile===inp||o.id.toLowerCase()===inp.toLowerCase());res.innerHTML=found.length?found.reverse().map(o=>`<div style="border:1px solid #ccc;padding:10px;margin:8px 0;border-radius:8px"><b>${o.id}</b> - <span style="background:#2e7d32;color:#fff;padding:2px 8px;border-radius:10px">${o.status}</span><br>Rs.${o.total} | ${o.payment}<br><small>${o.items.join(', ')}</small><br><small>${o.date}</small></div>`).join(''):"<p>Order nahi mila</p>";}
+function openSupport(){document.getElementById('supportModal').style.display='flex'}function closeSup(){document.getElementById('supportModal').style.display='none'}function sendSup(){let m=document.getElementById('supMsg').value;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(m)}`,'_blank');closeSup();}
+initF();save();render();
 </script></body></html>
