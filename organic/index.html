@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gaon Organic</title>
+
+<style>
+*{box-sizing:border-box;font-family:Arial}
+body{margin:0;background:#fffaf0;padding-bottom:70px}
+header{background:#2e7d32;color:white;padding:14px;display:flex;justify-content:space-between}
+a{color:white;text-decoration:none}
+.hero img{width:100%;height:210px;object-fit:cover}
+.search{padding:10px;background:white;display:flex;gap:6px}
+input,select{padding:11px;border:1px solid #ccc;border-radius:8px}
+.search input{flex:1}
+.filters{display:flex;gap:6px;overflow:auto;padding:8px}
+.filters button{padding:8px 14px;border:1px solid #2e7d32;border-radius:20px;background:white}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
+.card{background:white;padding:10px;border-radius:10px;text-align:center;box-shadow:0 2px 7px #ddd}
+.card img{width:100%;height:120px;object-fit:cover;border-radius:8px}
+.btn{width:100%;padding:10px;background:#2e7d32;color:white;border:0;border-radius:8px;font-weight:bold}
+.sec{display:none;background:white;margin:10px;padding:14px;border-radius:10px}
+.row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #ddd}
+</style>
+</head>
+
+<body>
+
+<header>
+<b>🌿 Gaon Organic</b>
+<div>
+<a href="#cart" onclick="show('cart')">🛒 <span id="count">0</span></a>
+&nbsp;&nbsp;
+<a href="admin.html">👑 Admin</a>
+</div>
+</header>
+
+<div class="hero">
+<img id="banner"
+src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900">
+</div>
+
+<div class="search">
+<input id="search" placeholder="Ghee, Dal..." oninput="render()">
+<select id="sort" onchange="render()">
+<option value="">Sort</option>
+<option value="low">Low-High</option>
+<option value="high">High-Low</option>
+</select>
+</div>
+
+<div class="filters">
+<button onclick="setFilter('all')">All</button>
+<button onclick="setFilter('500')">0-500</button>
+<button onclick="setFilter('1000')">500-1000</button>
+<button onclick="setFilter('2000')">1000-2000</button>
+<button onclick="setFilter('2000+')">2000+</button>
+</div>
+
+<div id="products" class="products">Loading...</div>
+
+<div id="cart" class="sec">
+<h2>🛒 Cart</h2>
+<div id="cartItems"></div>
+<h3>Total ₹<span id="total">0</span></h3>
+
+<input id="mobile" placeholder="10 digit mobile" style="width:100%">
+<input id="pin" placeholder="Pincode" style="width:100%;margin-top:6px">
+
+<button class="btn" onclick="order()" style="margin-top:8px">
+Place COD Order
+</button>
+</div>
+
+<div id="track" class="sec">
+<h2>📦 Track Order</h2>
+<input id="trackNo" placeholder="Mobile / Order ID" style="width:100%">
+<button class="btn" onclick="track()" style="margin-top:8px">
+Track
+</button>
+<div id="result"></div>
+</div>
+
+<script type="module">
+
+import{initializeApp}
+from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import{
+getDatabase,ref,onValue,push,update
+}
+from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const app=initializeApp({
+apiKey:"AIzaSyB80IKiUQA_t2IhXBgZjPI2kPQKqc1xSF8",
+authDomain:"gaon-organic.firebaseapp.com",
+databaseURL:"https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId:"gaon-organic",
+storageBucket:"gaon-organic.firebasestorage.app",
+messagingSenderId:"29340220943",
+appId:"1:29340220943:web:7cc9a5a9b8329bcef9ad7a"
+});
+
+const db=getDatabase(app);
+
+let products=[];
+let cart=JSON.parse(localStorage.cart||"[]");
+let filter="all";
+
+const $=id=>document.getElementById(id);
+
+window.show=id=>{
+document.querySelectorAll(".sec").forEach(x=>x.style.display="none");
+$(id).style.display="block";
+};
+
+window.setFilter=f=>{
+filter=f;
+render();
+};
+
+function render(){
+
+let text=$("search").value.toLowerCase();
+
+let list=products.filter(p=>
+p.name.toLowerCase().includes(text)
+);
+
+list=list.filter(p=>
+filter=="all" ||
+filter=="500"&&p.price<=500 ||
+filter=="1000"&&p.price>500&&p.price<=1000 ||
+filter=="2000"&&p.price>1000&&p.price<=2000 ||
+filter=="2000+"&&p.price>2000
+);
+
+if($("sort").value=="low")
+list.sort((a,b)=>a.price-b.price);
+
+if($("sort").value=="high")
+list.sort((a,b)=>b.price-a.price);
+
+$("products").innerHTML=list.map(p=>{
+
+let c=cart.find(x=>x.key==p.key);
+
+return`
+<div class="card">
+<img src="${p.img||''}">
+<b>${p.name}</b>
+<p>₹${p.price}</p>
+<small>${p.stock>0?"In Stock":"Out Of Stock"}</small>
+
+${
+c
+?`<p>
+<button onclick="qty('${p.key}',-1)">−</button>
+${c.qty}
+<button onclick="qty('${p.key}',1)">+</button>
+</p>`
+:`<button class="btn"
+onclick="add('${p.key}')"
+${p.stock<=0?"disabled":""}>
+Add to Cart
+</button>`
+}
+
+</div>`;
+
+}).join("");
+
+}
+
+window.add=key=>{
+
+let p=products.find(x=>x.key==key);
+let c=cart.find(x=>x.key==key);
+
+if(c)c.qty++;
+else cart.push({...p,key,qty:1});
+
+save();
+render();
+
+};
+
+window.qty=(key,n)=>{
+
+let c=cart.find(x=>x.key==key);
+if(!c)return;
+
+c.qty+=n;
+
+if(c.qty<=0)
+cart=cart.filter(x=>x.key!=key);
+
+save();
+render();
+cartRender();
+
+};
+
+function save(){
+
+localStorage.cart=JSON.stringify(cart);
+
+$("count").innerText=
+cart.reduce((a,x)=>a+x.qty,0);
+
+}
+
+function cartRender(){
+
+$("cartItems").innerHTML=cart.map(x=>`
+<div class="row">
+${x.name} × ${x.qty}
+<b>₹${x.price*x.qty}</b>
+</div>
+`).join("")||"Cart khali hai";
+
+$("total").innerText=
+cart.reduce((a,x)=>a+x.price*x.qty,0);
+
+}
+
+window.order=async()=>{
+
+let mobile=$("mobile").value.trim();
+let pin=$("pin").value.trim();
+
+if(!cart.length)return alert("Cart khali hai");
+if(!/^\d{10}$/.test(mobile))
+return alert("10 digit mobile dalo");
+if(!pin)return alert("Pincode dalo");
+
+let order={
+id:"GW"+Date.now(),
+mobile,
+pincode:pin,
+items:cart.map(x=>({
+name:x.name,
+price:x.price,
+qty:x.qty
+})),
+total:cart.reduce((a,x)=>a+x.price*x.qty,0),
+status:"Order Placed",
+payment:"COD",
+date:new Date().toLocaleString()
+};
+
+await push(ref(db,"orders"),order);
+
+for(let x of cart){
+
+let p=products.find(y=>y.key==x.key);
+
+if(p)
+await update(
+ref(db,"products/"+x.key),
+{stock:Math.max(0,p.stock-x.qty)}
+);
+
+}
+
+cart=[];
+save();
+cartRender();
+
+alert("Order Placed ✅\n"+order.id);
+
+show("track");
+$("trackNo").value=mobile;
+track();
+
+};
+
+window.track=()=>{
+
+let q=$("trackNo").value.trim();
+
+onValue(ref(db,"orders"),s=>{
+
+let data=s.val()||{};
+
+let found=Object.values(data)
+.filter(x=>x.mobile==q||x.id==q);
+
+$("result").innerHTML=
+found.map(o=>`
+<div class="row">
+<b>${o.id}</b>
+<span>${o.status}<br>₹${o.total}</span>
+</div>
+`).join("")||"Order nahi mila";
+
+},{onlyOnce:true});
+
+};
+
+onValue(ref(db,"products"),s=>{
+
+products=Object.entries(s.val()||{})
+.map(([key,v])=>({...v,key}));
+
+render();
+
+});
+
+onValue(ref(db,"settings/banner"),s=>{
+
+if(s.val())
+$("banner").src=s.val();
+
+});
+
+save();
+
+</script>
+</body>
+</html>
