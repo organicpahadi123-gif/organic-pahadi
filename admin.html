@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gaon Organic - Admin Panel</title>
+
+<title>Gaon Organic Admin</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -13,709 +15,145 @@
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
+  font-family:Arial,sans-serif;
   background:#f4f7f4;
   color:#222;
 }
 
 button,
 input,
-select,
-textarea{
-  font:inherit;
+textarea,
+select{
+  font-family:inherit;
 }
 
 button{
   cursor:pointer;
 }
 
-.hidden{
-  display:none!important;
-}
-
-/* LOGIN */
-
-#loginPage{
+.login-page{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:20px;
-  background:linear-gradient(135deg,#e8f5e9,#f7fff7);
+  background:#eef7ef;
 }
 
-.loginBox{
+.login-box{
   width:100%;
-  max-width:420px;
-  background:#fff;
-  padding:30px 24px;
-  border-radius:18px;
-  box-shadow:0 10px 35px rgba(0,0,0,.12);
+  max-width:400px;
+  background:white;
+  padding:28px;
+  border-radius:16px;
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
 }
 
-.logoTitle{
+.logo{
   text-align:center;
-  color:#2e7d32;
-  font-size:30px;
-  font-weight:800;
-  margin-bottom:5px;
-}
-
-.logoSub{
-  text-align:center;
-  color:#666;
-  margin-bottom:25px;
-}
-
-.formGroup{
-  margin-bottom:16px;
-}
-
-.formGroup label{
-  display:block;
-  font-weight:600;
-  margin-bottom:7px;
-}
-
-.formGroup input,
-.formGroup select,
-.formGroup textarea{
-  width:100%;
-  padding:12px 13px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  outline:none;
-  background:#fff;
-}
-
-.formGroup input:focus,
-.formGroup select:focus,
-.formGroup textarea:focus{
-  border-color:#43a047;
-  box-shadow:0 0 0 3px rgba(67,160,71,.1);
-}
-
-.passwordWrap{
-  position:relative;
-}
-
-.passwordWrap input{
-  padding-right:75px;
-}
-
-.togglePassword{
-  position:absolute;
-  right:8px;
-  top:7px;
-  border:0;
-  background:#f0f0f0;
-  padding:6px 9px;
-  border-radius:7px;
-  font-size:12px;
-}
-
-.primaryBtn{
-  width:100%;
-  border:0;
-  background:#2e7d32;
-  color:#fff;
-  padding:13px;
-  border-radius:10px;
-  font-weight:700;
-  transition:.2s;
-}
-
-.primaryBtn:hover{
-  background:#1b5e20;
-}
-
-.message{
-  margin-top:14px;
-  padding:10px;
-  border-radius:8px;
-  font-size:14px;
-  display:none;
-}
-
-.message.error{
-  display:block;
-  background:#ffebee;
-  color:#c62828;
-}
-
-.message.success{
-  display:block;
-  background:#e8f5e9;
-  color:#2e7d32;
-}
-
-/* ADMIN */
-
-#adminPage{
-  min-height:100vh;
-}
-
-.topbar{
-  background:#2e7d32;
-  color:#fff;
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
-}
-
-.topbarTitle{
-  font-size:22px;
-  font-weight:800;
-}
-
-.topbarRight{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.adminEmail{
-  font-size:13px;
-  opacity:.9;
-}
-
-.logoutBtn{
-  border:1px solid rgba(255,255,255,.5);
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  padding:8px 12px;
-  border-radius:8px;
-}
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
-
-/* TABS */
-
-.tabs{
-  display:flex;
-  gap:8px;
-  margin-bottom:20px;
-  overflow-x:auto;
-}
-
-.tabBtn{
-  border:0;
-  background:#fff;
-  color:#555;
-  padding:11px 18px;
-  border-radius:10px;
-  font-weight:700;
-  white-space:nowrap;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-}
-
-.tabBtn.active{
-  background:#2e7d32;
-  color:#fff;
-}
-
-/* SECTIONS */
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
-.card{
-  background:#fff;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 2px 12px rgba(0,0,0,.07);
-}
-
-.cardTitle{
-  font-size:20px;
-  font-weight:800;
-  margin-bottom:18px;
-  color:#2e7d32;
-}
-
-/* GRID */
-
-.formGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
-
-.fullWidth{
-  grid-column:1/-1;
-}
-
-/* PRODUCTS */
-
-.productFormButtons{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
-
-.greenBtn{
-  border:0;
-  background:#2e7d32;
-  color:#fff;
-  padding:11px 16px;
-  border-radius:9px;
-  font-weight:700;
-}
-
-.greenBtn:hover{
-  background:#1b5e20;
-}
-
-.grayBtn{
-  border:0;
-  background:#e0e0e0;
-  color:#333;
-  padding:11px 16px;
-  border-radius:9px;
-  font-weight:700;
-}
-
-.redBtn{
-  border:0;
-  background:#d32f2f;
-  color:#fff;
-  padding:9px 12px;
-  border-radius:8px;
-  font-weight:700;
-}
-
-.blueBtn{
-  border:0;
-  background:#1976d2;
-  color:#fff;
-  padding:9px 12px;
-  border-radius:8px;
-  font-weight:700;
-}
-
-.productsGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
-
-.productCard{
-  border:1px solid #e0e0e0;
-  border-radius:12px;
-  overflow:hidden;
-  background:#fff;
-}
-
-.productImage{
-  width:100%;
-  height:190px;
-  object-fit:cover;
-  background:#eee;
-}
-
-.productInfo{
-  padding:14px;
-}
-
-.productName{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:5px;
-}
-
-.productCategory{
-  font-size:13px;
-  color:#777;
+  font-size:28px;
+  font-weight:bold;
+  color:#287a38;
   margin-bottom:8px;
 }
 
-.productPrice{
-  color:#2e7d32;
-  font-weight:800;
-  font-size:18px;
+.subtitle{
+  text-align:center;
+  color:#777;
+  margin-bottom:25px;
 }
 
-.productStock{
-  font-size:13px;
-  margin-top:5px;
-}
-
-.productActions{
-  display:flex;
-  gap:7px;
-  margin-top:12px;
-  flex-wrap:wrap;
-}
-
-/* ORDERS */
-
-.orderFilters{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
+.form-group{
   margin-bottom:16px;
 }
 
-.filterBtn{
-  border:1px solid #ddd;
-  background:#fff;
-  padding:9px 13px;
+.form-group label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:bold;
+}
+
+.form-group input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
   border-radius:8px;
-  white-space:nowrap;
+  font-size:15px;
 }
 
-.filterBtn.active{
-  background:#2e7d32;
-  color:#fff;
-  border-color:#2e7d32;
+.password-wrap{
+  position:relative;
 }
 
-.ordersList{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+.password-wrap input{
+  padding-right:70px;
 }
 
-.orderCard{
-  border:1px solid #e0e0e0;
-  border-radius:12px;
-  padding:16px;
-  background:#fff;
+.show-btn{
+  position:absolute;
+  right:5px;
+  top:5px;
+  height:36px;
+  padding:0 10px;
+  border:0;
+  border-radius:6px;
+  background:#eee;
 }
 
-.orderHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.orderId{
-  font-weight:800;
-  color:#333;
-}
-
-.orderDate{
-  color:#777;
-  font-size:13px;
-  margin-top:4px;
-}
-
-.statusBadge{
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:800;
-  text-transform:capitalize;
-}
-
-.status-pending{
-  background:#fff3cd;
-  color:#856404;
-}
-
-.status-processing{
-  background:#e3f2fd;
-  color:#1565c0;
-}
-
-.status-shipped{
-  background:#ede7f6;
-  color:#4527a0;
-}
-
-.status-delivered{
-  background:#e8f5e9;
-  color:#2e7d32;
-}
-
-.status-cancelled{
-  background:#ffebee;
-  color:#c62828;
-}
-
-.orderDetails{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-bottom:14px;
-}
-
-.detailBox{
-  background:#f8f9f8;
-  padding:10px;
+.login-btn{
+  width:100%;
+  padding:13px;
+  border:0;
   border-radius:8px;
+  background:#287a38;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
 }
 
-.detailLabel{
-  font-size:12px;
-  color:#777;
-  margin-bottom:3px;
+.login-btn:hover{
+  background:#1f612d;
 }
 
-.detailValue{
-  font-weight:600;
-  word-break:break-word;
-}
-
-.orderItems{
-  border-top:1px solid #eee;
-  padding-top:12px;
-  margin-top:8px;
-}
-
-.orderItem{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:7px 0;
-  border-bottom:1px dashed #ddd;
-  font-size:14px;
-}
-
-.orderTotal{
-  text-align:right;
-  font-size:18px;
-  font-weight:800;
-  color:#2e7d32;
+.error{
+  color:#d32f2f;
+  text-align:center;
+  font-weight:bold;
   margin-top:12px;
 }
 
-.orderActions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
-.statusSelect{
-  padding:9px;
-  border:1px solid #ccc;
-  border-radius:8px;
-}
-
-/* SETTINGS */
-
-.previewBox{
-  margin-top:10px;
-  border:1px dashed #aaa;
-  border-radius:10px;
-  padding:10px;
+.success{
+  color:#188038;
   text-align:center;
-  background:#fafafa;
+  font-weight:bold;
+  margin-top:12px;
 }
 
-.previewBox img{
-  max-width:100%;
-  max-height:180px;
-  border-radius:8px;
-}
-
-/* EMPTY */
-
-.emptyState{
-  text-align:center;
-  padding:35px 15px;
-  color:#777;
-}
-
-/* LOADING */
-
-.loading{
-  text-align:center;
-  padding:30px;
-  color:#666;
-}
-
-/* INVOICE */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:15px;
-  z-index:100;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modalBox{
+.forgot-btn{
   width:100%;
-  max-width:750px;
-  max-height:92vh;
-  overflow-y:auto;
-  background:#fff;
-  border-radius:14px;
-  padding:22px;
-}
-
-.modalHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-}
-
-.closeBtn{
-  border:0;
-  background:#eee;
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  font-size:20px;
-}
-
-.invoice{
-  border:1px solid #ddd;
-  padding:25px;
-  background:#fff;
-}
-
-.invoiceShop{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.invoiceShop h2{
-  color:#2e7d32;
-}
-
-.invoiceMeta{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
-  font-size:14px;
-}
-
-.invoiceTable{
-  width:100%;
-  border-collapse:collapse;
-  margin-bottom:18px;
-}
-
-.invoiceTable th,
-.invoiceTable td{
-  border:1px solid #ddd;
-  padding:9px;
-  text-align:left;
-  font-size:13px;
-}
-
-.invoiceTotal{
-  text-align:right;
-  font-size:18px;
-  font-weight:800;
-}
-
-.modalActions{
-  display:flex;
-  gap:10px;
   margin-top:15px;
-  flex-wrap:wrap;
+  padding:10px;
+  border:0;
+  background:white;
+  color:#287a38;
+  font-weight:bold;
 }
 
-/* RESPONSIVE */
-
-@media(max-width:900px){
-  .productsGrid{
-    grid-template-columns:repeat(2,1fr);
-  }
+.reset-box{
+  display:none;
+  margin-top:15px;
+  padding:15px;
+  background:#f1f8f2;
+  border:1px solid #c8e6c9;
+  border-radius:10px;
 }
 
-@media(max-width:700px){
-  .topbar{
-    padding:12px 14px;
-  }
-
-  .topbarTitle{
-    font-size:18px;
-  }
-
-  .adminEmail{
-    display:none;
-  }
-
-  .container{
-    padding:12px;
-  }
-
-  .formGrid{
-    grid-template-columns:1fr;
-  }
-
-  .fullWidth{
-    grid-column:auto;
-  }
-
-  .productsGrid{
-    grid-template-columns:1fr;
-  }
-
-  .orderDetails{
-    grid-template-columns:1fr;
-  }
-
-  .invoice{
-    padding:15px;
-  }
-
-  .invoiceMeta{
-    flex-direction:column;
-  }
+.reset-title{
+  color:#287a38;
+  font-weight:bold;
+  margin-bottom:14px;
 }
 
-@media print{
-  body *{
-    visibility:hidden;
-  }
-
-  #invoiceModal,
-  #invoiceModal *{
-    visibility:visible;
-  }
-
-  #invoiceModal{
-    position:absolute;
-    inset:0;
-    background:#fff;
-    display:block!important;
-  }
-
-  #invoiceModal .modalBox{
-    max-width:none;
-    max-height:none;
-    box-shadow:none;
-  }
-
-  #invoiceModal .modalHeader,
-  #invoiceModal .modalActions{
-    display:none;
-  }
-}
 </style>
 </head>
 
@@ -723,1736 +161,855 @@ button{
 
 <!-- LOGIN PAGE -->
 
-<div id="loginPage">
+<div id="loginPage" class="login-page">
 
-  <div class="loginBox">
+  <div class="login-box">
 
-    <div class="logoTitle">🌿 Gaon Organic</div>
-    <div class="logoSub">Admin Panel</div>
+    <div class="logo">
+      🏔️ Gaon Organic
+    </div>
+
+    <div class="subtitle">
+      Admin Panel Login
+    </div>
 
     <form id="loginForm">
 
-      <div class="formGroup">
-        <label for="loginEmail">Admin Email</label>
+      <div class="form-group">
+
+        <label>
+          Admin Email
+        </label>
+
         <input
           type="email"
-          id="loginEmail"
-          value="organicpahadi123@gmail.com"
-          autocomplete="username"
-          required
-        >
+          id="adminEmail"
+          placeholder="Enter admin email"
+          required>
+
       </div>
 
-      <div class="formGroup">
-        <label for="loginPassword">Password</label>
+      <div class="form-group">
 
-        <div class="passwordWrap">
+        <label>
+          Admin Password
+        </label>
+
+        <div class="password-wrap">
 
           <input
             type="password"
-            id="loginPassword"
-            autocomplete="current-password"
-            required
-          >
+            id="adminPassword"
+            placeholder="Enter admin password"
+            required>
 
           <button
             type="button"
-            class="togglePassword"
-            id="togglePassword"
-          >
+            class="show-btn"
+            id="showAdminPassword">
             Show
           </button>
 
         </div>
+
       </div>
 
-      <button type="submit" class="primaryBtn">
-        Login
+      <button
+        type="submit"
+        class="login-btn">
+        🔐 Login
       </button>
 
-      <div id="loginMessage" class="message"></div>
+      <div
+        id="loginError"
+        class="error">
+      </div>
 
     </form>
 
+    <button
+      type="button"
+      id="forgotPasswordBtn"
+      class="forgot-btn">
+      Forgot Admin Password?
+    </button>
+
+    <!-- PART 1 END -->
+    <!-- MASTER PASSWORD RESET BOX -->
+
+<div
+  id="resetBox"
+  class="reset-box">
+
+  <div class="reset-title">
+    🔑 Master Password Recovery
+  </div>
+
+  <div class="form-group">
+
+    <label>
+      Master Password
+    </label>
+
+    <div class="password-wrap">
+
+      <input
+        type="password"
+        id="masterPassword"
+        placeholder="Enter master password">
+
+      <button
+        type="button"
+        class="show-btn"
+        id="showMasterPassword">
+        Show
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label>
+      New Admin Password
+    </label>
+
+    <div class="password-wrap">
+
+      <input
+        type="password"
+        id="newResetPassword"
+        placeholder="Enter new password">
+
+      <button
+        type="button"
+        class="show-btn"
+        id="showNewResetPassword">
+        Show
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label>
+      Confirm New Password
+    </label>
+
+    <div class="password-wrap">
+
+      <input
+        type="password"
+        id="confirmResetPassword"
+        placeholder="Confirm new password">
+
+      <button
+        type="button"
+        class="show-btn"
+        id="showConfirmResetPassword">
+        Show
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <button
+    type="button"
+    class="login-btn"
+    id="masterResetBtn">
+    🔑 Verify Master Password
+  </button>
+
+
+  <div
+    id="resetMessage"
+    class="error">
   </div>
 
 </div>
 
 
-<!-- ADMIN PAGE -->
+<!-- PART 2 END -->
+    <!-- ADMIN PAGE START -->
 
-<div id="adminPage" class="hidden">
+<div
+  id="adminPage"
+  style="display:none;">
 
-  <header class="topbar">
+  <div
+    style="
+      background:#287a38;
+      color:white;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    ">
 
-    <div class="topbarTitle">
-      🌿 Gaon Organic Admin
+    <div
+      style="
+        font-size:20px;
+        font-weight:bold;
+      ">
+      🏔️ Gaon Organic Admin
     </div>
 
-    <div class="topbarRight">
+    <button
+      id="logoutBtn"
+      style="
+        padding:9px 14px;
+        border:0;
+        border-radius:7px;
+        color:#287a38;
+        font-weight:bold;
+      ">
+      Logout
+    </button>
 
-      <span class="adminEmail" id="loggedAdminEmail"></span>
+  </div>
+
+
+  <div
+    style="
+      display:flex;
+      min-height:calc(100vh - 58px);
+    ">
+
+
+    <!-- SIDEBAR -->
+
+    <div
+      style="
+        width:220px;
+        background:white;
+        border-right:1px solid #ddd;
+        padding:12px;
+      ">
 
       <button
-        type="button"
-        class="logoutBtn"
-        id="logoutBtn"
-      >
-        Logout
+        class="navBtn activeNav"
+        data-section="dashboardSection"
+        style="
+          width:100%;
+          padding:12px;
+          margin-bottom:7px;
+          border:0;
+          border-radius:8px;
+          text-align:left;
+          background:#e8f5e9;
+          color:#287a38;
+          font-weight:bold;
+        ">
+        🏠 Dashboard
       </button>
 
-    </div>
-
-  </header>
-
-
-  <main class="container">
-
-    <!-- TABS -->
-
-    <div class="tabs">
 
       <button
-        type="button"
-        class="tabBtn active"
-        data-tab="ordersSection"
-      >
-        📦 Orders
+        class="navBtn"
+        data-section="productsSection"
+        style="
+          width:100%;
+          padding:12px;
+          margin-bottom:7px;
+          border:0;
+          border-radius:8px;
+          text-align:left;
+          background:white;
+        ">
+        📦 Products
       </button>
 
-      <button
-        type="button"
-        class="tabBtn"
-        data-tab="productsSection"
-      >
-        🛒 Products
-      </button>
 
       <button
-        type="button"
-        class="tabBtn"
-        data-tab="settingsSection"
-      >
+        class="navBtn"
+        data-section="ordersSection"
+        style="
+          width:100%;
+          padding:12px;
+          margin-bottom:7px;
+          border:0;
+          border-radius:8px;
+          text-align:left;
+          background:white;
+        ">
+        🛒 Orders
+      </button>
+
+
+      <button
+        class="navBtn"
+        data-section="settingsSection"
+        style="
+          width:100%;
+          padding:12px;
+          margin-bottom:7px;
+          border:0;
+          border-radius:8px;
+          text-align:left;
+          background:white;
+        ">
         ⚙️ Settings
       </button>
 
     </div>
 
 
-    <!-- ORDERS SECTION -->
+    <!-- MAIN AREA -->
 
-    <section
-      id="ordersSection"
-      class="section active"
-    >
+    <div
+      style="
+        flex:1;
+        padding:20px;
+        overflow:auto;
+      ">
 
-      <div class="card">
 
-        <div class="cardTitle">
-          Orders
-        </div>
+      <!-- DASHBOARD -->
 
-        <div class="orderFilters">
+      <section
+        id="dashboardSection"
+        class="adminSection">
 
-          <button
-            type="button"
-            class="filterBtn active"
-            data-filter="all"
-          >
-            All
-          </button>
+        <h1
+          style="
+            margin-bottom:18px;
+          ">
+          Dashboard
+        </h1>
 
-          <button
-            type="button"
-            class="filterBtn"
-            data-filter="pending"
-          >
-            Pending
-          </button>
 
-          <button
-            type="button"
-            class="filterBtn"
-            data-filter="processing"
-          >
-            Processing
-          </button>
+        <div
+          style="
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,.06);
+          ">
 
-          <button
-            type="button"
-            class="filterBtn"
-            data-filter="shipped"
-          >
-            Shipped
-          </button>
+          <h2
+            style="
+              margin-bottom:10px;
+            ">
+            Welcome to Gaon Organic
+          </h2>
 
-          <button
-            type="button"
-            class="filterBtn"
-            data-filter="delivered"
-          >
-            Delivered
-          </button>
-
-          <button
-            type="button"
-            class="filterBtn"
-            data-filter="cancelled"
-          >
-            Cancelled
-          </button>
+          <p>
+            Manage products, orders and shop
+            settings from this admin panel.
+          </p>
 
         </div>
 
-        <div id="ordersList" class="ordersList">
-
-          <div class="loading">
-            Loading orders...
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
+      </section>
 
 
-    <!-- PRODUCTS SECTION -->
+      <!-- PRODUCTS SECTION -->
 
-    <section
-      id="productsSection"
-      class="section"
-    >
+      <section
+        id="productsSection"
+        class="adminSection"
+        style="display:none;">
 
-      <div class="card">
-
-        <div class="cardTitle">
-          Add / Edit Product
-        </div>
-
-        <form id="productForm">
-
-          <input
-            type="hidden"
-            id="productId"
-          >
-
-          <div class="formGrid">
-
-            <div class="formGroup">
-
-              <label for="productName">
-                Product Name
-              </label>
-
-              <input
-                type="text"
-                id="productName"
-                placeholder="Example: Pahadi Honey"
-                required
-              >
-
-            </div>
+        <h1
+          style="
+            margin-bottom:18px;
+          ">
+          📦 Products
+        </h1>
 
 
-            <div class="formGroup">
+        <div
+          style="
+            background:white;
+            padding:20px;
+            border-radius:12px;
+          ">
 
-              <label for="productCategory">
-                Category
-              </label>
-
-              <select id="productCategory" required>
-
-                <option value="">
-                  Select Category
-                </option>
-
-                <option value="Honey">
-                  Honey
-                </option>
-
-                <option value="Spices">
-                  Spices
-                </option>
-
-                <option value="Pulses">
-                  Pulses
-                </option>
-
-                <option value="Grains">
-                  Grains
-                </option>
-
-                <option value="Pickles">
-                  Pickles
-                </option>
-
-                <option value="Oil">
-                  Oil
-                </option>
-
-                <option value="Herbs">
-                  Herbs
-                </option>
-
-                <option value="Other">
-                  Other
-                </option>
-
-              </select>
-
-            </div>
+          <h2
+            style="
+              margin-bottom:15px;
+            ">
+            Add Product
+          </h2>
 
 
-            <div class="formGroup">
+          <form id="productForm">
 
-              <label for="productPrice">
-                Price (₹)
-              </label>
-
-              <input
-                type="number"
-                id="productPrice"
-                min="0"
-                step="0.01"
-                placeholder="299"
-                required
-              >
-
-            </div>
+            <input
+              type="hidden"
+              id="productId">
 
 
-            <div class="formGroup">
-
-              <label for="productStock">
-                Stock
-              </label>
-
-              <input
-                type="number"
-                id="productStock"
-                min="0"
-                step="1"
-                placeholder="20"
-                required
-              >
-
-            </div>
+            <div
+              style="
+                display:grid;
+                grid-template-columns:
+                repeat(2,minmax(0,1fr));
+                gap:14px;
+              ">
 
 
-            <div class="formGroup fullWidth">
+              <div class="form-group">
 
-              <label for="productDescription">
-                Description
-              </label>
+                <label>
+                  Product Name
+                </label>
 
-              <textarea
-                id="productDescription"
-                rows="4"
-                placeholder="Product details..."
-              ></textarea>
+                <input
+                  type="text"
+                  id="productName"
+                  placeholder="Product name"
+                  required>
 
-            </div>
+              </div>
 
 
-            <div class="formGroup fullWidth">
+              <div class="form-group">
 
-              <label for="productImage">
-                Product Image
-              </label>
+                <label>
+                  Price ₹
+                </label>
 
-              <input
-                type="file"
-                id="productImage"
-                accept="image/*"
-              >
+                <input
+                  type="number"
+                  id="productPrice"
+                  min="0"
+                  step="0.01"
+                  placeholder="Price"
+                  required>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label>
+                  Stock
+                </label>
+
+                <input
+                  type="number"
+                  id="productStock"
+                  min="0"
+                  placeholder="Stock"
+                  required>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label>
+                  Category
+                </label>
+
+                <input
+                  type="text"
+                  id="productCategory"
+                  placeholder="Category">
+
+              </div>
+
 
               <div
-                id="productImagePreview"
-                class="previewBox hidden"
-              ></div>
+                class="form-group"
+                style="grid-column:1/-1;">
+
+                <label>
+                  Description
+                </label>
+
+                <textarea
+                  id="productDescription"
+                  placeholder="Product description"
+                  style="
+                    width:100%;
+                    min-height:90px;
+                    padding:12px;
+                    border:1px solid #ccc;
+                    border-radius:8px;
+                  "></textarea>
+
+              </div>
+
+
+              <div
+                class="form-group"
+                style="grid-column:1/-1;">
+
+                <label>
+                  Product Image
+                </label>
+
+                <input
+                  type="file"
+                  id="productImage"
+                  accept="image/*">
+
+              </div>
 
             </div>
 
-          </div>
-
-
-          <div class="productFormButtons">
 
             <button
               type="submit"
-              class="greenBtn"
-              id="saveProductBtn"
-            >
-              Add Product
+              id="productSaveBtn"
+              style="
+                padding:12px 18px;
+                background:#287a38;
+                color:white;
+                border:0;
+                border-radius:8px;
+                font-weight:bold;
+              ">
+              ➕ Add Product
             </button>
+
 
             <button
               type="button"
-              class="grayBtn"
-              id="resetProductBtn"
-            >
-              Reset
+              id="productCancelBtn"
+              style="
+                padding:12px 18px;
+                background:#777;
+                color:white;
+                border:0;
+                border-radius:8px;
+                margin-left:6px;
+              ">
+              Cancel
             </button>
 
-          </div>
+          </form>
 
-          <div
-            id="productMessage"
-            class="message"
-          ></div>
-
-        </form>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="cardTitle">
-          Products
         </div>
 
-        <div
-          id="productsGrid"
-          class="productsGrid"
-        >
+      </section>
 
-          <div class="loading">
+
+      <!-- PART 3 END -->
+      <!-- PRODUCT LIST -->
+
+<div
+  style="
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-top:18px;
+  ">
+
+  <h2
+    style="
+      margin-bottom:15px;
+    ">
+    📋 Product List
+  </h2>
+
+
+  <div
+    style="
+      width:100%;
+      overflow-x:auto;
+    ">
+
+    <table
+      style="
+        width:100%;
+        min-width:750px;
+        border-collapse:collapse;
+      ">
+
+      <thead>
+
+        <tr>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Image
+          </th>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Name
+          </th>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Price
+          </th>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Stock
+          </th>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Category
+          </th>
+
+          <th
+            style="
+              padding:10px;
+              border-bottom:1px solid #ddd;
+              text-align:left;
+            ">
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="productsTableBody">
+
+        <tr>
+
+          <td
+            colspan="6"
+            style="
+              padding:20px;
+              text-align:center;
+            ">
             Loading products...
-          </div>
+          </td>
 
-        </div>
+        </tr>
 
-      </div>
+      </tbody>
 
-    </section>
+    </table>
 
-
-    <!-- SETTINGS SECTION -->
-
-    <section
-      id="settingsSection"
-      class="section"
-    >
-
-      <div class="card">
-
-        <div class="cardTitle">
-          Shop Settings
-        </div>
-
-        <form id="settingsForm">
-
-          <div class="formGrid">
-
-            <div class="formGroup">
-
-              <label for="shopName">
-                Shop Name
-              </label>
-
-              <input
-                type="text"
-                id="shopName"
-                placeholder="Gaon Organic"
-              >
-
-            </div>
-
-
-            <div class="formGroup">
-
-              <label for="whatsappNumber">
-                WhatsApp Number
-              </label>
-
-              <input
-                type="text"
-                id="whatsappNumber"
-                placeholder="916395856099"
-              >
-
-            </div>
-
-
-            <div class="formGroup">
-
-              <label for="upiId">
-                UPI ID
-              </label>
-
-              <input
-                type="text"
-                id="upiId"
-                placeholder="yourname@upi"
-              >
-
-            </div>
-
-
-            <div class="formGroup">
-
-              <label for="deliveryCharge">
-                Delivery Charge (₹)
-              </label>
-
-              <input
-                type="number"
-                id="deliveryCharge"
-                min="0"
-                step="1"
-                placeholder="0"
-              >
-
-            </div>
-
-
-            <div class="formGroup fullWidth">
-
-              <label for="bannerImage">
-                Banner Image
-              </label>
-
-              <input
-                type="file"
-                id="bannerImage"
-                accept="image/*"
-              >
-
-              <div
-                id="bannerPreview"
-                class="previewBox hidden"
-              ></div>
-
-            </div>
-
-
-            <div class="formGroup fullWidth">
-
-              <label for="qrImage">
-                UPI QR Image
-              </label>
-
-              <input
-                type="file"
-                id="qrImage"
-                accept="image/*"
-              >
-
-              <div
-                id="qrPreview"
-                class="previewBox hidden"
-              ></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="productFormButtons">
-
-            <button
-              type="submit"
-              class="greenBtn"
-            >
-              Save Settings
-            </button>
-
-          </div>
-
-          <div
-            id="settingsMessage"
-            class="message"
-          ></div>
-
-        </form>
-
-      </div>
-
-    </section>
-
-  </main>
+  </div>
 
 </div>
 
 
-<!-- INVOICE MODAL -->
+</section>
 
-<div
-  id="invoiceModal"
-  class="modal"
->
 
-  <div class="modalBox">
+<!-- ORDERS SECTION -->
 
-    <div class="modalHeader">
+<section
+  id="ordersSection"
+  class="adminSection"
+  style="display:none;">
 
-      <strong>
-        Invoice
-      </strong>
+  <h1
+    style="
+      margin-bottom:18px;
+    ">
+    🛒 Orders
+  </h1>
+
+
+  <div
+    style="
+      background:white;
+      padding:20px;
+      border-radius:12px;
+    ">
+
+
+    <!-- ORDER FILTERS -->
+
+    <div
+      style="
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-bottom:18px;
+      ">
 
       <button
-        type="button"
-        class="closeBtn"
-        id="closeInvoiceBtn"
-      >
-        ×
+        class="orderFilterBtn"
+        data-status="all"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#287a38;
+          color:white;
+        ">
+        All
+      </button>
+
+
+      <button
+        class="orderFilterBtn"
+        data-status="pending"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#eee;
+        ">
+        Pending
+      </button>
+
+
+      <button
+        class="orderFilterBtn"
+        data-status="processing"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#eee;
+        ">
+        Processing
+      </button>
+
+
+      <button
+        class="orderFilterBtn"
+        data-status="shipped"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#eee;
+        ">
+        Shipped
+      </button>
+
+
+      <button
+        class="orderFilterBtn"
+        data-status="delivered"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#eee;
+        ">
+        Delivered
+      </button>
+
+
+      <button
+        class="orderFilterBtn"
+        data-status="cancelled"
+        style="
+          padding:9px 13px;
+          border:0;
+          border-radius:7px;
+          background:#eee;
+        ">
+        Cancelled
       </button>
 
     </div>
 
-    <div id="invoiceContent"></div>
 
-    <div class="modalActions">
-
-      <button
-        type="button"
-        class="greenBtn"
-        id="printInvoiceBtn"
-      >
-        🖨️ Print / S
-        /* ORDERS */
-
-let ordersCache = {};
-
-let currentOrderFilter = "all";
-
-
-async function loadOrders(){
-
-  const ordersList =
-    document.getElementById(
-      "ordersList"
-    );
-
-  ordersList.innerHTML =
-    `<div class="loading">
-      Loading orders...
-    </div>`;
-
-  try{
-
-    const snapshot =
-      await get(
-        ref(db,"orders")
-      );
-
-    ordersCache =
-      snapshot.exists()
-        ? snapshot.val()
-        : {};
-
-    renderOrders();
-
-  }catch(error){
-
-    console.error(error);
-
-    ordersList.innerHTML =
-      `<div class="emptyState">
-        Unable to load orders.
-      </div>`;
-
-  }
-
-}
-
-
-/* ORDER FILTERS */
-
-document.querySelectorAll(
-  ".filterBtn"
-).forEach(button => {
-
-  button.addEventListener(
-    "click",
-    () => {
-
-      document.querySelectorAll(
-        ".filterBtn"
-      ).forEach(btn => {
-
-        btn.classList.remove(
-          "active"
-        );
-
-      });
-
-      button.classList.add(
-        "active"
-      );
-
-      currentOrderFilter =
-        button.dataset.filter;
-
-      renderOrders();
-
-    }
-  );
-
-});
-
-
-/* RENDER ORDERS */
-
-function renderOrders(){
-
-  const ordersList =
-    document.getElementById(
-      "ordersList"
-    );
-
-  let entries =
-    Object.entries(
-      ordersCache || {}
-    );
-
-
-  entries.sort(
-    (a,b) => {
-
-      const dateA =
-        Number(
-          a[1]?.createdAt ||
-          a[1]?.timestamp ||
-          0
-        );
-
-      const dateB =
-        Number(
-          b[1]?.createdAt ||
-          b[1]?.timestamp ||
-          0
-        );
-
-      return dateB - dateA;
-
-    }
-  );
-
-
-  if(
-    currentOrderFilter !== "all"
-  ){
-
-    entries =
-      entries.filter(
-        ([id,order]) => {
-
-          const status =
-            String(
-              order.status ||
-              "pending"
-            ).toLowerCase();
-
-          return status ===
-            currentOrderFilter;
-
-        }
-      );
-
-  }
-
-
-  if(entries.length === 0){
-
-    ordersList.innerHTML =
-      `<div class="emptyState">
-        No orders found.
-      </div>`;
-
-    return;
-
-  }
-
-
-  ordersList.innerHTML =
-    entries.map(
-      ([id,order]) =>
-        createOrderCard(
-          id,
-          order
-        )
-    ).join("");
-
-
-  document.querySelectorAll(
-    ".statusSelect"
-  ).forEach(select => {
-
-    select.addEventListener(
-      "change",
-      async () => {
-
-        await updateOrderStatus(
-          select.dataset.id,
-          select.value
-        );
-
-      }
-    );
-
-  });
-
-
-  document.querySelectorAll(
-    ".invoiceBtn"
-  ).forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        openInvoice(
-          button.dataset.id
-        );
-
-      }
-    );
-
-  });
-
-}
-
-
-/* ORDER CARD */
-
-function createOrderCard(
-  id,
-  order
-){
-
-  const status =
-    String(
-      order.status ||
-      "pending"
-    ).toLowerCase();
-
-
-  const customer =
-    order.customer ||
-    order.user ||
-    {};
-
-
-  const name =
-    order.name ||
-    customer.name ||
-    order.customerName ||
-    "Customer";
-
-
-  const phone =
-    order.phone ||
-    customer.phone ||
-    order.customerPhone ||
-    "-";
-
-
-  const address =
-    order.address ||
-    customer.address ||
-    order.deliveryAddress ||
-    "-";
-
-
-  const paymentMethod =
-    order.paymentMethod ||
-    order.payment ||
-    "COD";
-
-
-  const utr =
-    order.utr ||
-    order.transactionId ||
-    "";
-
-
-  const dateValue =
-    order.createdAt ||
-    order.timestamp ||
-    Date.now();
-
-
-  const date =
-    new Date(
-      dateValue
-    ).toLocaleString(
-      "en-IN",
-      {
-        dateStyle:"medium",
-        timeStyle:"short"
-      }
-    );
-
-
-  const items =
-    Array.isArray(order.items)
-      ? order.items
-      : Object.values(
-          order.items || {}
-        );
-
-
-  const itemsHtml =
-    items.length
-      ? items.map(
-          item => {
-
-            const itemName =
-              item.name ||
-              item.productName ||
-              "Product";
-
-            const qty =
-              Number(
-                item.quantity ||
-                item.qty ||
-                1
-              );
-
-            const price =
-              Number(
-                item.price ||
-                0
-              );
-
-            return `
-
-              <div class="orderItem">
-
-                <span>
-                  ${escapeHtml(itemName)}
-                  × ${qty}
-                </span>
-
-                <strong>
-                  ₹${(
-                    price * qty
-                  ).toFixed(2)}
-                </strong>
-
-              </div>
-
-            `;
-
-          }
-        ).join("")
-      : `<div class="orderItem">
-          <span>No item details</span>
-        </div>`;
-
-
-  const subtotal =
-    Number(
-      order.subtotal ??
-      order.subTotal ??
-      order.total ??
-      0
-    );
-
-
-  const deliveryCharge =
-    Number(
-      order.deliveryCharge ||
-      0
-    );
-
-
-  const total =
-    Number(
-      order.total ??
-      subtotal + deliveryCharge
-    );
-
-
-  return `
-
-    <div class="orderCard">
-
-      <div class="orderHeader">
-
-        <div>
-
-          <div class="orderId">
-            Order #${escapeHtml(id)}
-          </div>
-
-          <div class="orderDate">
-            ${escapeHtml(date)}
-          </div>
-
-        </div>
-
-        <span
-          class="statusBadge status-${escapeHtml(status)}"
-        >
-          ${escapeHtml(status)}
-        </span>
-
-      </div>
-
-
-      <div class="orderDetails">
-
-        <div class="detailBox">
-
-          <div class="detailLabel">
-            Customer
-          </div>
-
-          <div class="detailValue">
-            ${escapeHtml(name)}
-          </div>
-
-        </div>
-
-
-        <div class="detailBox">
-
-          <div class="detailLabel">
-            Phone
-          </div>
-
-          <div class="detailValue">
-            ${escapeHtml(phone)}
-          </div>
-
-        </div>
-
-
-        <div class="detailBox">
-
-          <div class="detailLabel">
-            Address
-          </div>
-
-          <div class="detailValue">
-            ${escapeHtml(address)}
-          </div>
-
-        </div>
-
-
-        <div class="detailBox">
-
-          <div class="detailLabel">
-            Payment
-          </div>
-
-          <div class="detailValue">
-            ${escapeHtml(paymentMethod)}
-            ${
-              utr
-                ? `<br>UTR: ${escapeHtml(utr)}`
-                : ""
-            }
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="orderItems">
-
-        ${itemsHtml}
-
-      </div>
-
-
-      <div class="orderTotal">
-
-        Total:
-        ₹${total.toFixed(2)}
-
-      </div>
-
-
-      <div class="orderActions">
-
-        <select
-          class="statusSelect"
-          data-id="${escapeHtml(id)}"
-        >
-
-          <option
-            value="pending"
-            ${status === "pending" ? "selected" : ""}
-          >
-            Pending
-          </option>
-
-          <option
-            value="processing"
-            ${status === "processing" ? "selected" : ""}
-          >
-            Processing
-          </option>
-
-          <option
-            value="shipped"
-            ${status === "shipped" ? "selected" : ""}
-          >
-            Shipped
-          </option>
-
-          <option
-            value="delivered"
-            ${status === "delivered" ? "selected" : ""}
-          >
-            Delivered
-          </option>
-
-          <option
-            value="cancelled"
-            ${status === "cancelled" ? "selected" : ""}
-          >
-            Cancelled
-          </option>
-
-        </select>
-
-
-        <button
-          type="button"
-          class="blueBtn invoiceBtn"
-          data-id="${escapeHtml(id)}"
-        >
-          🧾 Invoice
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* UPDATE ORDER STATUS */
-
-async function updateOrderStatus(
-  orderId,
-  newStatus
-){
-
-  try{
-
-    await update(
-      ref(
-        db,
-        `orders/${orderId}`
-      ),
-      {
-        status:newStatus,
-        updatedAt:Date.now()
-      }
-    );
-
-
-    if(ordersCache[orderId]){
-
-      ordersCache[orderId].status =
-        newStatus;
-
-      ordersCache[orderId].updatedAt =
-        Date.now();
-
-    }
-
-
-    renderOrders();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "Unable to update order status."
-    );
-
-    renderOrders();
-
-  }
-
-}
-
-
-/* SETTINGS */
-
-let settingsCache = {};
-
-let newBannerImage = null;
-
-let newQrImage = null;
-
-
-/* LOAD SETTINGS */
-
-async function loadSettings(){
-
-  try{
-
-    const snapshot =
-      await get(
-        ref(db,"settings")
-      );
-
-    settingsCache =
-      snapshot.exists()
-        ? snapshot.val()
-        : {};
-
-
-    document.getElementById(
-      "shopName"
-    ).value =
-      settingsCache.shopName ||
-      "Gaon Organic";
-
-
-    document.getElementById(
-      "whatsappNumber"
-    ).value =
-      settingsCache.whatsapp ||
-      "916395856099";
-
-
-    document.getElementById(
-      "upiId"
-    ).value =
-      settingsCache.upiId ||
-      "";
-
-
-    document.getElementById(
-      "deliveryCharge"
-    ).value =
-      settingsCache.deliveryCharge ||
-      0;
-
-
-    showExistingPreview(
-      "bannerPreview",
-      settingsCache.banner
-    );
-
-
-    showExistingPreview(
-      "qrPreview",
-      settingsCache.qr
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-
-}
-
-
-/* EXISTING IMAGE PREVIEW */
-
-function showExistingPreview(
-  elementId,
-  image
-){
-
-  const element =
-    document.getElementById(
-      elementId
-    );
-
-  if(image){
-
-    element.innerHTML =
-      `<img
-        src="${escapeHtml(image)}"
-        alt="Preview"
-      >`;
-
-    element.classList.remove(
-      "hidden"
-    );
-
-  }else{
-
-    element.innerHTML = "";
-
-    element.classList.add(
-      "hidden"
-    );
-
-  }
-
-}
-
-
-/* BANNER IMAGE */
-
-document
-  .getElementById("bannerImage")
-  .addEventListener(
-    "change",
-    async event => {
-
-      const file =
-        event.target.files[0];
-
-      if(!file){
-
-        newBannerImage = null;
-
-        return;
-
-      }
-
-      try{
-
-        newBannerImage =
-          await compressImage(
-            file,
-            1400,
-            0.75
-          );
-
-        showExistingPreview(
-          "bannerPreview",
-          newBannerImage
-        );
-
-      }catch(error){
-
-        console.error(error);
-
-        alert(
-          "Unable to process banner image."
-        );
-
-      }
-
-    }
-  );
-
-
-/* QR IMAGE */
-
-document
-  .getElementById("qrImage")
-  .addEventListener(
-    "change",
-    async event => {
-
-      const file =
-        event.target.files[0];
-
-      if(!file){
-
-        newQrImage = null;
-
-        return;
-
-      }
-
-      try{
-
-        newQrImage =
-          await compressImage(
-            file,
-            800,
-            0.8
-          );
-
-        showExistingPreview(
-          "qrPreview",
-          newQrImage
-        );
-
-      }catch(error){
-
-        console.error(error);
-
-        alert(
-          "Unable to process QR image."
-        );
-
-      }
-
-    }
-  );
-
-
-/* SAVE SETTINGS */
-
-document
-  .getElementById("settingsForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      const message =
-        document.getElementById(
-          "settingsMessage"
-        );
-
-
-      const shopName =
-        document.getElementById(
-          "shopName"
-        ).value.trim();
-
-
-      const whatsapp =
-        document.getElementById(
-          "whatsappNumber"
-        ).value.trim();
-
-
-      const upiId =
-        document.getElementById(
-          "upiId"
-        ).value.trim();
-
-
-      const deliveryCharge =
-        Number(
-          document.getElementById(
-            "deliveryCharge"
-          ).value || 0
-        );
-
-
-      try{
-
-        const settings = {
-
-          shopName:
-            shopName ||
-            "Gaon Organic",
-
-          whatsapp,
-
-          upiId,
-
-          deliveryCharge,
-
-          banner:
-            newBannerImage ||
-            settingsCache.banner ||
-            "",
-
-          qr:
-            newQrImage ||
-            settingsCache.qr ||
-            "",
-
-          updatedAt:
-            Date.now()
-
-        };
-
-
-        await set(
-          ref(db,"settings"),
-          settings
-        );
-
-
-        settingsCache =
-          settings;
-
-
-        newBannerImage = null;
-
-        newQrImage = null;
-
-
-        document.getElementById(
-          "bannerImage"
-        ).value = "";
-
-
-        document.getElementById(
-          "qrImage"
-        ).value = "";
-
-
-        showMessage(
-          message,
-          "Settings saved successfully.",
-          "success"
-        );
-
-
-      }catch(error){
-
-        console.error(error);
-
-        showMessage(
-          message,
-          "Unable to save settings.",
-          "error"
-        );
-
-      }
-
-    }
-  );
-
-
-/* INVOICE */
-
-function openInvoice(orderId){
-
-  const order =
-    ordersCache[orderId];
-
-  if(!order){
-
-    return;
-
-  }
-
-
-  const customer =
-    order.customer ||
-    order.user ||
-    {};
-
-
-  const name =
-    order.name ||
-    customer.name ||
-    order.customerName ||
-    "Customer";
-
-
-  const phone =
-    order.phone ||
-    customer.phone ||
-    order.customerPhone ||
-    "-";
-
-
-  const address =
-    order.address ||
-    customer.address ||
-    order.deliveryAddress ||
-    "-";
-
-
-  const paymentMethod =
-    order.paymentMethod ||
-    order.payment ||
-    "COD";
-
-
-  const utr =
-    order.utr ||
-    order.transactionId ||
-    "";
-
-
-  const items =
-    Array.isArray(order.items)
-      ? order.items
-      : Object.values(
-          order.items || {}
-        );
-
-
-  const dateValue =
-    order.createdAt ||
-    order.timestamp ||
-    Date.now();
-
-
-  const date =
-    new Date(
-      dateValue
-    ).toLocaleString(
-      "en-IN",
-      {
-        dateStyle:"medium",
-        timeStyle:"short"
-      }
-    );
-
-
-  let subtotal = 0;
-
-
-  const itemRows =
-    items.map(
-      item => {
-
-        const name =
-          item.name ||
-          item.productName ||
-          "Product";
-
-        const qty =
-          Number(
-            item.quantity ||
-            item.qty ||
-            1
-          );
-
-        const price =
-          Number(
-            item.price ||
-            0
-          );
-
-        const amount =
-          price * qty;
-
-
-        subtotal +=
-          amount;
-
-
-        return `
-
-          <tr>
-
-            <td>
-              ${escapeHtml(name)}
-            </td>
-
-            <td>
-              ${qty}
-            </td>
-
-            <td>
-              ₹${price.toFixed(2)}
-            </td>
-
-            <td>
-              ₹${amount.toFixed(2)}
-            </td>
-
-          </tr>
-
-        `;
-
-      }
-    ).join("");
-
-
-  const deliveryCharge =
-    Number(
-      order.deliveryCharge ??
-      settingsCache.deliveryCharge ??
-      0
-    );
-
-
-  const total =
-    Number(
-      order.total ??
-      subtotal + deliveryCharge
-    );
-
-
-  const shopName =
-    settingsCache.shopName ||
-    "Gaon Organic";
-
-
-  const invoiceHtml = `
-
-    <div class="invoice">
-
-      <div class="invoiceShop">
-
-        <h2>
-          🌿 ${escapeHtml(shopName)}
-        </h2>
-
-        <p>
-          Organic & Pahadi Products
-        </p>
-
-      </div>
-
-
-      <div class="invoiceMeta">
-
-        <div>
-
-          <strong>
-            Invoice:
-          </strong>
-
-          #${escapeHtml(orderId)}
-
-          <br>
-
-          <strong>
-            Date:
-          </strong>
-
-          ${escapeHtml(date)}
-
-        </div>
-
-
-        <div>
-
-          <strong>
-            Customer:
-          </strong>
-
-          ${escapeHtml(name)}
-
-          <br>
-
-          <strong>
-            Phone:
-          </strong>
-
-          ${escapeHtml(phone)}
-
-          <br>
-
-          <strong>
-            Address:
-          </strong>
-
-          ${escapeHtml(address)}
-
-        </div>
-
-      </div>
-
-
-      <table class="invoiceTable">
+    <!-- ORDERS TABLE -->
+
+    <div
+      style="
+        width:100%;
+        overflow-x:auto;
+      ">
+
+      <table
+        style="
+          width:100%;
+          min-width:800px;
+          border-collapse:collapse;
+        ">
 
         <thead>
 
           <tr>
 
-            <th>
-              Product
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Order ID
             </th>
 
-            <th>
-              Qty
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Customer
             </th>
 
-            <th>
-              Price
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Phone
             </th>
 
-            <th>
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
               Amount
+            </th>
+
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Date
+            </th>
+
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Status
+            </th>
+
+            <th
+              style="
+                padding:10px;
+                border-bottom:1px solid #ddd;
+                text-align:left;
+              ">
+              Action
             </th>
 
           </tr>
@@ -2460,170 +1017,2955 @@ function openInvoice(orderId){
         </thead>
 
 
-        <tbody>
+        <tbody id="ordersTableBody">
 
-          ${
-            itemRows ||
-            `
-            <tr>
-              <td colspan="4">
-                No item details
-              </td>
-            </tr>
-            `
-          }
+          <tr>
+
+            <td
+              colspan="7"
+              style="
+                padding:20px;
+                text-align:center;
+              ">
+              Loading orders...
+            </td>
+
+          </tr>
 
         </tbody>
 
       </table>
 
+    </div>
 
-      <div style="text-align:right;line-height:1.8">
+  </div>
 
-        <div>
-          Subtotal:
-          ₹${subtotal.toFixed(2)}
-        </div>
-
-        <div>
-          Delivery:
-          ₹${deliveryCharge.toFixed(2)}
-        </div>
-
-        <div class="invoiceTotal">
-          Total:
-          ₹${total.toFixed(2)}
-        </div>
-
-      </div>
+</section>
 
 
-      <div style="margin-top:20px">
+<!-- PART 4 END -->
+      <!-- PART 5 START -->
 
-        <strong>
-          Payment:
-        </strong>
+<!-- SETTINGS SECTION -->
+<section id="settingsSection" class="adminSection" style="display:none;">
 
-        ${escapeHtml(paymentMethod)}
+  <h2>Shop Settings</h2>
 
-        ${
-          utr
-            ? `<br>
-               <strong>UTR:</strong>
-               ${escapeHtml(utr)}`
-            : ""
-        }
+  <div class="card">
 
-      </div>
+    <label>Shop Name</label>
+    <input type="text" id="shopName" placeholder="Gaon Organic">
+
+    <label>WhatsApp Number</label>
+    <input type="text" id="whatsappNumber" placeholder="91XXXXXXXXXX">
+
+    <label>UPI ID</label>
+    <input type="text" id="upiId" placeholder="example@upi">
+
+    <label>Delivery Charge</label>
+    <input type="number" id="deliveryCharge" placeholder="0">
+
+    <label>Banner Image URL</label>
+    <input type="text" id="bannerImage" placeholder="Banner image URL">
+
+    <label>QR Code Image URL</label>
+    <input type="text" id="qrImage" placeholder="QR code image URL">
+
+    <button id="saveSettingsBtn" class="primaryBtn">
+      Save Settings
+    </button>
+
+    <p id="settingsMessage" class="message"></p>
+
+  </div>
 
 
-      <div
-        style="
-          text-align:center;
-          margin-top:25px;
-          color:#777;
-          font-size:13px;
-        "
-      >
-        Thank you for shopping with
-        ${escapeHtml(shopName)} 🌿
-      </div>
+  <!-- CHANGE ADMIN PASSWORD -->
+
+  <h2>Change Admin Password</h2>
+
+  <div class="card">
+
+    <label>Current Password</label>
+
+    <div class="passwordRow">
+      <input type="password" id="currentPassword"
+        placeholder="Current password">
+
+      <button type="button"
+        onclick="togglePassword('currentPassword', this)">
+        Show
+      </button>
+    </div>
+
+
+    <label>New Password</label>
+
+    <div class="passwordRow">
+      <input type="password" id="newPassword"
+        placeholder="New password">
+
+      <button type="button"
+        onclick="togglePassword('newPassword', this)">
+        Show
+      </button>
+    </div>
+
+
+    <label>Confirm New Password</label>
+
+    <div class="passwordRow">
+      <input type="password" id="confirmPassword"
+        placeholder="Confirm new password">
+
+      <button type="button"
+        onclick="togglePassword('confirmPassword', this)">
+        Show
+      </button>
+    </div>
+
+
+    <button id="changePasswordBtn" class="primaryBtn">
+      Change Password
+    </button>
+
+    <p id="changePasswordMessage" class="message"></p>
+
+  </div>
+
+</section>
+
+
+<!-- CLOSE ADMIN CONTENT -->
+
+</main>
+</div>
+</div>
+
+
+<!-- INVOICE MODAL -->
+
+<div id="invoiceModal" class="modal" style="display:none;">
+
+  <div class="modalBox">
+
+    <button id="closeInvoiceBtn" class="closeBtn">
+      ✕
+    </button>
+
+    <div id="invoiceContent">
+
+      <h2>Gaon Organic</h2>
+
+      <p>Order Invoice</p>
+
+      <hr>
+
+      <div id="invoiceDetails"></div>
 
     </div>
+
+    <div class="invoiceActions">
+
+      <button id="printInvoiceBtn" class="primaryBtn">
+        Print Invoice
+      </button>
+
+      <button id="closeInvoiceBtn2" class="secondaryBtn">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- PART 5 END -->
+  <!-- PART 6 START -->
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  push,
+  update,
+  remove,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+
+// ===============================
+// FIREBASE CONFIG
+// ===============================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB80iUQA_t2IhXBgZjPI2kPQKqc1xSF8",
+  authDomain: "gaon-organic.firebaseapp.com",
+  databaseURL: "https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "gaon-organic",
+  storageBucket: "gaon-organic.firebasestorage.app",
+  messagingSenderId: "29340220943",
+  appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a"
+};
+
+
+// ===============================
+// INITIALIZE FIREBASE
+// ===============================
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getDatabase(app);
+
+
+// ===============================
+// ADMIN SETTINGS
+// ===============================
+
+const ADMIN_EMAIL = "organicpahadi123@gmail.com";
+
+const MASTER_PASSWORD = "Gaon@1234";
+
+let currentUser = null;
+
+let editingProductId = null;
+
+let existingProductImage = "";
+
+let allOrders = {};
+
+
+// ===============================
+// PART 6 END
+// ===============================
+  // ===============================
+// PART 7 START
+// ===============================
+
+
+// ===============================
+// DOM ELEMENTS
+// ===============================
+
+const loginPage = document.getElementById("loginPage");
+const adminPage = document.getElementById("adminPage");
+
+const adminEmail = document.getElementById("adminEmail");
+const adminPassword = document.getElementById("adminPassword");
+
+const loginBtn = document.getElementById("loginBtn");
+const loginMessage = document.getElementById("loginMessage");
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+const forgotPasswordBtn =
+  document.getElementById("forgotPasswordBtn");
+
+const resetBox =
+  document.getElementById("resetBox");
+
+
+// ===============================
+// PASSWORD SHOW / HIDE
+// ===============================
+
+window.togglePassword = function(inputId, button) {
+
+  const input = document.getElementById(inputId);
+
+  if (!input) return;
+
+  if (input.type === "password") {
+
+    input.type = "text";
+
+    button.textContent = "Hide";
+
+  } else {
+
+    input.type = "password";
+
+    button.textContent = "Show";
+
+  }
+
+};
+
+
+// ===============================
+// LOGIN
+// ===============================
+
+if (loginBtn) {
+
+  loginBtn.addEventListener("click", async () => {
+
+    const email =
+      adminEmail.value.trim();
+
+    const password =
+      adminPassword.value;
+
+    loginMessage.textContent = "";
+    loginMessage.className = "message";
+
+    if (email !== ADMIN_EMAIL) {
+
+      loginMessage.textContent =
+        "Wrong Admin Email";
+
+      loginMessage.className =
+        "message error";
+
+      return;
+    }
+
+    if (!password) {
+
+      loginMessage.textContent =
+        "Wrong Admin Password";
+
+      loginMessage.className =
+        "message error";
+
+      return;
+    }
+
+    loginBtn.disabled = true;
+
+    loginBtn.textContent = "Logging in...";
+
+    try {
+
+      await signInWithEmailAndPassword(
+        auth,
+        ADMIN_EMAIL,
+        password
+      );
+
+      loginMessage.textContent =
+        "Login successful";
+
+      loginMessage.className =
+        "message success";
+
+    } catch (error) {
+
+      console.error(error);
+
+      loginMessage.textContent =
+        "Wrong Admin Password";
+
+      loginMessage.className =
+        "message error";
+
+    }
+
+    loginBtn.disabled = false;
+
+    loginBtn.textContent = "Login";
+
+  });
+
+}
+
+
+// ===============================
+// FORGOT PASSWORD BOX
+// ===============================
+
+if (forgotPasswordBtn) {
+
+  forgotPasswordBtn.addEventListener("click", () => {
+
+    if (!resetBox) return;
+
+    if (
+      resetBox.style.display === "none" ||
+      resetBox.style.display === ""
+    ) {
+
+      resetBox.style.display = "block";
+
+      forgotPasswordBtn.textContent =
+        "Close Forgot Password";
+
+    } else {
+
+      resetBox.style.display = "none";
+
+      forgotPasswordBtn.textContent =
+        "Forgot Admin Password?";
+
+    }
+
+  });
+
+}
+
+
+// ===============================
+// AUTH STATE
+// ===============================
+
+onAuthStateChanged(auth, (user) => {
+
+  currentUser = user;
+
+  if (user && user.email === ADMIN_EMAIL) {
+
+    loginPage.style.display = "none";
+
+    adminPage.style.display = "block";
+
+  } else {
+
+    loginPage.style.display = "block";
+
+    adminPage.style.display = "none";
+
+  }
+
+});
+
+
+// ===============================
+// LOGOUT
+// ===============================
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener("click", async () => {
+
+    try {
+
+      await signOut(auth);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  });
+
+}
+
+
+// ===============================
+// PART 7 END
+// ===============================
+  // ===============================
+// PART 8 START
+// ===============================
+
+
+// ===============================
+// RESET PASSWORD ELEMENTS
+// ===============================
+
+const masterPassword =
+  document.getElementById("masterPassword");
+
+const resetNewPassword =
+  document.getElementById("resetNewPassword");
+
+const resetConfirmPassword =
+  document.getElementById("resetConfirmPassword");
+
+const verifyMasterBtn =
+  document.getElementById("verifyMasterBtn");
+
+const resetMessage =
+  document.getElementById("resetMessage");
+
+
+// ===============================
+// MASTER PASSWORD SHOW / HIDE
+// ===============================
+
+if (masterPassword) {
+
+  const masterShowBtn =
+    masterPassword.parentElement
+      ?.querySelector("button");
+
+  if (masterShowBtn) {
+
+    masterShowBtn.addEventListener("click", () => {
+
+      if (masterPassword.type === "password") {
+
+        masterPassword.type = "text";
+
+        masterShowBtn.textContent = "Hide";
+
+      } else {
+
+        masterPassword.type = "password";
+
+        masterShowBtn.textContent = "Show";
+
+      }
+
+    });
+
+  }
+
+}
+
+
+// ===============================
+// RESET NEW PASSWORD SHOW / HIDE
+// ===============================
+
+if (resetNewPassword) {
+
+  const newShowBtn =
+    resetNewPassword.parentElement
+      ?.querySelector("button");
+
+  if (newShowBtn) {
+
+    newShowBtn.addEventListener("click", () => {
+
+      if (resetNewPassword.type === "password") {
+
+        resetNewPassword.type = "text";
+
+        newShowBtn.textContent = "Hide";
+
+      } else {
+
+        resetNewPassword.type = "password";
+
+        newShowBtn.textContent = "Show";
+
+      }
+
+    });
+
+  }
+
+}
+
+
+// ===============================
+// RESET CONFIRM PASSWORD SHOW / HIDE
+// ===============================
+
+if (resetConfirmPassword) {
+
+  const confirmShowBtn =
+    resetConfirmPassword.parentElement
+      ?.querySelector("button");
+
+  if (confirmShowBtn) {
+
+    confirmShowBtn.addEventListener("click", () => {
+
+      if (resetConfirmPassword.type === "password") {
+
+        resetConfirmPassword.type = "text";
+
+        confirmShowBtn.textContent = "Hide";
+
+      } else {
+
+        resetConfirmPassword.type = "password";
+
+        confirmShowBtn.textContent = "Show";
+
+      }
+
+    });
+
+  }
+
+}
+
+
+// ===============================
+// MASTER PASSWORD VERIFICATION
+// ===============================
+
+if (verifyMasterBtn) {
+
+  verifyMasterBtn.addEventListener("click", async () => {
+
+    resetMessage.textContent = "";
+    resetMessage.className = "message";
+
+    const master =
+      masterPassword.value.trim();
+
+    const newPassword =
+      resetNewPassword.value;
+
+    const confirmPassword =
+      resetConfirmPassword.value;
+
+
+    // MASTER PASSWORD CHECK
+
+    if (master !== MASTER_PASSWORD) {
+
+      resetMessage.textContent =
+        "Wrong Master Password";
+
+      resetMessage.className =
+        "message error";
+
+      return;
+    }
+
+
+    // NEW PASSWORD CHECK
+
+    if (!newPassword || newPassword.length < 6) {
+
+      resetMessage.textContent =
+        "New password must be at least 6 characters";
+
+      resetMessage.className =
+        "message error";
+
+      return;
+    }
+
+
+    // CONFIRM PASSWORD CHECK
+
+    if (newPassword !== confirmPassword) {
+
+      resetMessage.textContent =
+        "Passwords do not match";
+
+      resetMessage.className =
+        "message error";
+
+      return;
+    }
+
+
+    verifyMasterBtn.disabled = true;
+
+    verifyMasterBtn.textContent =
+      "Sending Reset Link...";
+
+
+    try {
+
+      /*
+       Firebase client-side security does not allow
+       an unauthenticated page to directly change
+       another user's password.
+
+       Therefore the verified Master Password
+       triggers Firebase's official password-reset
+       email.
+      */
+
+      await sendPasswordResetEmail(
+        auth,
+        ADMIN_EMAIL
+      );
+
+
+      resetMessage.textContent =
+        "Master verified. Password reset link has been sent to your admin email.";
+
+      resetMessage.className =
+        "message success";
+
+
+      /*
+       The password typed above is NOT directly
+       applied here.
+
+       Open the Firebase reset email and set the
+       new password there.
+      */
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      resetMessage.textContent =
+        "Unable to send reset link. Please try again.";
+
+      resetMessage.className =
+        "message error";
+
+    }
+
+
+    verifyMasterBtn.disabled = false;
+
+    verifyMasterBtn.textContent =
+      "Verify Master Password";
+
+  });
+
+}
+
+
+// ===============================
+// PART 8 END
+// ===============================
+  // ===============================
+// PART 9 START
+// ===============================
+
+
+// ===============================
+// PRODUCT ELEMENTS
+// ===============================
+
+const productId =
+  document.getElementById("productId");
+
+const productName =
+  document.getElementById("productName");
+
+const productPrice =
+  document.getElementById("productPrice");
+
+const productStock =
+  document.getElementById("productStock");
+
+const productCategory =
+  document.getElementById("productCategory");
+
+const productDescription =
+  document.getElementById("productDescription");
+
+const productImage =
+  document.getElementById("productImage");
+
+const productSaveBtn =
+  document.getElementById("productSaveBtn");
+
+const productCancelBtn =
+  document.getElementById("productCancelBtn");
+
+const productsTableBody =
+  document.getElementById("productsTableBody");
+
+
+// ===============================
+// PRODUCT IMAGE HELPER
+// ===============================
+
+async function prepareProductImage(file) {
+
+  if (!file) return "";
+
+  return new Promise((resolve) => {
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      resolve(reader.result);
+
+    };
+
+    reader.onerror = () => {
+
+      resolve("");
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+// ===============================
+// SAVE PRODUCT
+// ===============================
+
+if (productSaveBtn) {
+
+  productSaveBtn.addEventListener("click", async () => {
+
+    const name =
+      productName.value.trim();
+
+    const price =
+      productPrice.value.trim();
+
+    const stock =
+      productStock.value.trim();
+
+    const category =
+      productCategory.value.trim();
+
+    const description =
+      productDescription.value.trim();
+
+
+    // VALIDATION
+
+    if (!name) {
+
+      alert("Please enter product name");
+
+      return;
+
+    }
+
+    if (!price) {
+
+      alert("Please enter product price");
+
+      return;
+
+    }
+
+    if (!stock) {
+
+      alert("Please enter product stock");
+
+      return;
+
+    }
+
+
+    productSaveBtn.disabled = true;
+
+    productSaveBtn.textContent =
+      editingProductId
+        ? "Updating..."
+        : "Saving...";
+
+
+    try {
+
+      let imageData =
+        existingProductImage || "";
+
+
+      // NEW IMAGE
+
+      if (
+        productImage &&
+        productImage.files &&
+        productImage.files[0]
+      ) {
+
+        imageData =
+          await prepareProductImage(
+            productImage.files[0]
+          );
+
+      }
+
+
+      const productData = {
+
+        name: name,
+
+        price: Number(price),
+
+        stock: Number(stock),
+
+        category: category,
+
+        description: description,
+
+        image: imageData,
+
+        updatedAt: Date.now()
+
+      };
+
+
+      // UPDATE EXISTING PRODUCT
+
+      if (editingProductId) {
+
+        await update(
+          ref(
+            db,
+            "products/" + editingProductId
+          ),
+          productData
+        );
+
+      }
+
+
+      // ADD NEW PRODUCT
+
+      else {
+
+        const newProductRef =
+          push(ref(db, "products"));
+
+        productData.createdAt =
+          Date.now();
+
+        await set(
+          newProductRef,
+          productData
+        );
+
+      }
+
+
+      alert(
+        editingProductId
+          ? "Product updated successfully"
+          : "Product added successfully"
+      );
+
+
+      resetProductForm();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Product save failed. Please try again."
+      );
+
+    }
+
+
+    productSaveBtn.disabled = false;
+
+    productSaveBtn.textContent =
+      "Save Product";
+
+  });
+
+}
+
+
+// ===============================
+// LOAD PRODUCTS
+// ===============================
+
+function loadProducts() {
+
+  const productsRef =
+    ref(db, "products");
+
+
+  onValue(
+    productsRef,
+    (snapshot) => {
+
+      const data =
+        snapshot.val() || {};
+
+
+      if (!productsTableBody) return;
+
+
+      productsTableBody.innerHTML = "";
+
+
+      const productEntries =
+        Object.entries(data);
+
+
+      if (productEntries.length === 0) {
+
+        productsTableBody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              No products found
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+
+      productEntries.forEach(
+        ([id, product]) => {
+
+          const row =
+            document.createElement("tr");
+
+
+          row.innerHTML = `
+
+            <td>
+              ${
+                product.image
+                  ? `<img
+                      src="${product.image}"
+                      style="
+                        width:55px;
+                        height:55px;
+                        object-fit:cover;
+                        border-radius:8px;
+                      "
+                    >`
+                  : "No Image"
+              }
+            </td>
+
+            <td>
+              ${product.name || "-"}
+            </td>
+
+            <td>
+              ₹${product.price || 0}
+            </td>
+
+            <td>
+              ${product.stock ?? 0}
+            </td>
+
+            <td>
+              ${product.category || "-"}
+            </td>
+
+            <td>
+              ${product.description || "-"}
+            </td>
+
+            <td>
+
+              <button
+                class="editProductBtn"
+                data-id="${id}">
+                Edit
+              </button>
+
+              <button
+                class="deleteProductBtn"
+                data-id="${id}">
+                Delete
+              </button>
+
+            </td>
+
+          `;
+
+
+          productsTableBody.appendChild(row);
+
+        }
+      );
+
+    },
+    (error) => {
+
+      console.error(
+        "Products load error:",
+        error
+      );
+
+    }
+  );
+
+}
+
+
+// ===============================
+// INITIAL PRODUCT LOAD
+// ===============================
+
+loadProducts();
+
+
+// ===============================
+// PART 9 END
+// ===============================
+  // ===============================
+// PART 10 START
+// ===============================
+
+
+// ===============================
+// EDIT PRODUCT
+// ===============================
+
+if (productsTableBody) {
+
+  productsTableBody.addEventListener(
+    "click",
+    async (event) => {
+
+      const editBtn =
+        event.target.closest(
+          ".editProductBtn"
+        );
+
+      const deleteBtn =
+        event.target.closest(
+          ".deleteProductBtn"
+        );
+
+
+      // =========================
+      // EDIT
+      // =========================
+
+      if (editBtn) {
+
+        const id =
+          editBtn.dataset.id;
+
+        if (!id) return;
+
+
+        try {
+
+          const snapshot =
+            await get(
+              ref(
+                db,
+                "products/" + id
+              )
+            );
+
+
+          if (!snapshot.exists()) {
+
+            alert("Product not found");
+
+            return;
+
+          }
+
+
+          const product =
+            snapshot.val();
+
+
+          editingProductId = id;
+
+          existingProductImage =
+            product.image || "";
+
+
+          productId.value = id;
+
+          productName.value =
+            product.name || "";
+
+          productPrice.value =
+            product.price ?? "";
+
+          productStock.value =
+            product.stock ?? "";
+
+          productCategory.value =
+            product.category || "";
+
+          productDescription.value =
+            product.description || "";
+
+
+          /*
+           File input cannot be filled
+           programmatically for security reasons.
+          */
+
+          if (productImage) {
+
+            productImage.value = "";
+
+          }
+
+
+          productSaveBtn.textContent =
+            "Update Product";
+
+
+          if (productCancelBtn) {
+
+            productCancelBtn.style.display =
+              "inline-block";
+
+          }
+
+
+          // Scroll to product form
+
+          productName.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            "Unable to load product"
+          );
+
+        }
+
+      }
+
+
+      // =========================
+      // DELETE
+      // =========================
+
+      if (deleteBtn) {
+
+        const id =
+          deleteBtn.dataset.id;
+
+        if (!id) return;
+
+
+        const confirmDelete =
+          confirm(
+            "Are you sure you want to delete this product?"
+          );
+
+
+        if (!confirmDelete) return;
+
+
+        try {
+
+          await remove(
+            ref(
+              db,
+              "products/" + id
+            )
+          );
+
+
+          alert(
+            "Product deleted successfully"
+          );
+
+
+          if (
+            editingProductId === id
+          ) {
+
+            resetProductForm();
+
+          }
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            "Product delete failed"
+          );
+
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+// ===============================
+// RESET PRODUCT FORM
+// ===============================
+
+function resetProductForm() {
+
+  editingProductId = null;
+
+  existingProductImage = "";
+
+
+  if (productId) {
+
+    productId.value = "";
+
+  }
+
+
+  if (productName) {
+
+    productName.value = "";
+
+  }
+
+
+  if (productPrice) {
+
+    productPrice.value = "";
+
+  }
+
+
+  if (productStock) {
+
+    productStock.value = "";
+
+  }
+
+
+  if (productCategory) {
+
+    productCategory.value = "";
+
+  }
+
+
+  if (productDescription) {
+
+    productDescription.value = "";
+
+  }
+
+
+  if (productImage) {
+
+    productImage.value = "";
+
+  }
+
+
+  if (productSaveBtn) {
+
+    productSaveBtn.textContent =
+      "Save Product";
+
+  }
+
+
+  if (productCancelBtn) {
+
+    productCancelBtn.style.display =
+      "none";
+
+  }
+
+}
+
+
+// ===============================
+// CANCEL EDIT
+// ===============================
+
+if (productCancelBtn) {
+
+  productCancelBtn.addEventListener(
+    "click",
+    () => {
+
+      resetProductForm();
+
+    }
+  );
+
+}
+
+
+// ===============================
+// PART 10 END
+// ===============================
+  // ===============================
+// PART 11 START
+// ===============================
+
+
+// ===============================
+// ORDER ELEMENTS
+// ===============================
+
+const ordersTableBody =
+  document.getElementById("ordersTableBody");
+
+const orderFilter =
+  document.getElementById("orderFilter");
+
+
+// ===============================
+// LOAD ORDERS
+// ===============================
+
+function loadOrders() {
+
+  const ordersRef =
+    ref(db, "orders");
+
+
+  onValue(
+    ordersRef,
+    (snapshot) => {
+
+      allOrders =
+        snapshot.val() || {};
+
+
+      renderOrders();
+
+    },
+    (error) => {
+
+      console.error(
+        "Orders load error:",
+        error
+      );
+
+    }
+  );
+
+}
+
+
+// ===============================
+// RENDER ORDERS
+// ===============================
+
+function renderOrders() {
+
+  if (!ordersTableBody) return;
+
+
+  ordersTableBody.innerHTML = "";
+
+
+  const filter =
+    orderFilter
+      ? orderFilter.value
+      : "all";
+
+
+  const entries =
+    Object.entries(allOrders);
+
+
+  const filteredOrders =
+    entries.filter(
+      ([id, order]) => {
+
+        if (filter === "all") {
+
+          return true;
+
+        }
+
+        return (
+          String(
+            order.status || "pending"
+          ).toLowerCase() ===
+          filter.toLowerCase()
+        );
+
+      }
+    );
+
+
+  if (filteredOrders.length === 0) {
+
+    ordersTableBody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          No orders found
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  filteredOrders.forEach(
+    ([id, order]) => {
+
+      const row =
+        document.createElement("tr");
+
+
+      const status =
+        order.status || "pending";
+
+
+      const customerName =
+        order.customerName ||
+        order.name ||
+        "-";
+
+
+      const customerPhone =
+        order.phone ||
+        order.customerPhone ||
+        "-";
+
+
+      const total =
+        order.total ??
+        order.grandTotal ??
+        0;
+
+
+      const date =
+        order.createdAt
+          ? new Date(
+              order.createdAt
+            ).toLocaleString()
+          : "-";
+
+
+      row.innerHTML = `
+
+        <td>
+          ${id}
+        </td>
+
+        <td>
+          ${customerName}
+        </td>
+
+        <td>
+          ${customerPhone}
+        </td>
+
+        <td>
+          ₹${total}
+        </td>
+
+        <td>
+          ${date}
+        </td>
+
+        <td>
+
+          <select
+            class="orderStatusSelect"
+            data-id="${id}">
+
+            <option value="pending"
+              ${status === "pending" ? "selected" : ""}>
+              Pending
+            </option>
+
+            <option value="processing"
+              ${status === "processing" ? "selected" : ""}>
+              Processing
+            </option>
+
+            <option value="shipped"
+              ${status === "shipped" ? "selected" : ""}>
+              Shipped
+            </option>
+
+            <option value="delivered"
+              ${status === "delivered" ? "selected" : ""}>
+              Delivered
+            </option>
+
+            <option value="cancelled"
+              ${status === "cancelled" ? "selected" : ""}>
+              Cancelled
+            </option>
+
+          </select>
+
+        </td>
+
+        <td>
+
+          <button
+            class="viewOrderBtn"
+            data-id="${id}">
+            View
+          </button>
+
+          <button
+            class="invoiceOrderBtn"
+            data-id="${id}">
+            Invoice
+          </button>
+
+        </td>
+
+      `;
+
+
+      ordersTableBody.appendChild(row);
+
+    }
+  );
+
+}
+
+
+// ===============================
+// ORDER FILTER
+// ===============================
+
+if (orderFilter) {
+
+  orderFilter.addEventListener(
+    "change",
+    () => {
+
+      renderOrders();
+
+    }
+  );
+
+}
+
+
+// ===============================
+// ORDER STATUS UPDATE
+// ===============================
+
+if (ordersTableBody) {
+
+  ordersTableBody.addEventListener(
+    "change",
+    async (event) => {
+
+      const select =
+        event.target.closest(
+          ".orderStatusSelect"
+        );
+
+
+      if (!select) return;
+
+
+      const orderId =
+        select.dataset.id;
+
+
+      const newStatus =
+        select.value;
+
+
+      if (!orderId) return;
+
+
+      try {
+
+        await update(
+          ref(
+            db,
+            "orders/" + orderId
+          ),
+          {
+            status: newStatus,
+            updatedAt: Date.now()
+          }
+        );
+
+
+        alert(
+          "Order status updated"
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Unable to update order status"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+// ===============================
+// VIEW ORDER
+// ===============================
+
+if (ordersTableBody) {
+
+  ordersTableBody.addEventListener(
+    "click",
+    (event) => {
+
+      const viewBtn =
+        event.target.closest(
+          ".viewOrderBtn"
+        );
+
+
+      if (!viewBtn) return;
+
+
+      const orderId =
+        viewBtn.dataset.id;
+
+
+      const order =
+        allOrders[orderId];
+
+
+      if (!order) {
+
+        alert("Order not found");
+
+        return;
+
+      }
+
+
+      const items =
+        order.items ||
+        order.products ||
+        [];
+
+
+      let itemText = "";
+
+
+      if (Array.isArray(items)) {
+
+        itemText =
+          items.map(
+            (item) =>
+              `${item.name || "Product"} × ${item.quantity || 1}`
+          ).join("\n");
+
+      } else {
+
+        itemText =
+          Object.values(items)
+            .map(
+              (item) =>
+                `${item.name || "Product"} × ${item.quantity || 1}`
+            )
+            .join("\n");
+
+      }
+
+
+      alert(
+`Order ID: ${orderId}
+
+Customer: ${
+  order.customerName ||
+  order.name ||
+  "-"
+}
+
+Phone: ${
+  order.phone ||
+  order.customerPhone ||
+  "-"
+}
+
+Address: ${
+  order.address ||
+  "-"
+}
+
+Status: ${
+  order.status ||
+  "pending"
+}
+
+Items:
+${itemText || "-"}
+
+Total: ₹${
+  order.total ??
+  order.grandTotal ??
+  0
+}`
+      );
+
+    }
+  );
+
+}
+
+
+// ===============================
+// INITIAL ORDER LOAD
+// ===============================
+
+loadOrders();
+
+
+// ===============================
+// PART 11 END
+// ===============================
+  // ===============================
+// PART 12 START
+// ===============================
+
+
+// ===============================
+// INVOICE ELEMENTS
+// ===============================
+
+const invoiceModal =
+  document.getElementById("invoiceModal");
+
+const invoiceDetails =
+  document.getElementById("invoiceDetails");
+
+const closeInvoiceBtn =
+  document.getElementById("closeInvoiceBtn");
+
+const closeInvoiceBtn2 =
+  document.getElementById("closeInvoiceBtn2");
+
+const printInvoiceBtn =
+  document.getElementById("printInvoiceBtn");
+
+
+// Current invoice order
+let currentInvoiceOrder = null;
+let currentInvoiceId = "";
+
+
+// ===============================
+// OPEN INVOICE
+// ===============================
+
+function openInvoice(orderId) {
+
+  const order =
+    allOrders[orderId];
+
+
+  if (!order) {
+
+    alert("Order not found");
+
+    return;
+
+  }
+
+
+  currentInvoiceOrder = order;
+
+  currentInvoiceId = orderId;
+
+
+  const customerName =
+    order.customerName ||
+    order.name ||
+    "-";
+
+
+  const phone =
+    order.phone ||
+    order.customerPhone ||
+    "-";
+
+
+  const address =
+    order.address ||
+    "-";
+
+
+  const status =
+    order.status ||
+    "pending";
+
+
+  const total =
+    order.total ??
+    order.grandTotal ??
+    0;
+
+
+  const date =
+    order.createdAt
+      ? new Date(
+          order.createdAt
+        ).toLocaleString()
+      : "-";
+
+
+  const items =
+    order.items ||
+    order.products ||
+    [];
+
+
+  let itemsHtml = "";
+
+
+  if (Array.isArray(items)) {
+
+    items.forEach((item) => {
+
+      itemsHtml += `
+
+        <tr>
+
+          <td>
+            ${item.name || "Product"}
+          </td>
+
+          <td>
+            ${item.quantity || 1}
+          </td>
+
+          <td>
+            ₹${item.price || 0}
+          </td>
+
+          <td>
+            ₹${
+              (Number(item.price) || 0) *
+              (Number(item.quantity) || 1)
+            }
+          </td>
+
+        </tr>
+
+      `;
+
+    });
+
+  } else {
+
+    Object.values(items)
+      .forEach((item) => {
+
+        itemsHtml += `
+
+          <tr>
+
+            <td>
+              ${item.name || "Product"}
+            </td>
+
+            <td>
+              ${item.quantity || 1}
+            </td>
+
+            <td>
+              ₹${item.price || 0}
+            </td>
+
+            <td>
+              ₹${
+                (Number(item.price) || 0) *
+                (Number(item.quantity) || 1)
+              }
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+  }
+
+
+  if (!itemsHtml) {
+
+    itemsHtml = `
+
+      <tr>
+
+        <td colspan="4">
+          No item details available
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+  invoiceDetails.innerHTML = `
+
+    <div class="invoiceHeader">
+
+      <h2>Gaon Organic</h2>
+
+      <p>Order Invoice</p>
+
+    </div>
+
+
+    <hr>
+
+
+    <div class="invoiceCustomer">
+
+      <p>
+        <strong>Order ID:</strong>
+        ${orderId}
+      </p>
+
+      <p>
+        <strong>Date:</strong>
+        ${date}
+      </p>
+
+      <p>
+        <strong>Customer:</strong>
+        ${customerName}
+      </p>
+
+      <p>
+        <strong>Phone:</strong>
+        ${phone}
+      </p>
+
+      <p>
+        <strong>Address:</strong>
+        ${address}
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        ${status}
+      </p>
+
+    </div>
+
+
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        margin-top:15px;
+      ">
+
+      <thead>
+
+        <tr>
+
+          <th
+            style="
+              border:1px solid #ccc;
+              padding:8px;
+            ">
+            Product
+          </th>
+
+          <th
+            style="
+              border:1px solid #ccc;
+              padding:8px;
+            ">
+            Qty
+          </th>
+
+          <th
+            style="
+              border:1px solid #ccc;
+              padding:8px;
+            ">
+            Price
+          </th>
+
+          <th
+            style="
+              border:1px solid #ccc;
+              padding:8px;
+            ">
+            Amount
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${itemsHtml}
+
+      </tbody>
+
+
+    </table>
+
+
+    <div
+      style="
+        text-align:right;
+        margin-top:20px;
+        font-size:18px;
+      ">
+
+      <strong>
+        Total: ₹${total}
+      </strong>
+
+    </div>
+
+
+    <hr>
+
+    <p style="text-align:center;">
+      Thank you for shopping with Gaon Organic
+    </p>
 
   `;
 
 
-  document.getElementById(
-    "invoiceContent"
-  ).innerHTML =
-    invoiceHtml;
+  if (invoiceModal) {
+
+    invoiceModal.style.display =
+      "flex";
+
+  }
+
+}
 
 
-  document.getElementById(
-    "invoiceModal"
-  ).classList.add(
-    "show"
+// ===============================
+// INVOICE BUTTON
+// ===============================
+
+if (ordersTableBody) {
+
+  ordersTableBody.addEventListener(
+    "click",
+    (event) => {
+
+      const invoiceBtn =
+        event.target.closest(
+          ".invoiceOrderBtn"
+        );
+
+
+      if (!invoiceBtn) return;
+
+
+      const orderId =
+        invoiceBtn.dataset.id;
+
+
+      openInvoice(orderId);
+
+    }
   );
 
 }
 
 
-/* CLOSE INVOICE */
+// ===============================
+// CLOSE INVOICE
+// ===============================
 
-function closeInvoice(){
+function closeInvoice() {
 
-  document.getElementById(
-    "invoiceModal"
-  ).classList.remove(
-    "show"
+  if (invoiceModal) {
+
+    invoiceModal.style.display =
+      "none";
+
+  }
+
+  currentInvoiceOrder = null;
+
+  currentInvoiceId = "";
+
+}
+
+
+if (closeInvoiceBtn) {
+
+  closeInvoiceBtn.addEventListener(
+    "click",
+    closeInvoice
   );
 
 }
 
 
-document.getElementById(
-  "closeInvoiceBtn"
-).addEventListener(
-  "click",
-  closeInvoice
-);
+if (closeInvoiceBtn2) {
+
+  closeInvoiceBtn2.addEventListener(
+    "click",
+    closeInvoice
+  );
+
+}
 
 
-document.getElementById(
-  "closeInvoiceBtn2"
-).addEventListener(
-  "click",
-  closeInvoice
-);
+// ===============================
+// CLOSE ON BACKDROP CLICK
+// ===============================
+
+if (invoiceModal) {
+
+  invoiceModal.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target === invoiceModal
+      ) {
+
+        closeInvoice();
+
+      }
+
+    }
+  );
+
+}
 
 
-/* CLICK OUTSIDE MODAL */
+// ===============================
+// PRINT INVOICE
+// ===============================
 
-document.getElementById(
-  "invoiceModal"
-).addEventListener(
-  "click",
-  event => {
+if (printInvoiceBtn) {
 
-    if(
-      event.target.id ===
-      "invoiceModal"
-    ){
+  printInvoiceBtn.addEventListener(
+    "click",
+    () => {
 
-      closeInvoice();
+      const invoiceContent =
+        document.getElementById(
+          "invoiceContent"
+        );
+
+
+      if (!invoiceContent) return;
+
+
+      const printWindow =
+        window.open(
+          "",
+          "_blank",
+          "width=800,height=900"
+        );
+
+
+      if (!printWindow) {
+
+        alert(
+          "Please allow pop-ups to print invoice."
+        );
+
+        return;
+
+      }
+
+
+      printWindow.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+          <title>
+            Gaon Organic Invoice
+          </title>
+
+          <style>
+
+            body {
+              font-family: Arial, sans-serif;
+              padding: 30px;
+              color: #222;
+            }
+
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+
+            th,
+            td {
+              border: 1px solid #ccc;
+              padding: 8px;
+              text-align: left;
+            }
+
+            h2 {
+              margin-bottom: 5px;
+            }
+
+          </style>
+
+        </head>
+
+        <body>
+
+          ${invoiceContent.innerHTML}
+
+        </body>
+
+        </html>
+
+      `);
+
+
+      printWindow.document.close();
+
+
+      printWindow.focus();
+
+
+      setTimeout(() => {
+
+        printWindow.print();
+
+      }, 500);
+
+    }
+  );
+
+}
+
+
+// ===============================
+// PART 12 END
+// ===============================
+  // ===============================
+// PART 13 START
+// ===============================
+
+
+// ===============================
+// SETTINGS ELEMENTS
+// ===============================
+
+const shopName =
+  document.getElementById("shopName");
+
+const whatsappNumber =
+  document.getElementById("whatsappNumber");
+
+const upiId =
+  document.getElementById("upiId");
+
+const deliveryCharge =
+  document.getElementById("deliveryCharge");
+
+const bannerImage =
+  document.getElementById("bannerImage");
+
+const qrImage =
+  document.getElementById("qrImage");
+
+const saveSettingsBtn =
+  document.getElementById("saveSettingsBtn");
+
+const settingsMessage =
+  document.getElementById("settingsMessage");
+
+
+// ===============================
+// LOAD SETTINGS
+// ===============================
+
+async function loadSettings() {
+
+  try {
+
+    const snapshot =
+      await get(
+        ref(db, "settings")
+      );
+
+
+    if (!snapshot.exists()) {
+
+      return;
 
     }
 
+
+    const settings =
+      snapshot.val();
+
+
+    if (shopName) {
+
+      shopName.value =
+        settings.shopName || "";
+
+    }
+
+
+    if (whatsappNumber) {
+
+      whatsappNumber.value =
+        settings.whatsappNumber || "";
+
+    }
+
+
+    if (upiId) {
+
+      upiId.value =
+        settings.upiId || "";
+
+    }
+
+
+    if (deliveryCharge) {
+
+      deliveryCharge.value =
+        settings.deliveryCharge ?? "";
+
+    }
+
+
+    if (bannerImage) {
+
+      bannerImage.value =
+        settings.bannerImage || "";
+
+    }
+
+
+    if (qrImage) {
+
+      qrImage.value =
+        settings.qrImage || "";
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Settings load error:",
+      error
+    );
+
   }
+
+}
+
+
+// ===============================
+// SAVE SETTINGS
+// ===============================
+
+if (saveSettingsBtn) {
+
+  saveSettingsBtn.addEventListener(
+    "click",
+    async () => {
+
+      saveSettingsBtn.disabled = true;
+
+      saveSettingsBtn.textContent =
+        "Saving...";
+
+
+      if (settingsMessage) {
+
+        settingsMessage.textContent =
+          "";
+
+        settingsMessage.className =
+          "message";
+
+      }
+
+
+      const settingsData = {
+
+        shopName:
+          shopName
+            ? shopName.value.trim()
+            : "",
+
+        whatsappNumber:
+          whatsappNumber
+            ? whatsappNumber.value.trim()
+            : "",
+
+        upiId:
+          upiId
+            ? upiId.value.trim()
+            : "",
+
+        deliveryCharge:
+          deliveryCharge
+            ? Number(
+                deliveryCharge.value || 0
+              )
+            : 0,
+
+        bannerImage:
+          bannerImage
+            ? bannerImage.value.trim()
+            : "",
+
+        qrImage:
+          qrImage
+            ? qrImage.value.trim()
+            : "",
+
+        updatedAt:
+          Date.now()
+
+      };
+
+
+      try {
+
+        await set(
+          ref(db, "settings"),
+          settingsData
+        );
+
+
+        if (settingsMessage) {
+
+          settingsMessage.textContent =
+            "Settings saved successfully";
+
+          settingsMessage.className =
+            "message success";
+
+        }
+
+
+      } catch (error) {
+
+        console.error(error);
+
+
+        if (settingsMessage) {
+
+          settingsMessage.textContent =
+            "Settings save failed";
+
+          settingsMessage.className =
+            "message error";
+
+        }
+
+      }
+
+
+      saveSettingsBtn.disabled = false;
+
+      saveSettingsBtn.textContent =
+        "Save Settings";
+
+    }
+  );
+
+}
+
+
+// ===============================
+// INITIAL SETTINGS LOAD
+// ===============================
+
+loadSettings();
+
+
+// ===============================
+// PART 13 END
+// ===============================
+  // ===============================
+// PART 14 START
+// ===============================
+
+
+// ===============================
+// ADMIN SECTION NAVIGATION
+// ===============================
+
+const adminSections = [
+  document.getElementById("dashboardSection"),
+  document.getElementById("productsSection"),
+  document.getElementById("ordersSection"),
+  document.getElementById("settingsSection")
+];
+
+
+function showAdminSection(sectionId) {
+
+  adminSections.forEach((section) => {
+
+    if (!section) return;
+
+    section.style.display =
+      section.id === sectionId
+        ? "block"
+        : "none";
+
+  });
+
+}
+
+
+// ===============================
+// SIDEBAR BUTTONS
+// ===============================
+
+const dashboardBtn =
+  document.getElementById("dashboardBtn");
+
+const productsBtn =
+  document.getElementById("productsBtn");
+
+const ordersBtn =
+  document.getElementById("ordersBtn");
+
+const settingsBtn =
+  document.getElementById("settingsBtn");
+
+
+if (dashboardBtn) {
+
+  dashboardBtn.addEventListener(
+    "click",
+    () => {
+
+      showAdminSection(
+        "dashboardSection"
+      );
+
+    }
+  );
+
+}
+
+
+if (productsBtn) {
+
+  productsBtn.addEventListener(
+    "click",
+    () => {
+
+      showAdminSection(
+        "productsSection"
+      );
+
+    }
+  );
+
+}
+
+
+if (ordersBtn) {
+
+  ordersBtn.addEventListener(
+    "click",
+    () => {
+
+      showAdminSection(
+        "ordersSection"
+      );
+
+    }
+  );
+
+}
+
+
+if (settingsBtn) {
+
+  settingsBtn.addEventListener(
+    "click",
+    () => {
+
+      showAdminSection(
+        "settingsSection"
+      );
+
+    }
+  );
+
+}
+
+
+// ===============================
+// CHANGE ADMIN PASSWORD
+// ===============================
+
+const currentPassword =
+  document.getElementById("currentPassword");
+
+const newPassword =
+  document.getElementById("newPassword");
+
+const confirmPassword =
+  document.getElementById("confirmPassword");
+
+const changePasswordBtn =
+  document.getElementById(
+    "changePasswordBtn"
+  );
+
+const changePasswordMessage =
+  document.getElementById(
+    "changePasswordMessage"
+  );
+
+
+if (changePasswordBtn) {
+
+  changePasswordBtn.addEventListener(
+    "click",
+    async () => {
+
+      if (!currentUser) {
+
+        changePasswordMessage.textContent =
+          "Please login again.";
+
+        changePasswordMessage.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      const current =
+        currentPassword.value;
+
+      const newPass =
+        newPassword.value;
+
+      const confirmPass =
+        confirmPassword.value;
+
+
+      if (!current) {
+
+        changePasswordMessage.textContent =
+          "Please enter current password.";
+
+        changePasswordMessage.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      if (!newPass || newPass.length < 6) {
+
+        changePasswordMessage.textContent =
+          "New password must be at least 6 characters.";
+
+        changePasswordMessage.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      if (newPass !== confirmPass) {
+
+        changePasswordMessage.textContent =
+          "Passwords do not match.";
+
+        changePasswordMessage.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      if (current === newPass) {
+
+        changePasswordMessage.textContent =
+          "New password must be different.";
+
+        changePasswordMessage.className =
+          "message error";
+
+        return;
+
+      }
+
+
+      changePasswordBtn.disabled = true;
+
+      changePasswordBtn.textContent =
+        "Changing...";
+
+
+      try {
+
+        const credential =
+          EmailAuthProvider.credential(
+            ADMIN_EMAIL,
+            current
+          );
+
+
+        await reauthenticateWithCredential(
+          currentUser,
+          credential
+        );
+
+
+        await updatePassword(
+          currentUser,
+          newPass
+        );
+
+
+        changePasswordMessage.textContent =
+          "Password changed successfully.";
+
+        changePasswordMessage.className =
+          "message success";
+
+
+        currentPassword.value = "";
+
+        newPassword.value = "";
+
+        confirmPassword.value = "";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+
+        if (
+          error.code ===
+          "auth/wrong-password" ||
+          error.code ===
+          "auth/invalid-credential"
+        ) {
+
+          changePasswordMessage.textContent =
+            "Current password is incorrect.";
+
+        } else {
+
+          changePasswordMessage.textContent =
+            "Password change failed. Please try again.";
+
+        }
+
+
+        changePasswordMessage.className =
+          "message error";
+
+      }
+
+
+      changePasswordBtn.disabled = false;
+
+      changePasswordBtn.textContent =
+        "Change Password";
+
+    }
+  );
+
+}
+
+
+// ===============================
+// DEFAULT SECTION
+// ===============================
+
+showAdminSection(
+  "dashboardSection"
 );
 
 
-/* PRINT / SAVE PDF */
+// ===============================
+// PART 14 END
+// ===============================
+  // ===============================
+// PART 15 START
+// ===============================
 
-document.getElementById(
-  "printInvoiceBtn"
-).addEventListener(
-  "click",
-  () => {
 
-    window.print();
+// ===============================
+// FINAL ADMIN INITIALIZATION
+// ===============================
 
-  }
+console.log(
+  "Gaon Organic Admin Panel Loaded"
 );
 
 
-/* ESC KEY */
+// ===============================
+// LOGIN PAGE INITIAL STATE
+// ===============================
+
+if (!currentUser) {
+
+  if (loginPage) {
+
+    loginPage.style.display = "block";
+
+  }
+
+  if (adminPage) {
+
+    adminPage.style.display = "none";
+
+  }
+
+}
+
+
+// ===============================
+// PREVENT ENTER KEY FORM ISSUES
+// ===============================
 
 document.addEventListener(
   "keydown",
-  event => {
+  (event) => {
 
-    if(
-      event.key === "Escape"
-    ){
+    if (
+      event.key === "Enter" &&
+      event.target.tagName === "INPUT"
+    ) {
 
-      closeInvoice();
+      /*
+       Do not submit anything automatically.
+       Buttons handle their own actions.
+      */
 
     }
 
@@ -2631,16 +3973,29 @@ document.addEventListener(
 );
 
 
-/* INITIAL SETTINGS */
+// ===============================
+// FINAL ERROR CHECK
+// ===============================
 
-newBannerImage = null;
+window.addEventListener(
+  "error",
+  (event) => {
 
-newQrImage = null;
+    console.error(
+      "Admin Panel Error:",
+      event.error || event.message
+    );
+
+  }
+);
 
 
-/* END */
+// ===============================
+// PART 15 END
+// ===============================
 
 </script>
 
 </body>
+
 </html>
