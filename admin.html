@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin V6 - FINAL COMPRESS FIX</title>
+<title>Admin V6 - PASSWORD CHANGE</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial} body{background:#f1f8e9;padding:10px}
 header{background:#2e7d32;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;border-radius:10px;position:sticky;top:0;z-index:100}
@@ -19,10 +19,12 @@ img.prev{width:100%;max-height:200px;display:none;border-radius:8px;margin:8px 0
 .edit-box{border:1px solid #2e7d32;padding:10px;border-radius:10px;margin-top:8px;background:#f1f8e9}
 .status-btn{padding:8px 12px;border:none;border-radius:20px;font-weight:700;margin:3px;cursor:pointer;font-size:12px}
 .seed-box{background:#fff3cd!important;border:2px dashed #ff9800!important}
+#passModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:999}
+#passBox{background:white;padding:18px;border-radius:14px;width:92%;max-width:360px}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, update, remove, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, remove, push, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 const cfg={
   apiKey: "AIzaSyB80IKiUQA_t2IhXBgZjPI2kPQKqc1xSF8",
   authDomain: "gaon-organic.firebaseapp.com",
@@ -33,7 +35,7 @@ const cfg={
   appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a"
 };
 const app=initializeApp(cfg); const db=getDatabase(app);
-window.db=db; window.ref=ref; window.onV=onValue; window.up=update; window.rm=remove; window.pu=push; window.st=set;
+window.db=db; window.ref=ref; window.onV=onValue; window.up=update; window.rm=remove; window.pu=push; window.st=set; window.gt=get;
 </script>
 </head>
 <body>
@@ -43,76 +45,107 @@ window.db=db; window.ref=ref; window.onV=onValue; window.up=update; window.rm=re
 <h3>🔒 Admin Login</h3>
 <div style="position:relative">
 <input id="pwd" type="password" placeholder="Password" style="padding-right:45px">
-<span onclick="togglePass()" id="eyeBtn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:20px">👁️</span>
+<span onclick="togglePass('pwd','eyeBtn')" id="eyeBtn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:20px">👁️</span>
 </div>
 <button class="btn" onclick="doLogin()">Login</button>
+<button onclick="openPassModal()" style="background:none;border:none;color:#1565c0;margin-top:12px;font-weight:700;cursor:pointer">🔑 Password Change / Reset?</button>
+<p id="passInfo" style="font-size:11px;color:gray;margin-top:8px">Default: Gaon123</p>
 </div>
 
+<!-- PASSWORD CHANGE MODAL -->
+<div id="passModal"><div id="passBox">
+<h3 style="text-align:center">🔑 Password Change</h3>
+<input id="oldPass" type="password" placeholder="Old Password ya Master Code">
+<input id="newPass" type="password" placeholder="New Password (min 4)">
+<input id="newPass2" type="password" placeholder="Confirm New Password">
+<button class="btn" onclick="changePassword()">✅ Change Karo</button>
+<p style="font-size:11px;color:gray;margin-top:10px;text-align:center">Bhul gaye? Old me <b>GAONRESET</b> likho to reset ho jayega Gaon123 pe</p>
+<button onclick="closePassModal()" style="width:100%;background:none;border:none;color:red;margin-top:10px;font-weight:700">❌ Close</button>
+</div></div>
+
 <div id="main">
-<div class="box seed-box"><h3>🌿 15 Pahadi Products - 1 Click Add</h3><p style="font-size:12px;color:#666">Ek baar dabao, 15 products auto add ho jayenge</p><button class="btn" style="background:#ff9800" onclick="seed15()">1-Click me 15 Products Add Karo</button></div>
-<div class="tabs"><button class="active" onclick="tab('orders',this)">📦 Orders</button><button onclick="tab('prods',this)">📋 Products Edit</button><button onclick="tab('add',this)">➕ New Add Item</button><button onclick="tab('banner',this)">🏷️ Banner</button><button onclick="tab('pay',this)">💳 QR</button><button onclick="tab('wa',this)">📱 WhatsApp No</button></div>
+<div class="box seed-box"><h3>🌿 15 Pahadi Products - 1 Click Add</h3><button class="btn" style="background:#ff9800" onclick="seed15()">1-Click me 15 Products Add Karo</button></div>
+<div class="tabs"><button class="active" onclick="tab('orders',this)">📦 Orders</button><button onclick="tab('prods',this)">📋 Products Edit</button><button onclick="tab('add',this)">➕ New Add</button><button onclick="tab('banner',this)">🏷️ Banner</button><button onclick="tab('pay',this)">💳 QR</button><button onclick="tab('wa',this)">📱 WA No</button><button onclick="tab('pass',this)">🔑 Password</button></div>
 
 <div id="orders" class="sec"><div class="box"><h3>📦 Live Orders</h3><div id="orderList">Loading...</div></div></div>
 <div id="prods" class="sec" style="display:none"><div class="box"><h3>📋 Products Edit</h3><div id="prodList">Loading...</div></div></div>
-<div id="add" class="sec" style="display:none"><div class="box"><h3>➕ New Item Add</h3><input id="pName" placeholder="Product Name"><input id="pPrice" type="number" placeholder="Price"><input id="pStock" type="number" placeholder="Stock"><input type="file" id="pFile" accept="image/*" class="file-input"><img id="pPrev" class="prev"><p style="font-size:11px;color:green">Auto compress ho jayega, bada photo bhi chalega ✅</p><button class="btn" onclick="addProd()">✅ Add Karo</button></div></div>
+<div id="add" class="sec" style="display:none"><div class="box"><h3>➕ New Item Add</h3><input id="pName" placeholder="Product Name"><input id="pPrice" type="number" placeholder="Price"><input id="pStock" type="number" placeholder="Stock"><input type="file" id="pFile" accept="image/*" class="file-input"><img id="pPrev" class="prev"><button class="btn" onclick="addProd()">✅ Add Karo</button></div></div>
 <div id="banner" class="sec" style="display:none"><div class="box"><h3>🏷️ Banner Change</h3><input type="file" id="bFile" accept="image/*" class="file-input"><img id="bPrev" class="prev"><button class="btn" onclick="saveBanner()">Save Banner</button></div></div>
-<div id="pay" class="sec" style="display:none"><div class="box"><h3>💳 QR Payment</h3><input type="file" id="qFile" accept="image/*" class="file-input"><img id="qPrev" class="prev"><input id="upi" placeholder="UPI ID jaise - gaonwala@upi"><button class="btn" onclick="savePay()">Save QR</button></div></div>
+<div id="pay" class="sec" style="display:none"><div class="box"><h3>💳 QR Payment</h3><input type="file" id="qFile" accept="image/*" class="file-input"><img id="qPrev" class="prev"><input id="upi" placeholder="UPI ID"><button class="btn" onclick="savePay()">Save QR</button></div></div>
 <div id="wa" class="sec" style="display:none"><div class="box"><h3>📱 WhatsApp Number</h3><input id="waNo" placeholder="916395856099"><button class="btn" onclick="saveWA()">Save WhatsApp No</button></div></div>
+<div id="pass" class="sec" style="display:none"><div class="box"><h3>🔑 Admin Password Change</h3><input id="oldPass2" type="password" placeholder="Old Password"><input id="newPassA" type="password" placeholder="New Password"><input id="newPassA2" type="password" placeholder="Confirm New Password"><button class="btn" onclick="changePassword2()">✅ Update Password</button><p style="font-size:11px;color:gray;margin-top:8px">Master Reset Code: GAONRESET</p></div></div>
 </div>
 
 <script>
 let pImg="", bImg="", qImg="", allProds={};
+let currentAdminPass = "Gaon123"; // default
+
+// Firebase se password load karo
+setTimeout(async ()=>{
+  try{
+    let snap = await window.gt(window.ref(window.db,'settings/adminPass'));
+    if(snap.exists()){ currentAdminPass = snap.val(); document.getElementById('passInfo').innerText = "Password set hai ✅"; }
+  }catch(e){}
+},500);
+
 function tab(id,el){document.querySelectorAll('.sec').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function toB(f,cb){let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let canvas=document.createElement('canvas');let max=600;let w=img.width,h=img.height;if(w>max||h>max){if(w>h){h*=max/w;w=max;}else{w*=max/h;h=max;}}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);cb(canvas.toDataURL('image/jpeg',0.5));};img.src=e.target.result;};r.readAsDataURL(f);}
+function togglePass(inputId,eyeId){let p=document.getElementById(inputId);let e=document.getElementById(eyeId);if(p.type==='password'){p.type='text';if(e)e.innerText='🙈';}else{p.type='password';if(e)e.innerText='👁️';}}
 
-// YEHI MAIN FIX HAI - IMAGE COMPRESS
-function toB(f,cb){
-  let r=new FileReader();
-  r.onload=e=>{
-    let img=new Image();
-    img.onload=()=>{
-      let canvas=document.createElement('canvas');
-      let max=600; // 600px max - QR ke liye kaafi
-      let w=img.width, h=img.height;
-      if(w>max || h>max){
-        if(w>h){ h*=max/w; w=max; }
-        else { w*=max/h; h=max; }
-      }
-      canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      cb(canvas.toDataURL('image/jpeg',0.5)); // 50% quality - size 10x kam
-    };
-    img.src=e.target.result;
-  };
-  r.readAsDataURL(f);
+function doLogin(){
+  let entered = document.getElementById('pwd').value;
+  if(entered===currentAdminPass){localStorage.setItem('gaon_admin','yes');document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';loadAll();}
+  else alert('Galat Password! Default Gaon123 hai, ya GAONRESET se reset karo');
 }
-
-function togglePass(){let p=document.getElementById('pwd');let e=document.getElementById('eyeBtn');if(p.type==='password'){p.type='text';e.innerText='🙈';}else{p.type='password';e.innerText='👁️';}}
-function doLogin(){if(document.getElementById('pwd').value==='Gaon123'){localStorage.setItem('gaon_admin','yes');document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';loadAll();}else alert('Galat Password!');}
 function logout(){localStorage.removeItem('gaon_admin');location.reload();}
 if(localStorage.getItem('gaon_admin')==='yes'){document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';setTimeout(loadAll,500);}
+
+function openPassModal(){document.getElementById('passModal').style.display='flex';}
+function closePassModal(){document.getElementById('passModal').style.display='none';}
+
+async function changePassword(){
+  let oldP = document.getElementById('oldPass').value;
+  let newP = document.getElementById('newPass').value;
+  let newP2 = document.getElementById('newPass2').value;
+  if(oldP==="GAONRESET"){ // master reset
+    await window.st(window.ref(window.db,'settings/adminPass'),"Gaon123");
+    currentAdminPass="Gaon123"; alert("✅ Reset Ho Gaya - Naya Pass: Gaon123"); closePassModal(); return;
+  }
+  if(oldP!==currentAdminPass){alert("Old Password galat hai!");return;}
+  if(newP.length<4){alert("New pass min 4 char");return;}
+  if(newP!==newP2){alert("Confirm match nahi ho raha");return;}
+  await window.st(window.ref(window.db,'settings/adminPass'),newP);
+  currentAdminPass=newP; alert("✅ Password Change Ho Gaya: "+newP); closePassModal();
+}
+async function changePassword2(){ // andar wale tab se
+  let oldP = document.getElementById('oldPass2').value;
+  let newP = document.getElementById('newPassA').value;
+  let newP2 = document.getElementById('newPassA2').value;
+  if(oldP==="GAONRESET"){await window.st(window.ref(window.db,'settings/adminPass'),"Gaon123");currentAdminPass="Gaon123";alert("✅ Reset: Gaon123");return;}
+  if(oldP!==currentAdminPass){alert("Old galat");return;}
+  if(newP!==newP2){alert("Match nahi");return;}
+  await window.st(window.ref(window.db,'settings/adminPass'),newP);currentAdminPass=newP;alert("✅ Password Updated: "+newP);
+}
 
 document.getElementById('pFile').onchange=e=>{if(e.target.files[0])toB(e.target.files[0],r=>{pImg=r;document.getElementById('pPrev').src=r;document.getElementById('pPrev').style.display='block';})};
 document.getElementById('bFile').onchange=e=>{if(e.target.files[0])toB(e.target.files[0],r=>{bImg=r;document.getElementById('bPrev').src=r;document.getElementById('bPrev').style.display='block';})};
 document.getElementById('qFile').onchange=e=>{if(e.target.files[0])toB(e.target.files[0],r=>{qImg=r;document.getElementById('qPrev').src=r;document.getElementById('qPrev').style.display='block';})};
 
 function loadAll(){
-window.onV(window.ref(window.db,'products'),s=>{allProds=s.val()||{};let d=document.getElementById('prodList');if(!Object.keys(allProds).length){d.innerHTML='Koi product nahi - Niche 15 wala button dabao';return;}d.innerHTML=Object.entries(allProds).map(([k,v])=>`<div style="border:1px solid #ddd;border-radius:10px;padding:10px;margin:8px 0"><div style="display:flex;gap:10px"><img src="${v.img}" id="img_${k}" style="width:60px;height:60px;border-radius:8px"><div style="flex:1"><b>${v.name}</b><br>Rs.${v.price} | Stock ${v.stock}</div><button class="btn2" style="background:red" onclick="delP('${k}')">Delete</button></div><div class="edit-box"><input id="name_${k}" value="${v.name}"><div style="display:flex;gap:6px"><input id="price_${k}" type="number" value="${v.price}"><input id="stock_${k}" type="number" value="${v.stock}"></div><input type="file" id="file_${k}" accept="image/*" onchange="changePhoto('${k}')" class="file-input"><button class="btn" onclick="saveEdit('${k}')" style="background:#1565c0">💾 Save Edit</button></div></div>`).join('');});
-
-window.onV(window.ref(window.db,'orders'),s=>{let data=s.val();let div=document.getElementById('orderList');if(!data){div.innerHTML='Koi order nahi';return;}let arr=Object.entries(data).map(([k,v])=>({...v,_k:k})).reverse();div.innerHTML=arr.map(o=>`<div style="border:2px solid #2e7d32;padding:10px;border-radius:10px;margin:8px 0;background:#fffde7"><b>ID: ${o.id||o._k}</b> - <span style="background:#2e7d32;color:white;padding:2px 8px;border-radius:10px;font-size:12px">${o.status}</span><br>📱 ${o.mobile||''} | 💰 Rs.${o.total||0} | ${o.payment||''}<br><small>${o.items?o.items.map(i=>i.name+" x "+i.qty).join(', '):''}</small><br><div style="margin-top:8px"><button class="status-btn" style="background:#ff9800;color:white" onclick="updO('${o._k}','Confirmed')">✅ Confirm</button><button class="status-btn" style="background:#1565c0;color:white" onclick="updO('${o._k}','Out for Delivery')">🚚 Out</button><button class="status-btn" style="background:#2e7d32;color:white" onclick="updO('${o._k}','Delivered')">📦 Delivered</button><button class="status-btn" style="background:red;color:white" onclick="updO('${o._k}','Cancelled')">❌ Cancel</button></div></div>`).join('');});
-
+window.onV(window.ref(window.db,'products'),s=>{allProds=s.val()||{};let d=document.getElementById('prodList');if(!Object.keys(allProds).length){d.innerHTML='Koi product nahi';return;}d.innerHTML=Object.entries(allProds).map(([k,v])=>`<div style="border:1px solid #ddd;border-radius:10px;padding:10px;margin:8px 0"><div style="display:flex;gap:10px"><img src="${v.img}" id="img_${k}" style="width:60px;height:60px;border-radius:8px"><div style="flex:1"><b>${v.name}</b><br>Rs.${v.price} | Stock ${v.stock}</div><button class="btn2" style="background:red" onclick="delP('${k}')">Delete</button></div><div class="edit-box"><input id="name_${k}" value="${v.name}"><div style="display:flex;gap:6px"><input id="price_${k}" type="number" value="${v.price}"><input id="stock_${k}" type="number" value="${v.stock}"></div><input type="file" id="file_${k}" accept="image/*" onchange="changePhoto('${k}')" class="file-input"><button class="btn" onclick="saveEdit('${k}')" style="background:#1565c0">💾 Save Edit</button></div></div>`).join('');});
+window.onV(window.ref(window.db,'orders'),s=>{let data=s.val();let div=document.getElementById('orderList');if(!data){div.innerHTML='Koi order nahi';return;}let arr=Object.entries(data).map(([k,v])=>({...v,_k:k})).reverse();div.innerHTML=arr.map(o=>`<div style="border:2px solid #2e7d32;padding:10px;border-radius:10px;margin:8px 0;background:#fffde7"><b>ID: ${o.id||o._k}</b> - <span style="background:#2e7d32;color:white;padding:2px 8px;border-radius:10px;font-size:12px">${o.status}</span><br>📱 ${o.mobile||''} | 💰 Rs.${o.total||0}<br><small>${o.items?o.items.map(i=>i.name+" x "+i.qty).join(', '):''}</small><br><div style="margin-top:8px"><button class="status-btn" style="background:#ff9800" onclick="updO('${o._k}','Confirmed')">✅ Confirm</button><button class="status-btn" style="background:#1565c0" onclick="updO('${o._k}','Out for Delivery')">🚚 Out</button><button class="status-btn" style="background:#2e7d32" onclick="updO('${o._k}','Delivered')">📦 Delivered</button><button class="status-btn" style="background:red" onclick="updO('${o._k}','Cancelled')">❌ Cancel</button></div></div>`).join('');});
 window.onV(window.ref(window.db,'shopSettings'),s=>{let d=s.val();if(d&&d.wa)document.getElementById('waNo').value=d.wa;});
 }
-
 let tempEditImgs={};
 function changePhoto(k){let f=document.getElementById('file_'+k).files[0];if(!f)return;toB(f,r=>{tempEditImgs[k]=r;document.getElementById('img_'+k).src=r;});}
 function saveEdit(k){let n=document.getElementById('name_'+k).value;let p=document.getElementById('price_'+k).value;let s=document.getElementById('stock_'+k).value;let upData={name:n,price:parseInt(p),stock:parseInt(s)};if(tempEditImgs[k])upData.img=tempEditImgs[k];window.up(window.ref(window.db,'products/'+k),upData).then(()=>alert('✅ Save Ho Gaya'));}
 function addProd(){let n=document.getElementById('pName').value,pr=document.getElementById('pPrice').value,st=document.getElementById('pStock').value;if(!n||!pr||!pImg){alert('Name, Price, Photo dalo');return;}window.pu(window.ref(window.db,'products'),{name:n,price:parseInt(pr),stock:parseInt(st)||10,img:pImg,rating:'4.8'}).then(()=>{alert('✅ Add Ho Gaya');document.getElementById('pName').value=''; document.getElementById('pPrev').style.display='none'; pImg='';});}
 function delP(k){if(confirm('Delete?'))window.rm(window.ref(window.db,'products/'+k));}
-function saveBanner(){if(!bImg)return alert('Banner photo lo');window.st(window.ref(window.db,'settings/banner'),bImg).then(()=>alert('✅ Banner Save - Dukaan pe dikhega'));}
-function savePay(){if(!qImg)return alert('QR photo lo');let upiId=document.getElementById('upi').value||'gaonwala@upi';window.st(window.ref(window.db,'paymentSettings'),{qrImage:qImg,upiId:upiId}).then(()=>alert('✅ QR Save Ho Gaya - Refresh pe nahi hatega'));}
-function saveWA(){let wa=document.getElementById('waNo').value;window.st(window.ref(window.db,'shopSettings'),{wa:wa}).then(()=>alert('✅ WhatsApp No Save'));}
+function saveBanner(){if(!bImg)return alert('Banner photo lo');window.st(window.ref(window.db,'settings/banner'),bImg).then(()=>alert('✅ Banner Save'));}
+function savePay(){if(!qImg)return alert('QR photo lo');let upiId=document.getElementById('upi').value||'gaonwala@upi';window.st(window.ref(window.db,'paymentSettings'),{qrImage:qImg,upiId:upiId}).then(()=>alert('✅ QR Save'));}
+function saveWA(){let wa=document.getElementById('waNo').value;window.st(window.ref(window.db,'shopSettings'),{wa:wa}).then(()=>alert('✅ WA Save'));}
 function updO(k,s){window.up(window.ref(window.db,'orders/'+k),{status:s}).then(()=>alert(s));}
-function seed15(){if(!confirm('15 products add karu?'))return;let list=[{name:"Pahadi Desi Ghee 1KG",price:1450,stock:15,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500"},{name:"Pahadi Gahat Dal 1KG",price:280,stock:25,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Bhatt ki Dal 1KG",price:320,stock:20,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"},{name:"Mandua Atta 1KG",price:120,stock:30,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500"},{name:"Jhangora 1KG",price:180,stock:25,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Buransh Juice 750ML",price:350,stock:18,img:"https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500"},{name:"Pahadi Haldi 500G",price:220,stock:30,img:"https://images.unsplash.com/photo-1615484477778-ca3b779f6aac?w=500"},{name:"Wild Honey 500G",price:550,stock:12,img:"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500"},{name:"Pahadi Rajma 1KG",price:260,stock:22,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Kodo Millet 1KG",price:150,stock:28,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500"},{name:"Pahadi Achar 500G",price:200,stock:20,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"},{name:"Pahadi Namak 100G",price:99,stock:50,img:"https://images.unsplash.com/photo-1506368249639-73a05d4f6488?w=500"},{name:"Amla Pickle 500G",price:180,stock:25,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"},{name:"Jakhiya 100G",price:80,stock:40,img:"https://images.unsplash.com/photo-1506368083636-6defb67639a7?w=500"},{name:"Lingda Achar 500G",price:250,stock:15,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"}];list.forEach(p=>{window.pu(window.ref(window.db,'products'),p)});alert("✅ 15 Products add ho gaye! Dukaan refresh karo");}
+function seed15(){if(!confirm('15 products add karu?'))return;let list=[{name:"Pahadi Desi Ghee 1KG",price:1450,stock:15,img:"https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500"},{name:"Pahadi Gahat Dal 1KG",price:280,stock:25,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Bhatt ki Dal 1KG",price:320,stock:20,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"},{name:"Mandua Atta 1KG",price:120,stock:30,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500"},{name:"Jhangora 1KG",price:180,stock:25,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Buransh Juice 750ML",price:350,stock:18,img:"https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500"},{name:"Pahadi Haldi 500G",price:220,stock:30,img:"https://images.unsplash.com/photo-1615484477778-ca3b779f6aac?w=500"},{name:"Wild Honey 500G",price:550,stock:12,img:"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500"},{name:"Pahadi Rajma 1KG",price:260,stock:22,img:"https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=500"},{name:"Kodo Millet 1KG",price:150,stock:28,img:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500"},{name:"Pahadi Achar 500G",price:200,stock:20,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"},{name:"Pahadi Namak 100G",price:99,stock:50,img:"https://images.unsplash.com/photo-1506368249639-73a05d4f6488?w=500"},{name:"Amla Pickle 500G",price:180,stock:25,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"},{name:"Jakhiya 100G",price:80,stock:40,img:"https://images.unsplash.com/photo-1506368083636-6defb67639a7?w=500"},{name:"Lingda Achar 500G",price:250,stock:15,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"}];list.forEach(p=>{window.pu(window.ref(window.db,'products'),p)});alert("✅ 15 Products add ho gaye!");}
 </script>
 </body>
 </html>
