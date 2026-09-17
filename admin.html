@@ -1369,15 +1369,15 @@ if (loginBtn) {
 
       loginMessage.textContent =
         "Login successful";
-
-      loginMessage.className =
-        "message success";
       
-      loginPage.style.display = "none";
+     loginMessage.className =
+  "message success";
+
+loginPage.style.display = "none";
 adminPage.style.display = "block";
 
-    } catch (error) {
-
+} catch (error) {
+      
       console.error(error);
 
       loginMessage.textContent =
@@ -1395,7 +1395,10 @@ adminPage.style.display = "block";
   });
 
 }
-
+window.addEventListener("DOMContentLoaded", () => {
+  loginPage.style.display = "none";
+  adminPage.style.display = "block";
+});
 
 // ===============================
 // FORGOT PASSWORD BOX
