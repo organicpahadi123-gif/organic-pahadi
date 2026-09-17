@@ -14,11 +14,14 @@
 
 body{
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f6f8;
+  background:#f4f7f4;
   color:#222;
 }
 
-button,input,textarea,select{
+button,
+input,
+select,
+textarea{
   font:inherit;
 }
 
@@ -30,478 +33,687 @@ button{
   display:none!important;
 }
 
-header{
-  background:#176b35;
-  color:white;
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-
-header h1{
-  font-size:21px;
-}
-
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.container{
-  max-width:1250px;
-  margin:auto;
-  padding:20px;
-}
-
 /* LOGIN */
 
-.login-box{
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#e8f5e9,#f7fff7);
+}
+
+.loginBox{
+  width:100%;
   max-width:420px;
-  margin:80px auto;
-  background:white;
-  padding:30px;
-  border-radius:16px;
-  box-shadow:0 5px 25px rgba(0,0,0,.1);
+  background:#fff;
+  padding:30px 24px;
+  border-radius:18px;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
 }
 
-.login-box h2{
+.logoTitle{
   text-align:center;
-  margin-bottom:8px;
-  color:#176b35;
+  color:#2e7d32;
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:5px;
 }
 
-.login-box p{
+.logoSub{
   text-align:center;
   color:#666;
-  margin-bottom:22px;
+  margin-bottom:25px;
 }
 
-input,textarea,select{
-  width:100%;
-  padding:11px 12px;
-  border:1px solid #ccc;
-  border-radius:8px;
-  outline:none;
-  background:white;
+.formGroup{
+  margin-bottom:16px;
 }
 
-input:focus,textarea:focus,select:focus{
-  border-color:#176b35;
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
-label{
+.formGroup label{
   display:block;
-  font-weight:bold;
-  margin-bottom:6px;
+  font-weight:600;
+  margin-bottom:7px;
 }
 
-.form-group{
-  margin-bottom:14px;
+.formGroup input,
+.formGroup select,
+.formGroup textarea{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  outline:none;
+  background:#fff;
 }
 
-.btn{
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus{
+  border-color:#43a047;
+  box-shadow:0 0 0 3px rgba(67,160,71,.1);
+}
+
+.passwordWrap{
+  position:relative;
+}
+
+.passwordWrap input{
+  padding-right:75px;
+}
+
+.togglePassword{
+  position:absolute;
+  right:8px;
+  top:7px;
   border:0;
-  padding:10px 15px;
-  border-radius:8px;
-  font-weight:bold;
+  background:#f0f0f0;
+  padding:6px 9px;
+  border-radius:7px;
+  font-size:12px;
 }
 
-.btn-primary{
-  background:#176b35;
-  color:white;
+.primaryBtn{
+  width:100%;
+  border:0;
+  background:#2e7d32;
+  color:#fff;
+  padding:13px;
+  border-radius:10px;
+  font-weight:700;
+  transition:.2s;
 }
 
-.btn-primary:hover{
-  background:#0f572a;
-}
-
-.btn-danger{
-  background:#d93636;
-  color:white;
-}
-
-.btn-warning{
-  background:#e09b16;
-  color:white;
-}
-
-.btn-secondary{
-  background:#666;
-  color:white;
-}
-
-.btn-success{
-  background:#218838;
-  color:white;
-}
-
-.btn-small{
-  padding:7px 10px;
-  font-size:13px;
+.primaryBtn:hover{
+  background:#1b5e20;
 }
 
 .message{
-  margin-top:12px;
+  margin-top:14px;
   padding:10px;
   border-radius:8px;
+  font-size:14px;
   display:none;
-}
-
-.message.success{
-  display:block;
-  background:#dff5e5;
-  color:#176b35;
 }
 
 .message.error{
   display:block;
-  background:#ffe1e1;
-  color:#b00000;
+  background:#ffebee;
+  color:#c62828;
 }
 
-/* DASHBOARD */
+.message.success{
+  display:block;
+  background:#e8f5e9;
+  color:#2e7d32;
+}
 
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
+/* ADMIN */
+
+#adminPage{
+  min-height:100vh;
+}
+
+.topbar{
+  background:#2e7d32;
+  color:#fff;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   gap:15px;
-  margin-bottom:20px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 
-.stat{
-  background:white;
-  border-radius:12px;
+.topbarTitle{
+  font-size:22px;
+  font-weight:800;
+}
+
+.topbarRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.adminEmail{
+  font-size:13px;
+  opacity:.9;
+}
+
+.logoutBtn{
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  padding:8px 12px;
+  border-radius:8px;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
   padding:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.stat h3{
-  color:#777;
-  font-size:14px;
-  margin-bottom:8px;
-}
-
-.stat strong{
-  font-size:25px;
-  color:#176b35;
-}
+/* TABS */
 
 .tabs{
   display:flex;
   gap:8px;
-  flex-wrap:wrap;
   margin-bottom:20px;
+  overflow-x:auto;
 }
 
-.tab-btn{
-  background:white;
-  border:1px solid #ddd;
-  padding:10px 15px;
-  border-radius:8px;
-  font-weight:bold;
-}
-
-.tab-btn.active{
-  background:#176b35;
-  color:white;
-  border-color:#176b35;
-}
-
-.panel{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
+.tabBtn{
+  border:0;
+  background:#fff;
+  color:#555;
+  padding:11px 18px;
+  border-radius:10px;
+  font-weight:700;
+  white-space:nowrap;
   box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.panel h2{
-  margin-bottom:16px;
-  color:#176b35;
+.tabBtn.active{
+  background:#2e7d32;
+  color:#fff;
+}
+
+/* SECTIONS */
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);
+}
+
+.cardTitle{
   font-size:20px;
+  font-weight:800;
+  margin-bottom:18px;
+  color:#2e7d32;
+}
+
+/* GRID */
+
+.formGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.fullWidth{
+  grid-column:1/-1;
 }
 
 /* PRODUCTS */
 
-.product-form{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+.productFormButtons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
 }
 
-.full{
-  grid-column:1/-1;
+.greenBtn{
+  border:0;
+  background:#2e7d32;
+  color:#fff;
+  padding:11px 16px;
+  border-radius:9px;
+  font-weight:700;
 }
 
-.preview-img{
-  width:100px;
-  height:100px;
-  object-fit:cover;
+.greenBtn:hover{
+  background:#1b5e20;
+}
+
+.grayBtn{
+  border:0;
+  background:#e0e0e0;
+  color:#333;
+  padding:11px 16px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.redBtn{
+  border:0;
+  background:#d32f2f;
+  color:#fff;
+  padding:9px 12px;
   border-radius:8px;
-  border:1px solid #ddd;
-  margin-top:8px;
+  font-weight:700;
 }
 
-.products-grid{
+.blueBtn{
+  border:0;
+  background:#1976d2;
+  color:#fff;
+  padding:9px 12px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.productsGrid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-top:20px;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
 }
 
-.product-card{
-  border:1px solid #ddd;
-  border-radius:10px;
+.productCard{
+  border:1px solid #e0e0e0;
+  border-radius:12px;
   overflow:hidden;
-  background:white;
+  background:#fff;
 }
 
-.product-card img{
+.productImage{
   width:100%;
-  height:160px;
+  height:190px;
   object-fit:cover;
   background:#eee;
 }
 
-.product-info{
-  padding:12px;
+.productInfo{
+  padding:14px;
 }
 
-.product-info h3{
-  font-size:16px;
-  margin-bottom:6px;
+.productName{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:5px;
 }
 
-.product-info p{
-  font-size:14px;
-  color:#666;
-  margin:4px 0;
+.productCategory{
+  font-size:13px;
+  color:#777;
+  margin-bottom:8px;
 }
 
-.product-actions{
+.productPrice{
+  color:#2e7d32;
+  font-weight:800;
+  font-size:18px;
+}
+
+.productStock{
+  font-size:13px;
+  margin-top:5px;
+}
+
+.productActions{
   display:flex;
   gap:7px;
-  margin-top:10px;
+  margin-top:12px;
+  flex-wrap:wrap;
 }
 
 /* ORDERS */
 
-.order-card{
-  border:1px solid #ddd;
-  border-radius:12px;
-  margin-bottom:15px;
-  overflow:hidden;
+.orderFilters{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-bottom:16px;
 }
 
-.order-head{
-  background:#f7f7f7;
-  padding:13px;
+.filterBtn{
+  border:1px solid #ddd;
+  background:#fff;
+  padding:9px 13px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+
+.filterBtn.active{
+  background:#2e7d32;
+  color:#fff;
+  border-color:#2e7d32;
+}
+
+.ordersList{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.orderCard{
+  border:1px solid #e0e0e0;
+  border-radius:12px;
+  padding:16px;
+  background:#fff;
+}
+
+.orderHeader{
   display:flex;
   justify-content:space-between;
+  align-items:flex-start;
   gap:10px;
-  flex-wrap:wrap;
+  margin-bottom:12px;
 }
 
-.order-body{
-  padding:15px;
+.orderId{
+  font-weight:800;
+  color:#333;
 }
 
-.order-meta{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-  margin-bottom:15px;
-}
-
-.order-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-bottom:15px;
-}
-
-.order-table th,
-.order-table td{
-  border:1px solid #ddd;
-  padding:8px;
-  text-align:left;
+.orderDate{
+  color:#777;
   font-size:13px;
+  margin-top:4px;
 }
 
-.order-table th{
-  background:#f5f5f5;
-}
-
-.order-total{
-  text-align:right;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.status{
-  display:inline-block;
-  padding:5px 9px;
+.statusBadge{
+  padding:6px 10px;
   border-radius:20px;
   font-size:12px;
-  font-weight:bold;
-  background:#eee;
+  font-weight:800;
+  text-transform:capitalize;
 }
 
-.status.pending{
-  background:#fff0c2;
+.status-pending{
+  background:#fff3cd;
   color:#856404;
 }
 
-.status.verified{
-  background:#d9f5df;
-  color:#176b35;
+.status-processing{
+  background:#e3f2fd;
+  color:#1565c0;
 }
 
-.status.rejected{
-  background:#ffdede;
-  color:#a00000;
+.status-shipped{
+  background:#ede7f6;
+  color:#4527a0;
 }
 
-.slip{
-  max-width:260px;
-  max-height:350px;
-  object-fit:contain;
-  border:1px solid #ddd;
+.status-delivered{
+  background:#e8f5e9;
+  color:#2e7d32;
+}
+
+.status-cancelled{
+  background:#ffebee;
+  color:#c62828;
+}
+
+.orderDetails{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.detailBox{
+  background:#f8f9f8;
+  padding:10px;
   border-radius:8px;
+}
+
+.detailLabel{
+  font-size:12px;
+  color:#777;
+  margin-bottom:3px;
+}
+
+.detailValue{
+  font-weight:600;
+  word-break:break-word;
+}
+
+.orderItems{
+  border-top:1px solid #eee;
+  padding-top:12px;
   margin-top:8px;
+}
+
+.orderItem{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px dashed #ddd;
+  font-size:14px;
+}
+
+.orderTotal{
+  text-align:right;
+  font-size:18px;
+  font-weight:800;
+  color:#2e7d32;
+  margin-top:12px;
+}
+
+.orderActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.statusSelect{
+  padding:9px;
+  border:1px solid #ccc;
+  border-radius:8px;
 }
 
 /* SETTINGS */
 
-.settings-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+.previewBox{
+  margin-top:10px;
+  border:1px dashed #aaa;
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
+  background:#fafafa;
 }
 
-.setting-image-preview{
-  max-width:250px;
+.previewBox img{
+  max-width:100%;
   max-height:180px;
-  object-fit:contain;
-  border:1px solid #ddd;
   border-radius:8px;
-  margin-top:8px;
+}
+
+/* EMPTY */
+
+.emptyState{
+  text-align:center;
+  padding:35px 15px;
+  color:#777;
+}
+
+/* LOADING */
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#666;
 }
 
 /* INVOICE */
 
-.invoice{
-  background:white;
-  padding:25px;
-  max-width:850px;
-  margin:auto;
-  border:1px solid #ddd;
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:100;
 }
 
-.invoice-title{
+.modal.show{
+  display:flex;
+}
+
+.modalBox{
+  width:100%;
+  max-width:750px;
+  max-height:92vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:14px;
+  padding:22px;
+}
+
+.modalHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.closeBtn{
+  border:0;
+  background:#eee;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  font-size:20px;
+}
+
+.invoice{
+  border:1px solid #ddd;
+  padding:25px;
+  background:#fff;
+}
+
+.invoiceShop{
   text-align:center;
   margin-bottom:20px;
 }
 
-.invoice-shop{
-  font-size:24px;
-  color:#176b35;
-  font-weight:bold;
+.invoiceShop h2{
+  color:#2e7d32;
 }
 
-.invoice table{
+.invoiceMeta{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+  font-size:14px;
+}
+
+.invoiceTable{
   width:100%;
   border-collapse:collapse;
-  margin:15px 0;
+  margin-bottom:18px;
 }
 
-.invoice th,
-.invoice td{
+.invoiceTable th,
+.invoiceTable td{
   border:1px solid #ddd;
-  padding:8px;
+  padding:9px;
+  text-align:left;
+  font-size:13px;
 }
 
-.invoice-total{
+.invoiceTotal{
   text-align:right;
   font-size:18px;
-  font-weight:bold;
+  font-weight:800;
+}
+
+.modalActions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+  flex-wrap:wrap;
 }
 
 /* RESPONSIVE */
 
 @media(max-width:900px){
-  .dashboard-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .products-grid{
+  .productsGrid{
     grid-template-columns:repeat(2,1fr);
   }
 }
 
-@media(max-width:650px){
-  header{
-    padding:12px;
+@media(max-width:700px){
+  .topbar{
+    padding:12px 14px;
   }
 
-  header h1{
-    font-size:17px;
+  .topbarTitle{
+    font-size:18px;
+  }
+
+  .adminEmail{
+    display:none;
   }
 
   .container{
     padding:12px;
   }
 
-  .dashboard-grid,
-  .products-grid,
-  .product-form,
-  .settings-grid,
-  .order-meta{
+  .formGrid{
     grid-template-columns:1fr;
   }
 
-  .full{
+  .fullWidth{
     grid-column:auto;
   }
 
-  .order-table{
-    font-size:11px;
+  .productsGrid{
+    grid-template-columns:1fr;
   }
 
-  .order-table th,
-  .order-table td{
-    padding:5px;
+  .orderDetails{
+    grid-template-columns:1fr;
+  }
+
+  .invoice{
+    padding:15px;
+  }
+
+  .invoiceMeta{
+    flex-direction:column;
   }
 }
 
 @media print{
-  body{
-    background:white;
+  body *{
+    visibility:hidden;
   }
 
-  header,
-  .tabs,
-  .no-print{
-    display:none!important;
+  #invoiceModal,
+  #invoiceModal *{
+    visibility:visible;
   }
 
-  .container{
-    padding:0;
+  #invoiceModal{
+    position:absolute;
+    inset:0;
+    background:#fff;
+    display:block!important;
   }
 
-  .invoice{
-    border:0;
+  #invoiceModal .modalBox{
     max-width:none;
+    max-height:none;
+    box-shadow:none;
+  }
+
+  #invoiceModal .modalHeader,
+  #invoiceModal .modalActions{
+    display:none;
   }
 }
 </style>
@@ -509,37 +721,52 @@ label{
 
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN PAGE -->
+
 <div id="loginPage">
 
-  <div class="login-box">
+  <div class="loginBox">
 
-    <h2>🌿 Gaon Organic</h2>
-    <p>Admin Panel Login</p>
+    <div class="logoTitle">🌿 Gaon Organic</div>
+    <div class="logoSub">Admin Panel</div>
 
     <form id="loginForm">
 
-      <div class="form-group">
-        <label>Email</label>
+      <div class="formGroup">
+        <label for="loginEmail">Admin Email</label>
         <input
           type="email"
           id="loginEmail"
           value="organicpahadi123@gmail.com"
+          autocomplete="username"
           required
         >
       </div>
 
-      <div class="form-group">
-        <label>Password</label>
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="Admin password"
-          required
-        >
+      <div class="formGroup">
+        <label for="loginPassword">Password</label>
+
+        <div class="passwordWrap">
+
+          <input
+            type="password"
+            id="loginPassword"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            type="button"
+            class="togglePassword"
+            id="togglePassword"
+          >
+            Show
+          </button>
+
+        </div>
       </div>
 
-      <button class="btn btn-primary" style="width:100%;">
+      <button type="submit" class="primaryBtn">
         Login
       </button>
 
@@ -552,663 +779,1868 @@ label{
 </div>
 
 
-<!-- ADMIN APP -->
+<!-- ADMIN PAGE -->
+
 <div id="adminPage" class="hidden">
 
-<header>
+  <header class="topbar">
 
-  <h1>🌿 Gaon Organic Admin</h1>
-
-  <div class="header-right">
-    <span id="adminEmail"></span>
-    <button id="logoutBtn" class="btn btn-danger btn-small">
-      Logout
-    </button>
-  </div>
-
-</header>
-
-
-<div class="container">
-
-  <!-- DASHBOARD STATS -->
-
-  <div class="dashboard-grid">
-
-    <div class="stat">
-      <h3>Total Products</h3>
-      <strong id="totalProducts">0</strong>
+    <div class="topbarTitle">
+      🌿 Gaon Organic Admin
     </div>
 
-    <div class="stat">
-      <h3>Total Orders</h3>
-      <strong id="totalOrders">0</strong>
+    <div class="topbarRight">
+
+      <span class="adminEmail" id="loggedAdminEmail"></span>
+
+      <button
+        type="button"
+        class="logoutBtn"
+        id="logoutBtn"
+      >
+        Logout
+      </button>
+
     </div>
 
-    <div class="stat">
-      <h3>Pending Payments</h3>
-      <strong id="pendingPayments">0</strong>
+  </header>
+
+
+  <main class="container">
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+      <button
+        type="button"
+        class="tabBtn active"
+        data-tab="ordersSection"
+      >
+        📦 Orders
+      </button>
+
+      <button
+        type="button"
+        class="tabBtn"
+        data-tab="productsSection"
+      >
+        🛒 Products
+      </button>
+
+      <button
+        type="button"
+        class="tabBtn"
+        data-tab="settingsSection"
+      >
+        ⚙️ Settings
+      </button>
+
     </div>
 
-    <div class="stat">
-      <h3>Pending Orders</h3>
-      <strong id="pendingOrders">0</strong>
-    </div>
 
-  </div>
+    <!-- ORDERS SECTION -->
 
+    <section
+      id="ordersSection"
+      class="section active"
+    >
 
-  <!-- TABS -->
+      <div class="card">
 
-  <div class="tabs">
+        <div class="cardTitle">
+          Orders
+        </div>
 
-    <button class="tab-btn active" data-tab="ordersTab">
-      📦 Orders
-    </button>
+        <div class="orderFilters">
 
-    <button class="tab-btn" data-tab="productsTab">
-      🛒 Products
-    </button>
+          <button
+            type="button"
+            class="filterBtn active"
+            data-filter="all"
+          >
+            All
+          </button>
 
-    <button class="tab-btn" data-tab="settingsTab">
-      ⚙️ Settings
-    </button>
+          <button
+            type="button"
+            class="filterBtn"
+            data-filter="pending"
+          >
+            Pending
+          </button>
 
-  </div>
+          <button
+            type="button"
+            class="filterBtn"
+            data-filter="processing"
+          >
+            Processing
+          </button>
 
+          <button
+            type="button"
+            class="filterBtn"
+            data-filter="shipped"
+          >
+            Shipped
+          </button>
 
-  <!-- ORDERS TAB -->
+          <button
+            type="button"
+            class="filterBtn"
+            data-filter="delivered"
+          >
+            Delivered
+          </button>
 
-  <section id="ordersTab" class="tab-content">
+          <button
+            type="button"
+            class="filterBtn"
+            data-filter="cancelled"
+          >
+            Cancelled
+          </button>
 
-    <div class="panel">
+        </div>
 
-      <h2>📦 Orders</h2>
+        <div id="ordersList" class="ordersList">
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;">
+          <div class="loading">
+            Loading orders...
+          </div>
 
-        <select id="orderFilter" style="max-width:250px;">
-          <option value="all">All Orders</option>
-          <option value="pending">Pending</option>
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-
-        <button class="btn btn-secondary" id="refreshOrders">
-          Refresh
-        </button>
+        </div>
 
       </div>
 
-      <div id="ordersList">
-        Loading orders...
-      </div>
-
-    </div>
-
-  </section>
+    </section>
 
 
-  <!-- PRODUCTS TAB -->
+    <!-- PRODUCTS SECTION -->
 
-  <section id="productsTab" class="tab-content hidden">
+    <section
+      id="productsSection"
+      class="section"
+    >
 
-    <div class="panel">
+      <div class="card">
 
-      <h2 id="productFormTitle">
-        ➕ Add Product
-      </h2>
+        <div class="cardTitle">
+          Add / Edit Product
+        </div>
 
-      <form id="productForm">
+        <form id="productForm">
 
-        <input type="hidden" id="editProductId">
+          <input
+            type="hidden"
+            id="productId"
+          >
 
-        <div class="product-form">
+          <div class="formGrid">
 
-          <div class="form-group">
-            <label>Product Name</label>
-            <input id="productName" required>
+            <div class="formGroup">
+
+              <label for="productName">
+                Product Name
+              </label>
+
+              <input
+                type="text"
+                id="productName"
+                placeholder="Example: Pahadi Honey"
+                required
+              >
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="productCategory">
+                Category
+              </label>
+
+              <select id="productCategory" required>
+
+                <option value="">
+                  Select Category
+                </option>
+
+                <option value="Honey">
+                  Honey
+                </option>
+
+                <option value="Spices">
+                  Spices
+                </option>
+
+                <option value="Pulses">
+                  Pulses
+                </option>
+
+                <option value="Grains">
+                  Grains
+                </option>
+
+                <option value="Pickles">
+                  Pickles
+                </option>
+
+                <option value="Oil">
+                  Oil
+                </option>
+
+                <option value="Herbs">
+                  Herbs
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="productPrice">
+                Price (₹)
+              </label>
+
+              <input
+                type="number"
+                id="productPrice"
+                min="0"
+                step="0.01"
+                placeholder="299"
+                required
+              >
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="productStock">
+                Stock
+              </label>
+
+              <input
+                type="number"
+                id="productStock"
+                min="0"
+                step="1"
+                placeholder="20"
+                required
+              >
+
+            </div>
+
+
+            <div class="formGroup fullWidth">
+
+              <label for="productDescription">
+                Description
+              </label>
+
+              <textarea
+                id="productDescription"
+                rows="4"
+                placeholder="Product details..."
+              ></textarea>
+
+            </div>
+
+
+            <div class="formGroup fullWidth">
+
+              <label for="productImage">
+                Product Image
+              </label>
+
+              <input
+                type="file"
+                id="productImage"
+                accept="image/*"
+              >
+
+              <div
+                id="productImagePreview"
+                class="previewBox hidden"
+              ></div>
+
+            </div>
+
           </div>
 
-          <div class="form-group">
-            <label>Price (₹)</label>
-            <input
-              id="productPrice"
-              type="number"
-              min="0"
-              step="0.01"
-              required
-            >
-          </div>
 
-          <div class="form-group">
-            <label>Stock</label>
-            <input
-              id="productStock"
-              type="number"
-              min="0"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Category</label>
-            <input
-              id="productCategory"
-              placeholder="Organic / Food / Spices etc."
-            >
-          </div>
-
-          <div class="form-group full">
-            <label>Description</label>
-            <textarea id="productDescription"></textarea>
-          </div>
-
-          <div class="form-group full">
-            <label>Product Image</label>
-
-            <input
-              type="file"
-              id="productImage"
-              accept="image/*"
-            >
-
-            <small>
-              JPG/PNG/WebP recommended. Image will be compressed.
-            </small>
-
-            <br>
-
-            <img
-              id="productPreview"
-              class="preview-img hidden"
-            >
-          </div>
-
-          <div class="full" style="display:flex;gap:10px;">
+          <div class="productFormButtons">
 
             <button
               type="submit"
-              class="btn btn-primary"
+              class="greenBtn"
               id="saveProductBtn"
             >
-              Save Product
+              Add Product
             </button>
 
             <button
               type="button"
-              class="btn btn-secondary hidden"
-              id="cancelEditBtn"
+              class="grayBtn"
+              id="resetProductBtn"
             >
-              Cancel Edit
+              Reset
             </button>
 
           </div>
 
-        </div>
+          <div
+            id="productMessage"
+            class="message"
+          ></div>
 
-        <div id="productMessage" class="message"></div>
+        </form>
 
-      </form>
-
-    </div>
-
-
-    <div class="panel">
-
-      <h2>🛒 Products</h2>
-
-      <div id="productsList" class="products-grid">
-        Loading products...
       </div>
 
-    </div>
 
-  </section>
+      <div class="card">
 
+        <div class="cardTitle">
+          Products
+        </div>
 
-  <!-- SETTINGS TAB -->
+        <div
+          id="productsGrid"
+          class="productsGrid"
+        >
 
-  <section id="settingsTab" class="tab-content hidden">
-
-    <div class="panel">
-
-      <h2>⚙️ Store Settings</h2>
-
-      <form id="settingsForm">
-
-        <div class="settings-grid">
-
-          <div class="form-group">
-            <label>Shop Name</label>
-            <input id="shopName">
-          </div>
-
-          <div class="form-group">
-            <label>WhatsApp Number</label>
-            <input
-              id="whatsapp"
-              placeholder="916395856099"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>UPI ID</label>
-            <input
-              id="upiId"
-              placeholder="example@upi"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Delivery Charge (₹)</label>
-            <input
-              id="deliveryCharge"
-              type="number"
-              min="0"
-            >
-          </div>
-
-          <div class="form-group">
-
-            <label>Banner Image</label>
-
-            <input
-              type="file"
-              id="bannerImage"
-              accept="image/*"
-            >
-
-            <img
-              id="bannerPreview"
-              class="setting-image-preview hidden"
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>QR Payment Image</label>
-
-            <input
-              type="file"
-              id="qrImage"
-              accept="image/*"
-            >
-
-            <img
-              id="qrPreview"
-              class="setting-image-preview hidden"
-            >
-
+          <div class="loading">
+            Loading products...
           </div>
 
         </div>
 
+      </div>
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          style="margin-top:10px;"
-        >
-          Save Settings
-        </button>
-
-        <div id="settingsMessage" class="message"></div>
-
-      </form>
-
-    </div>
-
-  </section>
+    </section>
 
 
-  <!-- INVOICE AREA -->
+    <!-- SETTINGS SECTION -->
 
-  <section id="invoiceSection" class="hidden">
+    <section
+      id="settingsSection"
+      class="section"
+    >
 
-    <div class="panel">
+      <div class="card">
 
-      <div class="no-print" style="display:flex;gap:10px;margin-bottom:15px;">
+        <div class="cardTitle">
+          Shop Settings
+        </div>
 
-        <button
-          class="btn btn-primary"
-          onclick="window.print()"
-        >
-          🖨️ Print / Save PDF
-        </button>
+        <form id="settingsForm">
 
-        <button
-          class="btn btn-secondary"
-          onclick="closeInvoice()"
-        >
-          Close
-        </button>
+          <div class="formGrid">
+
+            <div class="formGroup">
+
+              <label for="shopName">
+                Shop Name
+              </label>
+
+              <input
+                type="text"
+                id="shopName"
+                placeholder="Gaon Organic"
+              >
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="whatsappNumber">
+                WhatsApp Number
+              </label>
+
+              <input
+                type="text"
+                id="whatsappNumber"
+                placeholder="916395856099"
+              >
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="upiId">
+                UPI ID
+              </label>
+
+              <input
+                type="text"
+                id="upiId"
+                placeholder="yourname@upi"
+              >
+
+            </div>
+
+
+            <div class="formGroup">
+
+              <label for="deliveryCharge">
+                Delivery Charge (₹)
+              </label>
+
+              <input
+                type="number"
+                id="deliveryCharge"
+                min="0"
+                step="1"
+                placeholder="0"
+              >
+
+            </div>
+
+
+            <div class="formGroup fullWidth">
+
+              <label for="bannerImage">
+                Banner Image
+              </label>
+
+              <input
+                type="file"
+                id="bannerImage"
+                accept="image/*"
+              >
+
+              <div
+                id="bannerPreview"
+                class="previewBox hidden"
+              ></div>
+
+            </div>
+
+
+            <div class="formGroup fullWidth">
+
+              <label for="qrImage">
+                UPI QR Image
+              </label>
+
+              <input
+                type="file"
+                id="qrImage"
+                accept="image/*"
+              >
+
+              <div
+                id="qrPreview"
+                class="previewBox hidden"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <div class="productFormButtons">
+
+            <button
+              type="submit"
+              class="greenBtn"
+            >
+              Save Settings
+            </button>
+
+          </div>
+
+          <div
+            id="settingsMessage"
+            class="message"
+          ></div>
+
+        </form>
 
       </div>
 
-      <div id="invoiceArea"></div>
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- INVOICE MODAL -->
+
+<div
+  id="invoiceModal"
+  class="modal"
+>
+
+  <div class="modalBox">
+
+    <div class="modalHeader">
+
+      <strong>
+        Invoice
+      </strong>
+
+      <button
+        type="button"
+        class="closeBtn"
+        id="closeInvoiceBtn"
+      >
+        ×
+      </button>
 
     </div>
 
-  </section>
+    <div id="invoiceContent"></div>
 
-</div>
+    <div class="modalActions">
 
-</div>
+      <button
+        type="button"
+        class="greenBtn"
+        id="printInvoiceBtn"
+      >
+        🖨️ Print / S
+        /* ORDERS */
 
+let ordersCache = {};
 
-<script type="module">
-
-/* =========================================
-   FIREBASE
-========================================= */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-}
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-import {
-  getDatabase,
-  ref,
-  set,
-  push,
-  update,
-  remove,
-  onValue,
-  get
-}
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+let currentOrderFilter = "all";
 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB80IKiUQA_t2IhXBgZjPI2kPQKqc1xSF8",
-  authDomain: "gaon-organic.firebaseapp.com",
-  databaseURL: "https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "gaon-organic",
-  storageBucket: "gaon-organic.firebasestorage.app",
-  messagingSenderId: "29340220943",
-  appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a"
-};
+async function loadOrders(){
 
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-
-/* =========================================
-   ADMIN EMAIL
-========================================= */
-
-const ADMIN_EMAIL = "organicpahadi123@gmail.com";
-
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
-const loginPage = document.getElementById("loginPage");
-const adminPage = document.getElementById("adminPage");
-
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-
-const logoutBtn = document.getElementById("logoutBtn");
-const adminEmail = document.getElementById("adminEmail");
-
-const ordersList = document.getElementById("ordersList");
-const productsList = document.getElementById("productsList");
-
-let allOrders = {};
-let allProducts = {};
-
-let currentSettings = {};
-
-
-/* =========================================
-   MESSAGE
-========================================= */
-
-function showMessage(element, text, type="success"){
-  element.textContent = text;
-  element.className = "message " + type;
-
-  setTimeout(()=>{
-    element.className = "message";
-  },4000);
-}
-
-
-/* =========================================
-   AUTH STATE
-========================================= */
-
-onAuthStateChanged(auth, async (user)=>{
-
-  if(user){
-
-    /*
-      Extra client-side check.
-      Real protection will also be done
-      by Firebase Database Rules.
-    */
-
-    if(
-      !user.email ||
-      user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
-    ){
-
-      await signOut(auth);
-
-      loginPage.classList.remove("hidden");
-      adminPage.classList.add("hidden");
-
-      showMessage(
-        loginMessage,
-        "This account is not authorized as admin.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    loginPage.classList.add("hidden");
-    adminPage.classList.remove("hidden");
-
-    adminEmail.textContent = user.email;
-
-    loadProducts();
-    loadOrders();
-    loadSettings();
-
-  }else{
-
-    loginPage.classList.remove("hidden");
-    adminPage.classList.add("hidden");
-
-  }
-
-});
-
-
-/* =========================================
-   LOGIN
-========================================= */
-
-loginForm.addEventListener("submit", async (e)=>{
-
-  e.preventDefault();
-
-  const email =
-    document.getElementById("loginEmail").value.trim();
-
-  const password =
-    document.getElementById("loginPassword").value;
-
-
-  if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){
-
-    showMessage(
-      loginMessage,
-      "Only authorized admin email can login.",
-      "error"
+  const ordersList =
+    document.getElementById(
+      "ordersList"
     );
 
-    return;
-  }
-
+  ordersList.innerHTML =
+    `<div class="loading">
+      Loading orders...
+    </div>`;
 
   try{
 
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const snapshot =
+      await get(
+        ref(db,"orders")
+      );
 
-    loginForm.reset();
+    ordersCache =
+      snapshot.exists()
+        ? snapshot.val()
+        : {};
+
+    renderOrders();
 
   }catch(error){
 
     console.error(error);
 
-    let msg = "Login failed.";
-
-    if(error.code === "auth/invalid-credential"){
-      msg = "Email or password is incorrect.";
-    }
-
-    if(error.code === "auth/user-not-found"){
-      msg = "Admin account does not exist yet.";
-    }
-
-    if(error.code === "auth/too-many-requests"){
-      msg = "Too many attempts. Try again later.";
-    }
-
-    showMessage(loginMessage,msg,"error");
+    ordersList.innerHTML =
+      `<div class="emptyState">
+        Unable to load orders.
+      </div>`;
 
   }
 
+}
+
+
+/* ORDER FILTERS */
+
+document.querySelectorAll(
+  ".filterBtn"
+).forEach(button => {
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      document.querySelectorAll(
+        ".filterBtn"
+      ).forEach(btn => {
+
+        btn.classList.remove(
+          "active"
+        );
+
+      });
+
+      button.classList.add(
+        "active"
+      );
+
+      currentOrderFilter =
+        button.dataset.filter;
+
+      renderOrders();
+
+    }
+  );
+
 });
 
 
-/* =========================================
-   LOGOUT
-========================================= */
+/* RENDER ORDERS */
 
-logoutBtn.addEventListener("click", async ()=>{
+function renderOrders(){
 
-  await signOut(auth);
+  const ordersList =
+    document.getElementById(
+      "ordersList"
+    );
 
-});
+  let entries =
+    Object.entries(
+      ordersCache || {}
+    );
 
 
-/* =========================================
-   TABS
-========================================= */
+  entries.sort(
+    (a,b) => {
 
-document.querySelectorAll(".tab-btn").forEach(btn=>{
+      const dateA =
+        Number(
+          a[1]?.createdAt ||
+          a[1]?.timestamp ||
+          0
+        );
 
-  btn.addEventListener("click",()=>{
+      const dateB =
+        Number(
+          b[1]?.createdAt ||
+          b[1]?.timestamp ||
+          0
+        );
 
-    document.querySelectorAll(".tab-btn")
-      .forEach(x=>x.classList.remove("active"));
+      return dateB - dateA;
 
-    document.querySelectorAll(".tab-content")
-      .forEach(x=>x.classList.add("hidden"));
+    }
+  );
 
-    btn.classList.add("active");
 
-    document
-      .getElementById(btn.dataset.tab)
-      .classList.remove("hidden");
+  if(
+    currentOrderFilter !== "all"
+  ){
+
+    entries =
+      entries.filter(
+        ([id,order]) => {
+
+          const status =
+            String(
+              order.status ||
+              "pending"
+            ).toLowerCase();
+
+          return status ===
+            currentOrderFilter;
+
+        }
+      );
+
+  }
+
+
+  if(entries.length === 0){
+
+    ordersList.innerHTML =
+      `<div class="emptyState">
+        No orders found.
+      </div>`;
+
+    return;
+
+  }
+
+
+  ordersList.innerHTML =
+    entries.map(
+      ([id,order]) =>
+        createOrderCard(
+          id,
+          order
+        )
+    ).join("");
+
+
+  document.querySelectorAll(
+    ".statusSelect"
+  ).forEach(select => {
+
+    select.addEventListener(
+      "change",
+      async () => {
+
+        await updateOrderStatus(
+          select.dataset.id,
+          select.value
+        );
+
+      }
+    );
 
   });
 
-});
 
+  document.querySelectorAll(
+    ".invoiceBtn"
+  ).forEach(button => {
 
-/* =========================================
-   IMAGE COMPRESSION
-========================================= */
+    button.addEventListener(
+      "click",
+      () => {
 
-function compressImage(file, maxWidth=1000, quality=.72){
-
-  return new Promise((resolve,reject)=>{
-
-    const reader = new FileReader();
-
-    reader.onload = ()=>{
-
-      const img = new Image();
-
-      img.onload = ()=>{
-
-        let width = img.width;
-        let height = img.height;
-
-        if(width > maxWidth){
-
-          height =
-            Math.round(height * maxWidth / width);
-
-          width = maxWidth;
-
-        }
-
-        const canvas =
-          document.createElement("canvas");
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          width,
-          height
+        openInvoice(
+          button.dataset.id
         );
 
-        resolve(
-          canvas.toDataURL(
-            "image/jpeg",
-            quality
-          )
-        );
-
-      };
-
-      img.onerror = reject;
-
-      img.src = reader.result;
-
-    };
-
-    reader.onerror = reject;
-
-    reader.readAsDataURL(file);
+      }
+    );
 
   });
 
 }
 
 
-/* =========================================
-   PRODUCTS
-=================================
+/* ORDER CARD */
+
+function createOrderCard(
+  id,
+  order
+){
+
+  const status =
+    String(
+      order.status ||
+      "pending"
+    ).toLowerCase();
+
+
+  const customer =
+    order.customer ||
+    order.user ||
+    {};
+
+
+  const name =
+    order.name ||
+    customer.name ||
+    order.customerName ||
+    "Customer";
+
+
+  const phone =
+    order.phone ||
+    customer.phone ||
+    order.customerPhone ||
+    "-";
+
+
+  const address =
+    order.address ||
+    customer.address ||
+    order.deliveryAddress ||
+    "-";
+
+
+  const paymentMethod =
+    order.paymentMethod ||
+    order.payment ||
+    "COD";
+
+
+  const utr =
+    order.utr ||
+    order.transactionId ||
+    "";
+
+
+  const dateValue =
+    order.createdAt ||
+    order.timestamp ||
+    Date.now();
+
+
+  const date =
+    new Date(
+      dateValue
+    ).toLocaleString(
+      "en-IN",
+      {
+        dateStyle:"medium",
+        timeStyle:"short"
+      }
+    );
+
+
+  const items =
+    Array.isArray(order.items)
+      ? order.items
+      : Object.values(
+          order.items || {}
+        );
+
+
+  const itemsHtml =
+    items.length
+      ? items.map(
+          item => {
+
+            const itemName =
+              item.name ||
+              item.productName ||
+              "Product";
+
+            const qty =
+              Number(
+                item.quantity ||
+                item.qty ||
+                1
+              );
+
+            const price =
+              Number(
+                item.price ||
+                0
+              );
+
+            return `
+
+              <div class="orderItem">
+
+                <span>
+                  ${escapeHtml(itemName)}
+                  × ${qty}
+                </span>
+
+                <strong>
+                  ₹${(
+                    price * qty
+                  ).toFixed(2)}
+                </strong>
+
+              </div>
+
+            `;
+
+          }
+        ).join("")
+      : `<div class="orderItem">
+          <span>No item details</span>
+        </div>`;
+
+
+  const subtotal =
+    Number(
+      order.subtotal ??
+      order.subTotal ??
+      order.total ??
+      0
+    );
+
+
+  const deliveryCharge =
+    Number(
+      order.deliveryCharge ||
+      0
+    );
+
+
+  const total =
+    Number(
+      order.total ??
+      subtotal + deliveryCharge
+    );
+
+
+  return `
+
+    <div class="orderCard">
+
+      <div class="orderHeader">
+
+        <div>
+
+          <div class="orderId">
+            Order #${escapeHtml(id)}
+          </div>
+
+          <div class="orderDate">
+            ${escapeHtml(date)}
+          </div>
+
+        </div>
+
+        <span
+          class="statusBadge status-${escapeHtml(status)}"
+        >
+          ${escapeHtml(status)}
+        </span>
+
+      </div>
+
+
+      <div class="orderDetails">
+
+        <div class="detailBox">
+
+          <div class="detailLabel">
+            Customer
+          </div>
+
+          <div class="detailValue">
+            ${escapeHtml(name)}
+          </div>
+
+        </div>
+
+
+        <div class="detailBox">
+
+          <div class="detailLabel">
+            Phone
+          </div>
+
+          <div class="detailValue">
+            ${escapeHtml(phone)}
+          </div>
+
+        </div>
+
+
+        <div class="detailBox">
+
+          <div class="detailLabel">
+            Address
+          </div>
+
+          <div class="detailValue">
+            ${escapeHtml(address)}
+          </div>
+
+        </div>
+
+
+        <div class="detailBox">
+
+          <div class="detailLabel">
+            Payment
+          </div>
+
+          <div class="detailValue">
+            ${escapeHtml(paymentMethod)}
+            ${
+              utr
+                ? `<br>UTR: ${escapeHtml(utr)}`
+                : ""
+            }
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="orderItems">
+
+        ${itemsHtml}
+
+      </div>
+
+
+      <div class="orderTotal">
+
+        Total:
+        ₹${total.toFixed(2)}
+
+      </div>
+
+
+      <div class="orderActions">
+
+        <select
+          class="statusSelect"
+          data-id="${escapeHtml(id)}"
+        >
+
+          <option
+            value="pending"
+            ${status === "pending" ? "selected" : ""}
+          >
+            Pending
+          </option>
+
+          <option
+            value="processing"
+            ${status === "processing" ? "selected" : ""}
+          >
+            Processing
+          </option>
+
+          <option
+            value="shipped"
+            ${status === "shipped" ? "selected" : ""}
+          >
+            Shipped
+          </option>
+
+          <option
+            value="delivered"
+            ${status === "delivered" ? "selected" : ""}
+          >
+            Delivered
+          </option>
+
+          <option
+            value="cancelled"
+            ${status === "cancelled" ? "selected" : ""}
+          >
+            Cancelled
+          </option>
+
+        </select>
+
+
+        <button
+          type="button"
+          class="blueBtn invoiceBtn"
+          data-id="${escapeHtml(id)}"
+        >
+          🧾 Invoice
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* UPDATE ORDER STATUS */
+
+async function updateOrderStatus(
+  orderId,
+  newStatus
+){
+
+  try{
+
+    await update(
+      ref(
+        db,
+        `orders/${orderId}`
+      ),
+      {
+        status:newStatus,
+        updatedAt:Date.now()
+      }
+    );
+
+
+    if(ordersCache[orderId]){
+
+      ordersCache[orderId].status =
+        newStatus;
+
+      ordersCache[orderId].updatedAt =
+        Date.now();
+
+    }
+
+
+    renderOrders();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Unable to update order status."
+    );
+
+    renderOrders();
+
+  }
+
+}
+
+
+/* SETTINGS */
+
+let settingsCache = {};
+
+let newBannerImage = null;
+
+let newQrImage = null;
+
+
+/* LOAD SETTINGS */
+
+async function loadSettings(){
+
+  try{
+
+    const snapshot =
+      await get(
+        ref(db,"settings")
+      );
+
+    settingsCache =
+      snapshot.exists()
+        ? snapshot.val()
+        : {};
+
+
+    document.getElementById(
+      "shopName"
+    ).value =
+      settingsCache.shopName ||
+      "Gaon Organic";
+
+
+    document.getElementById(
+      "whatsappNumber"
+    ).value =
+      settingsCache.whatsapp ||
+      "916395856099";
+
+
+    document.getElementById(
+      "upiId"
+    ).value =
+      settingsCache.upiId ||
+      "";
+
+
+    document.getElementById(
+      "deliveryCharge"
+    ).value =
+      settingsCache.deliveryCharge ||
+      0;
+
+
+    showExistingPreview(
+      "bannerPreview",
+      settingsCache.banner
+    );
+
+
+    showExistingPreview(
+      "qrPreview",
+      settingsCache.qr
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* EXISTING IMAGE PREVIEW */
+
+function showExistingPreview(
+  elementId,
+  image
+){
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+  if(image){
+
+    element.innerHTML =
+      `<img
+        src="${escapeHtml(image)}"
+        alt="Preview"
+      >`;
+
+    element.classList.remove(
+      "hidden"
+    );
+
+  }else{
+
+    element.innerHTML = "";
+
+    element.classList.add(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* BANNER IMAGE */
+
+document
+  .getElementById("bannerImage")
+  .addEventListener(
+    "change",
+    async event => {
+
+      const file =
+        event.target.files[0];
+
+      if(!file){
+
+        newBannerImage = null;
+
+        return;
+
+      }
+
+      try{
+
+        newBannerImage =
+          await compressImage(
+            file,
+            1400,
+            0.75
+          );
+
+        showExistingPreview(
+          "bannerPreview",
+          newBannerImage
+        );
+
+      }catch(error){
+
+        console.error(error);
+
+        alert(
+          "Unable to process banner image."
+        );
+
+      }
+
+    }
+  );
+
+
+/* QR IMAGE */
+
+document
+  .getElementById("qrImage")
+  .addEventListener(
+    "change",
+    async event => {
+
+      const file =
+        event.target.files[0];
+
+      if(!file){
+
+        newQrImage = null;
+
+        return;
+
+      }
+
+      try{
+
+        newQrImage =
+          await compressImage(
+            file,
+            800,
+            0.8
+          );
+
+        showExistingPreview(
+          "qrPreview",
+          newQrImage
+        );
+
+      }catch(error){
+
+        console.error(error);
+
+        alert(
+          "Unable to process QR image."
+        );
+
+      }
+
+    }
+  );
+
+
+/* SAVE SETTINGS */
+
+document
+  .getElementById("settingsForm")
+  .addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      const message =
+        document.getElementById(
+          "settingsMessage"
+        );
+
+
+      const shopName =
+        document.getElementById(
+          "shopName"
+        ).value.trim();
+
+
+      const whatsapp =
+        document.getElementById(
+          "whatsappNumber"
+        ).value.trim();
+
+
+      const upiId =
+        document.getElementById(
+          "upiId"
+        ).value.trim();
+
+
+      const deliveryCharge =
+        Number(
+          document.getElementById(
+            "deliveryCharge"
+          ).value || 0
+        );
+
+
+      try{
+
+        const settings = {
+
+          shopName:
+            shopName ||
+            "Gaon Organic",
+
+          whatsapp,
+
+          upiId,
+
+          deliveryCharge,
+
+          banner:
+            newBannerImage ||
+            settingsCache.banner ||
+            "",
+
+          qr:
+            newQrImage ||
+            settingsCache.qr ||
+            "",
+
+          updatedAt:
+            Date.now()
+
+        };
+
+
+        await set(
+          ref(db,"settings"),
+          settings
+        );
+
+
+        settingsCache =
+          settings;
+
+
+        newBannerImage = null;
+
+        newQrImage = null;
+
+
+        document.getElementById(
+          "bannerImage"
+        ).value = "";
+
+
+        document.getElementById(
+          "qrImage"
+        ).value = "";
+
+
+        showMessage(
+          message,
+          "Settings saved successfully.",
+          "success"
+        );
+
+
+      }catch(error){
+
+        console.error(error);
+
+        showMessage(
+          message,
+          "Unable to save settings.",
+          "error"
+        );
+
+      }
+
+    }
+  );
+
+
+/* INVOICE */
+
+function openInvoice(orderId){
+
+  const order =
+    ordersCache[orderId];
+
+  if(!order){
+
+    return;
+
+  }
+
+
+  const customer =
+    order.customer ||
+    order.user ||
+    {};
+
+
+  const name =
+    order.name ||
+    customer.name ||
+    order.customerName ||
+    "Customer";
+
+
+  const phone =
+    order.phone ||
+    customer.phone ||
+    order.customerPhone ||
+    "-";
+
+
+  const address =
+    order.address ||
+    customer.address ||
+    order.deliveryAddress ||
+    "-";
+
+
+  const paymentMethod =
+    order.paymentMethod ||
+    order.payment ||
+    "COD";
+
+
+  const utr =
+    order.utr ||
+    order.transactionId ||
+    "";
+
+
+  const items =
+    Array.isArray(order.items)
+      ? order.items
+      : Object.values(
+          order.items || {}
+        );
+
+
+  const dateValue =
+    order.createdAt ||
+    order.timestamp ||
+    Date.now();
+
+
+  const date =
+    new Date(
+      dateValue
+    ).toLocaleString(
+      "en-IN",
+      {
+        dateStyle:"medium",
+        timeStyle:"short"
+      }
+    );
+
+
+  let subtotal = 0;
+
+
+  const itemRows =
+    items.map(
+      item => {
+
+        const name =
+          item.name ||
+          item.productName ||
+          "Product";
+
+        const qty =
+          Number(
+            item.quantity ||
+            item.qty ||
+            1
+          );
+
+        const price =
+          Number(
+            item.price ||
+            0
+          );
+
+        const amount =
+          price * qty;
+
+
+        subtotal +=
+          amount;
+
+
+        return `
+
+          <tr>
+
+            <td>
+              ${escapeHtml(name)}
+            </td>
+
+            <td>
+              ${qty}
+            </td>
+
+            <td>
+              ₹${price.toFixed(2)}
+            </td>
+
+            <td>
+              ₹${amount.toFixed(2)}
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    ).join("");
+
+
+  const deliveryCharge =
+    Number(
+      order.deliveryCharge ??
+      settingsCache.deliveryCharge ??
+      0
+    );
+
+
+  const total =
+    Number(
+      order.total ??
+      subtotal + deliveryCharge
+    );
+
+
+  const shopName =
+    settingsCache.shopName ||
+    "Gaon Organic";
+
+
+  const invoiceHtml = `
+
+    <div class="invoice">
+
+      <div class="invoiceShop">
+
+        <h2>
+          🌿 ${escapeHtml(shopName)}
+        </h2>
+
+        <p>
+          Organic & Pahadi Products
+        </p>
+
+      </div>
+
+
+      <div class="invoiceMeta">
+
+        <div>
+
+          <strong>
+            Invoice:
+          </strong>
+
+          #${escapeHtml(orderId)}
+
+          <br>
+
+          <strong>
+            Date:
+          </strong>
+
+          ${escapeHtml(date)}
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            Customer:
+          </strong>
+
+          ${escapeHtml(name)}
+
+          <br>
+
+          <strong>
+            Phone:
+          </strong>
+
+          ${escapeHtml(phone)}
+
+          <br>
+
+          <strong>
+            Address:
+          </strong>
+
+          ${escapeHtml(address)}
+
+        </div>
+
+      </div>
+
+
+      <table class="invoiceTable">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Product
+            </th>
+
+            <th>
+              Qty
+            </th>
+
+            <th>
+              Price
+            </th>
+
+            <th>
+              Amount
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          ${
+            itemRows ||
+            `
+            <tr>
+              <td colspan="4">
+                No item details
+              </td>
+            </tr>
+            `
+          }
+
+        </tbody>
+
+      </table>
+
+
+      <div style="text-align:right;line-height:1.8">
+
+        <div>
+          Subtotal:
+          ₹${subtotal.toFixed(2)}
+        </div>
+
+        <div>
+          Delivery:
+          ₹${deliveryCharge.toFixed(2)}
+        </div>
+
+        <div class="invoiceTotal">
+          Total:
+          ₹${total.toFixed(2)}
+        </div>
+
+      </div>
+
+
+      <div style="margin-top:20px">
+
+        <strong>
+          Payment:
+        </strong>
+
+        ${escapeHtml(paymentMethod)}
+
+        ${
+          utr
+            ? `<br>
+               <strong>UTR:</strong>
+               ${escapeHtml(utr)}`
+            : ""
+        }
+
+      </div>
+
+
+      <div
+        style="
+          text-align:center;
+          margin-top:25px;
+          color:#777;
+          font-size:13px;
+        "
+      >
+        Thank you for shopping with
+        ${escapeHtml(shopName)} 🌿
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "invoiceContent"
+  ).innerHTML =
+    invoiceHtml;
+
+
+  document.getElementById(
+    "invoiceModal"
+  ).classList.add(
+    "show"
+  );
+
+}
+
+
+/* CLOSE INVOICE */
+
+function closeInvoice(){
+
+  document.getElementById(
+    "invoiceModal"
+  ).classList.remove(
+    "show"
+  );
+
+}
+
+
+document.getElementById(
+  "closeInvoiceBtn"
+).addEventListener(
+  "click",
+  closeInvoice
+);
+
+
+document.getElementById(
+  "closeInvoiceBtn2"
+).addEventListener(
+  "click",
+  closeInvoice
+);
+
+
+/* CLICK OUTSIDE MODAL */
+
+document.getElementById(
+  "invoiceModal"
+).addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target.id ===
+      "invoiceModal"
+    ){
+
+      closeInvoice();
+
+    }
+
+  }
+);
+
+
+/* PRINT / SAVE PDF */
+
+document.getElementById(
+  "printInvoiceBtn"
+).addEventListener(
+  "click",
+  () => {
+
+    window.print();
+
+  }
+);
+
+
+/* ESC KEY */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closeInvoice();
+
+    }
+
+  }
+);
+
+
+/* INITIAL SETTINGS */
+
+newBannerImage = null;
+
+newQrImage = null;
+
+
+/* END */
+
+</script>
+
+</body>
+</html>
