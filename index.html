@@ -118,7 +118,7 @@ function placeOrder(){
   let name=document.getElementById('custName').value||'Customer';
   let bill=cart.map(i=>`${i.name} (${i.unit}) x ${i.qty} = ₹${i.price*i.qty}`).join('%0A');
   let total=document.getElementById('total').innerText;
-  let msg=`🌿 ${settings.shopName} - New Order%0AName: ${name}%0A%0ABILL:%0A${bill}%0A%0ATOTAL: ₹${total}`;
+  let msg=`🌿 ${settings?.shopName || 'Organic Pahadi'} - New Order%0AName: ${name}%0A%0ABILL:%0A${bill}%0A%0ATOTAL: ₹${total}`;
   window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank');
 }
 document.getElementById('waSupport').href=`https://wa.me/${settings.supportNo}?text=Hi Support`;
