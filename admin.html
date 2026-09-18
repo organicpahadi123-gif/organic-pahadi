@@ -1,237 +1,32 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title>
-<style>
-body{font-family:system-ui;max-width:650px;margin:auto;padding:15px;background:#f9f9f9}
-.tab{display:flex;gap:10px;margin:15px 0}
-.tab button{flex:1;padding:12px;border:0;border-radius:10px;background:#ddd;font-weight:bold}
-.tab button.active{background:#000;color:#fff}
-.card{background:#fff;padding:12px;border-radius:10px;margin:10px 0;display:flex;gap:12px;align-items:center}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
-.primary{background:#000;color:#fff;width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0}
-img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
-.section{display:none}.section.show{display:block}
-#preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}
-.qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}
-#lock{position:fixed;inset:0;background:#000000f2;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-</style></head><body>
-
-<!-- PASSWORD LOCK -->
-<div id="lock">
-  <div style="background:#fff;padding:25px;border-radius:16px;width:100%;max-width:340px;text-align:center">
-    <h2 style="margin:0">🔒 Admin Login</h2>
-    <p style="color:#666;font-size:13px">Gaon Organic</p>
-    <input id="pass" type="password" placeholder="Password daalo" style="margin-top:10px">
-    <button class="primary" onclick="checkPass()">Login</button>
-    <p id="err" style="color:#ff4444;font-size:13px;display:none;margin-top:8px">❌ Galat password</p>
-  </div>
-</div>
-
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h2>🌿 Admin</h2>
-<button onclick="logout()" style="background:#eee;border:0;padding:8px 12px;border-radius:8px">Logout</button>
-</div>
-
-<div class="tab">
-  <button id="t1" class="active" onclick="showTab('prod')">Products</button>
-  <button id="t2" onclick="showTab('sett')">Settings</button>
-</div>
-
-<div id="prod" class="section show">
-  <input id="name" placeholder="Product Name">
-  <input id="price" type="number" placeholder="Price">
-  <input id="unit" placeholder="Unit - 1 KG" value="1 KG">
-  <input id="stock" type="number" placeholder="Stock" value="10">
-  <select id="cat"><option>Dal</option><option>Anaj</option><option>Masale</option></select>
-
-  <label style="font-size:13px">Photo (Gallery se):</label>
-  <input id="file" type="file" accept="image/*">
-  <img id="preview">
-  <p id="status" style="font-size:13px;color:green"></p>
-
-  <button class="primary" onclick="addProduct()" id="addBtn">Add Product</button>
-  <p><a href="index.html">→ Shop Dekho</a></p>
-  <div id="list"></div>
-</div>
-
-<div id="sett" class="section">
-  <div style="background:#fff;padding:15px;border-radius:12px">
-    <h3>WhatsApp Numbers</h3>
-    <label>Order wala Number</label><input id="orderNo" placeholder="916395856099">
-    <label>Support wala Number</label><input id="supportNo" placeholder="916395856099">
-    <label>Shop Name</label><input id="shopName" placeholder="Gaon Organic">
-
-    <hr style="margin:15px 0">
-    <h3>📍 Delivery Pincode</h3>
-    <label>Allowed Pincodes (comma se)</label><input id="pincodes" placeholder="221001,221002,273001 - Khali chhodo to sab jagah delivery">
-    <small style="color:#666">Ex: 221001,273001 - Sirf ye pincode pe order lega</small>
-
-    <hr style="margin:15px 0">
-    <h3>🎁 Coupon Code</h3>
-    <label>Coupon Code</label><input id="couponCode" placeholder="GAON20">
-    <label>Discount %</label><input id="couponDiscount" type="number" placeholder="20">
-
-    <hr style="margin:15px 0">
-    <h3>💳 UPI QR Code (FREE Payment)</h3>
-    <label>QR Upload Karo (PhonePe / GPay ka QR)</label>
-    <input id="qrInput" type="file" accept="image/*">
-    <div id="qrBoxDiv" class="qrBox" style="display:none">
-      <img id="qrPreview" style="width:180px;border-radius:10px"><br>
-      <small>Yehi QR customer ko dikhega</small><br>
-      <button onclick="removeQR()" style="margin-top:8px;background:#ff4444;color:#fff;border:0;padding:6px 12px;border-radius:6px">QR Hatao</button>
-    </div>
-    <p id="qrStatus" style="font-size:13px;color:green"></p>
-
-    <button class="primary" onclick="saveSettings()" style="margin-top:15px">Save Settings</button>
-    <p id="settStatus" style="color:green"></p>
-  </div>
-</div>
-
-<script>
-const ADMIN_PASS = "asdf@1234";
-function checkPass(){
-  if(document.getElementById('pass').value===ADMIN_PASS){
-    localStorage.setItem('admin_ok','yes');
-    document.getElementById('lock').style.display='none';
-  } else {
-    document.getElementById('err').style.display='block';
-  }
-}
-function logout(){
-  localStorage.removeItem('admin_ok');
-  location.reload();
-}
-if(localStorage.getItem('admin_ok')=='yes') document.getElementById('lock').style.display='none';
-
-let products=JSON.parse(localStorage.getItem('gaon_products')||'[]');
-let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic","pincodes":"","couponCode":"GAON20","couponDiscount":"20"}');
-let compressedImage=''; let editId=null; let compressedQR='';
-
-function showTab(t){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
-  document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(t).classList.add('show');
-  document.getElementById(t=='prod'?'t1':'t2').classList.add('active');
-  if(t=='sett'){
-    document.getElementById('orderNo').value=settings.orderNo||'';
-    document.getElementById('supportNo').value=settings.supportNo||'';
-    document.getElementById('shopName').value=settings.shopName||'';
-    document.getElementById('pincodes').value=settings.pincodes||'';
-    document.getElementById('couponCode').value=settings.couponCode||'GAON20';
-    document.getElementById('couponDiscount').value=settings.couponDiscount||'20';
-    if(settings.qrImage){
-      document.getElementById('qrPreview').src=settings.qrImage;
-      document.getElementById('qrBoxDiv').style.display='block';
-    }
-  }
-}
-function saveSettings(){
-  settings.orderNo=document.getElementById('orderNo').value.replace(/[^0-9]/g,'');
-  settings.supportNo=document.getElementById('supportNo').value.replace(/[^0-9]/g,'');
-  settings.shopName=document.getElementById('shopName').value||'Gaon Organic';
-  settings.pincodes=document.getElementById('pincodes').value.trim();
-  settings.couponCode=document.getElementById('couponCode').value.trim().toUpperCase()||'GAON20';
-  settings.couponDiscount=document.getElementById('couponDiscount').value.trim()||'20';
-  if(compressedQR) settings.qrImage=compressedQR;
-  localStorage.setItem('gaon_settings',JSON.stringify(settings));
-  document.getElementById('settStatus').innerText='✓ Saved! Pincode/Coupon/QR save ho gaya';
-  setTimeout(()=>document.getElementById('settStatus').innerText='',3000);
-}
-
-function removeQR(){
-  if(confirm('QR hatana hai?')){
-    delete settings.qrImage;
-    localStorage.setItem('gaon_settings',JSON.stringify(settings));
-    document.getElementById('qrBoxDiv').style.display='none';
-    document.getElementById('qrInput').value='';
-    compressedQR='';
-    document.getElementById('qrStatus').innerText='QR hata diya';
-  }
-}
-
-document.getElementById('qrInput').addEventListener('change', function(e){
-  let file=e.target.files[0]; if(!file) return;
-  document.getElementById('qrStatus').innerText='Compressing QR...';
-  let reader=new FileReader();
-  reader.onload=function(ev){
-    let img=new Image();
-    img.onload=function(){
-      let canvas=document.createElement('canvas');
-      let maxW=600;
-      let scale=Math.min(maxW/img.width, maxW/img.height, 1);
-      canvas.width=img.width*scale; canvas.height=img.height*scale;
-      let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      compressedQR=canvas.toDataURL('image/jpeg',0.7);
-      document.getElementById('qrPreview').src=compressedQR;
-      document.getElementById('qrBoxDiv').style.display='block';
-      document.getElementById('qrStatus').innerText='✓ QR Ready - Save Settings dabao';
-    };
-    img.src=ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-document.getElementById('file').addEventListener('change', function(e){
-  let file=e.target.files[0]; if(!file) return;
-  document.getElementById('status').innerText='Compressing...';
-  let reader=new FileReader();
-  reader.onload=function(ev){
-    let img=new Image();
-    img.onload=function(){
-      let canvas=document.createElement('canvas');
-      let maxW=800;
-      let scale=Math.min(maxW/img.width, maxW/img.height, 1);
-      canvas.width=img.width*scale; canvas.height=img.height*scale;
-      let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      compressedImage=canvas.toDataURL('image/jpeg',0.6);
-      document.getElementById('preview').src=compressedImage;
-      document.getElementById('preview').style.display='block';
-      document.getElementById('status').innerText='✓ Photo Ready - '+Math.round(compressedImage.length/1024)+' KB';
-    };
-    img.src=ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-function save(){localStorage.setItem('gaon_products',JSON.stringify(products)); render();}
-function addProduct(){
-  let n=document.getElementById('name').value.trim();
-  let p=document.getElementById('price').value.trim();
-  let u=document.getElementById('unit').value.trim()||'1 KG';
-  let s=document.getElementById('stock').value.trim()||'10';
-  let c=document.getElementById('cat').value;
-  if(!n ||!p){ alert('Name aur Price daalo'); return; }
-  if(!editId &&!compressedImage){ alert('Photo select karo'); return; }
-  if(editId){
-    let pr=products.find(x=>x.id==editId);
-    pr.name=n; pr.price=parseInt(p); pr.unit=u; pr.stock=parseInt(s); pr.cat=c;
-    if(compressedImage) pr.img=compressedImage;
-    editId=null; document.getElementById('addBtn').innerText='Add Product';
-  } else {
-    products.push({id:Date.now(), name:n, price:parseInt(p), unit:u, stock:parseInt(s), cat:c, img:compressedImage});
-  }
-  document.getElementById('name').value=''; document.getElementById('price').value='';
-  compressedImage=''; document.getElementById('preview').style.display='none';
-  document.getElementById('file').value=''; document.getElementById('status').innerText='✓ Added!';
-  save();
-}
-function del(id){ if(confirm('Delete?')){ products=products.filter(x=>x.id!=id); save(); } }
-function edit(id){
-  let p=products.find(x=>x.id==id);
-  document.getElementById('name').value=p.name; document.getElementById('price').value=p.price;
-  document.getElementById('unit').value=p.unit; document.getElementById('stock').value=p.stock;
-  document.getElementById('cat').value=p.cat;
-  document.getElementById('preview').src=p.img; document.getElementById('preview').style.display='block';
-  editId=id; document.getElementById('addBtn').innerText='Update Product';
-  document.getElementById('status').innerText='Editing: '+p.name+' - Nayi photo chaho to select karo';
-  window.scrollTo(0,0);
-}
-function render(){
-  let list=document.getElementById('list');
-  list.innerHTML='<h3>Products ('+products.length+')</h3>';
-  products.forEach(p=>{
-    list.innerHTML+=`<div class="card"><img class="thumb" src="${p.img}"><div style="flex:1"><b>${p.name}</b><br>₹${p.price} / ${p.unit}<br><small>${p.cat} • Stock ${p.stock}</small></div><button onclick="edit(${p.id})" style="background:#eee;padding:8px 10px;border-radius:6px;border:0">Edit</button><button onclick="del(${p.id})" style="background:#ff4444;color:#fff;padding:8px 10px;border-radius:6px;border:0">X</button></div>`;
-  });
-}
-render();
+<style>body{font-family:system-ui;max-width:650px;margin:auto;padding:15px;background:#f9f9f9}.tab{display:flex;gap:10px;margin:15px 0}.tab button{flex:1;padding:12px;border:0;border-radius:10px;background:#ddd;font-weight:bold}.tab button.active{background:#000;color:#fff}.card{background:#fff;padding:12px;border-radius:10px;margin:10px 0;display:flex;gap:12px;align-items:center}input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}.primary{background:#000;color:#fff;width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0}img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}.section{display:none}.section.show{display:block}#preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}.qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}#lock{position:fixed;inset:0;background:#000000f2;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}</style></head><body>
+<div id="lock"><div style="background:#fff;padding:25px;border-radius:16px;width:100%;max-width:340px;text-align:center"><h2 style="margin:0">🔒 Admin Login</h2><p style="color:#666;font-size:13px">Firebase Secure</p><input id="email" type="email" placeholder="Email" value="organicpahadi123@gmail.com" style="margin-top:10px"><input id="pass" type="password" placeholder="Password"><button class="primary" onclick="login()" id="loginBtn">Login</button><p id="err" style="color:#ff4444;font-size:13px;display:none;margin-top:8px"></p></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h2>🌿 Admin</h2><button onclick="logout()" style="background:#eee;border:0;padding:8px 12px;border-radius:8px">Logout</button></div>
+<div class="tab"><button id="t1" class="active" onclick="showTab('prod')">Products</button><button id="t2" onclick="showTab('sett')">Settings</button></div>
+<div id="prod" class="section show"><input id="name" placeholder="Product Name"><input id="price" type="number" placeholder="Price"><input id="unit" placeholder="Unit - 1 KG" value="1 KG"><input id="stock" type="number" placeholder="Stock" value="10"><select id="cat"><option>Dal</option><option>Anaj</option><option>Masale</option></select><label style="font-size:13px">Photo:</label><input id="file" type="file" accept="image/*"><img id="preview"><p id="status" style="font-size:13px;color:green"></p><button class="primary" onclick="addProduct()" id="addBtn">Add Product</button><p><a href="index.html">→ Shop Dekho</a></p><div id="list"></div></div>
+<div id="sett" class="section"><div style="background:#fff;padding:15px;border-radius:12px"><h3>WhatsApp Numbers</h3><label>Order wala Number</label><input id="orderNo" placeholder="916395856099"><label>Support wala Number</label><input id="supportNo" placeholder="916395856099"><label>Shop Name</label><input id="shopName" placeholder="Gaon Organic"><hr><h3>📍 Delivery Pincode</h3><label>Allowed Pincodes</label><input id="pincodes" placeholder="221001,221002"><hr><h3>🎁 Coupon Code</h3><label>Coupon Code</label><input id="couponCode" placeholder="GAON20"><label>Discount %</label><input id="couponDiscount" type="number" placeholder="20"><hr><h3>💳 UPI QR Code</h3><label>QR Upload</label><input id="qrInput" type="file" accept="image/*"><div id="qrBoxDiv" class="qrBox" style="display:none"><img id="qrPreview" style="width:180px;border-radius:10px"><br><small>Yehi QR customer ko dikhega</small><br><button onclick="removeQR()" style="margin-top:8px;background:#ff4444;color:#fff;border:0;padding:6px 12px;border-radius:6px">QR Hatao</button></div><p id="qrStatus" style="font-size:13px;color:green"></p><hr><h3>🔑 Password Change</h3><label>New Password (min 6)</label><input id="newPass" type="password" placeholder="Naya password"><label>Confirm New Password</label><input id="newPass2" type="password" placeholder="Confirm karo"><button onclick="changePass()" style="background:#111;color:#fff;width:100%;padding:12px;border-radius:10px;font-weight:bold;border:0;margin-top:8px">Update Password</button><p id="passStatus" style="font-size:13px"></p><button class="primary" onclick="saveSettings()" style="margin-top:15px">Save Settings</button><p id="settStatus" style="color:green"></p></div></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const firebaseConfig = { apiKey: "AIzaSyB80lKiUQA_t2IhXBgZjPI2kPQKqc1xSF8", authDomain: "gaon-organic.firebaseapp.com", databaseURL: "https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "gaon-organic", storageBucket: "gaon-organic.firebasestorage.app", messagingSenderId: "29340220943", appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a" };
+const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
+let products = {}; let settings = {}; let compressedImage = ''; let editId = null; let compressedQR = '';
+window.login = async () => { const email=document.getElementById('email').value.trim(); const pass=document.getElementById('pass').value.trim(); const err=document.getElementById('err'); const btn=document.getElementById('loginBtn'); if(!email||!pass){err.innerText='Email / Password daalo';err.style.display='block';return;} btn.innerText='Logging...';btn.disabled=true; try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){err.innerText='❌ '+e.message.replace('Firebase: ','');err.style.display='block';btn.innerText='Login';btn.disabled=false;}};
+window.logout = async () => { await signOut(auth); location.reload(); };
+onAuthStateChanged(auth,(user)=>{ if(user && user.email.toLowerCase()==='organicpahadi123@gmail.com'){document.getElementById('lock').style.display='none';initData();}else if(user){document.getElementById('err').innerText='❌ Ye admin email nahi hai';document.getElementById('err').style.display='block';signOut(auth);}else{document.getElementById('lock').style.display='flex';document.getElementById('loginBtn').innerText='Login';document.getElementById('loginBtn').disabled=false;}});
+function initData(){ onValue(ref(db,'products'),(snap)=>{products=snap.val()||{};render();}); onValue(ref(db,'settings'),(snap)=>{settings=snap.val()||{orderNo:"916395856099",supportNo:"916395856099",shopName:"Gaon Organic",pincodes:"",couponCode:"GAON20",couponDiscount:"20"}; if(document.getElementById('sett').classList.contains('show')) fillSettings();});}
+window.changePass = async () => { const np=document.getElementById('newPass').value.trim(); const np2=document.getElementById('newPass2').value.trim(); const st=document.getElementById('passStatus'); if(!np||np.length<6){st.style.color='red';st.innerText='❌ Min 6 character';return;} if(np!==np2){st.style.color='red';st.innerText='❌ Dono same nahi';return;} st.style.color='green';st.innerText='Updating...'; try{ await updatePassword(auth.currentUser,np); st.style.color='green';st.innerText='✓ Password update ho gaya!'; document.getElementById('newPass').value='';document.getElementById('newPass2').value=''; }catch(e){ if(e.code==='auth/requires-recent-login'){ const cur=prompt('Purana password daalo:'); if(!cur){st.innerText='❌ Cancelled';return;} try{ const cred=EmailAuthProvider.credential(auth.currentUser.email,cur); await reauthenticateWithCredential(auth.currentUser,cred); await updatePassword(auth.currentUser,np); st.style.color='green';st.innerText='✓ Password update ho gaya!'; document.getElementById('newPass').value='';document.getElementById('newPass2').value=''; }catch(e2){st.style.color='red';st.innerText='❌ '+e2.message;}} else { st.style.color='red';st.innerText='❌ '+e.message;}}};
+window.showTab = (t) => { document.querySelectorAll('.section').forEach(s=>s.classList.remove('show')); document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('active')); document.getElementById(t).classList.add('show'); document.getElementById(t=='prod'?'t1':'t2').classList.add('active'); if(t=='sett') fillSettings(); }
+function fillSettings(){ document.getElementById('orderNo').value=settings.orderNo||''; document.getElementById('supportNo').value=settings.supportNo||''; document.getElementById('shopName').value=settings.shopName||''; document.getElementById('pincodes').value=settings.pincodes||''; document.getElementById('couponCode').value=settings.couponCode||'GAON20'; document.getElementById('couponDiscount').value=settings.couponDiscount||'20'; if(settings.qrImage){document.getElementById('qrPreview').src=settings.qrImage;document.getElementById('qrBoxDiv').style.display='block';}}
+window.saveSettings = async () => { const newSet={ orderNo:document.getElementById('orderNo').value.replace(/[^0-9]/g,''), supportNo:document.getElementById('supportNo').value.replace(/[^0-9]/g,''), shopName:document.getElementById('shopName').value||'Gaon Organic', pincodes:document.getElementById('pincodes').value.trim(), couponCode:document.getElementById('couponCode').value.trim().toUpperCase()||'GAON20', couponDiscount:document.getElementById('couponDiscount').value.trim()||'20', qrImage:compressedQR||settings.qrImage||'' }; if(!newSet.qrImage) delete newSet.qrImage; await set(ref(db,'settings'),newSet); document.getElementById('settStatus').innerText='✓ Saved to Firebase!'; setTimeout(()=>document.getElementById('settStatus').innerText='',3000); };
+window.removeQR = async () => { if(confirm('QR hatana hai?')){ compressedQR=''; const updated={...settings}; delete updated.qrImage; await set(ref(db,'settings'),updated); document.getElementById('qrBoxDiv').style.display='none'; document.getElementById('qrInput').value=''; document.getElementById('qrStatus').innerText='QR hata diya'; }};
+document.getElementById('qrInput').addEventListener('change',function(e){ let file=e.target.files[0];if(!file)return;document.getElementById('qrStatus').innerText='Compressing QR...';let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let maxW=600;let scale=Math.min(maxW/img.width,maxW/img.height,1);canvas.width=img.width*scale;canvas.height=img.height*scale;let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);compressedQR=canvas.toDataURL('image/jpeg',0.7);document.getElementById('qrPreview').src=compressedQR;document.getElementById('qrBoxDiv').style.display='block';document.getElementById('qrStatus').innerText='✓ QR Ready - Save Settings dabao';};img.src=ev.target.result;};reader.readAsDataURL(file);});
+document.getElementById('file').addEventListener('change',function(e){ let file=e.target.files[0];if(!file)return;document.getElementById('status').innerText='Compressing...';let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let maxW=800;let scale=Math.min(maxW/img.width,maxW/img.height,1);canvas.width=img.width*scale;canvas.height=img.height*scale;let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);compressedImage=canvas.toDataURL('image/jpeg',0.6);document.getElementById('preview').src=compressedImage;document.getElementById('preview').style.display='block';document.getElementById('status').innerText='✓ Photo Ready - '+Math.round(compressedImage.length/1024)+' KB';};img.src=ev.target.result;};reader.readAsDataURL(file);});
+window.addProduct = async () => { let n=document.getElementById('name').value.trim();let p=document.getElementById('price').value.trim();let u=document.getElementById('unit').value.trim()||'1 KG';let s=document.getElementById('stock').value.trim()||'10';let c=document.getElementById('cat').value;if(!n||!p){alert('Name aur Price daalo');return;}if(!editId&&!compressedImage){alert('Photo select karo');return;}if(editId){let upd={name:n,price:parseInt(p),unit:u,stock:parseInt(s),cat:c};if(compressedImage)upd.img=compressedImage;await update(ref(db,'products/'+editId),upd);editId=null;document.getElementById('addBtn').innerText='Add Product';}else{const newRef=push(ref(db,'products'));await set(newRef,{id:newRef.key,name:n,price:parseInt(p),unit:u,stock:parseInt(s),cat:c,img:compressedImage});}document.getElementById('name').value='';document.getElementById('price').value='';compressedImage='';document.getElementById('preview').style.display='none';document.getElementById('file').value='';document.getElementById('status').innerText='✓ Saved to Firebase!';};
+window.del = async (id) => { if(confirm('Delete?')){ await remove(ref(db,'products/'+id)); } };
+window.edit = (id) => { let p=products[id]; document.getElementById('name').value=p.name; document.getElementById('price').value=p.price; document.getElementById('unit').value=p.unit; document.getElementById('stock').value=p.stock; document.getElementById('cat').value=p.cat; document.getElementById('preview').src=p.img; document.getElementById('preview').style.display='block'; editId=id; document.getElementById('addBtn').innerText='Update Product'; document.getElementById('status').innerText='Editing: '+p.name; window.scrollTo(0,0); };
+function render(){ let list=document.getElementById('list'); const count=Object.keys(products).length; list.innerHTML='<h3>Products ('+count+') - Firebase Live</h3>'; Object.values(products).reverse().forEach(p=>{ list.innerHTML+=`<div class="card"><img class="thumb" src="${p.img}"><div style="flex:1"><b>${p.name}</b><br>₹${p.price} / ${p.unit}<br><small>${p.cat} • Stock ${p.stock}</small></div><button onclick="edit('${p.id}')" style="background:#eee;padding:8px 10px;border-radius:6px;border:0">Edit</button><button onclick="del('${p.id}')" style="background:#ff4444;color:#fff;padding:8px 10px;border-radius:6px;border:0">X</button></div>`;});}
 showTab('prod');
 </script></body></html>
