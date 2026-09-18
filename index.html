@@ -24,6 +24,8 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 #toast button{background:#fff;color:#000;border:0;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer}
 .input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;margin-bottom:8px}
 .couponBox{display:flex;gap:6px;margin-bottom:10px}
+.payBox{display:flex;gap:8px;margin:10px 0}.payBox button{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:bold}.payBox button.activePay{background:#000;color:#fff;border-color:#000}
+#successModal{position:fixed;inset:0;background:#00000090;z-index:99;display:none;align-items:center;justify-content:center;padding:20px}
 </style></head><body>
 <header>
   <b id="shopTitle">🌿 Gaon Organic</b>
@@ -41,16 +43,23 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 </header>
 <div class="grid" id="grid"><p style="grid-column:1/-1;text-align:center;padding:30px">Loading Firebase...</p></div>
 <div id="toast"><span id="toastText">Added to cart</span><button onclick="openCart(true)">View Cart</button></div>
-<div id="cartSheet"><div class="cartHead"><span>🛒 Cart (<span id="cCount2">0</span>)</span><span onclick="openCart()" style="cursor:pointer">✕</span></div><div class="cartBody" id="cartItems"></div><div class="checkoutFooter"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div><div id="couponRow" style="display:flex;justify-content:space-between;margin-bottom:5px;color:#2e7d32;display:none"><span>Coupon (<span id="couponCodeShow"></span>)</span><span>-₹<span id="couponAmt">0</span></span></div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div><div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div><div id="step1"><div class="couponBox"><input id="couponInput" class="input" style="margin:0" placeholder="Coupon code?"><button onclick="applyCoupon()" style="padding:12px 16px;border-radius:10px;border:0;background:#000;color:#fff;font-weight:bold">Apply</button></div><button onclick="goCheckout()" style="width:100%;background:#000;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">Proceed to Checkout →</button></div><div id="step2" style="display:none"><div id="qrBox" style="display:none;text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366"><p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p><img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px"><p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karke screenshot bhej do</p></div><input id="custName" class="input" placeholder="1. Full Name *"><input id="custPO" class="input" placeholder="2. P.O. (Post Office) *"><input id="custVill" class="input" placeholder="3. Vill / City *"><input id="custDist" class="input" placeholder="4. District *"><input id="custState" class="input" placeholder="5. State *"><input id="custPin" class="input" placeholder="6. Pincode *"><small id="pinErr" style="color:#ff4444;display:none;margin:-4px 0 8px 0">⚠️ Is pincode pe delivery nahi hai</small><input id="custMobile" class="input" placeholder="Mobile Number *"><button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">✅ WhatsApp pe Order Bhejo</button><button onclick="backToCart()" style="width:100%;background:#eee;padding:10px;border:0;border-radius:10px;margin-top:8px;margin-bottom:40px">← Back to Cart</button></div></div></div><a class="wa-float" id="waSupport" href="#" target="_blank">💬</a>
+<div id="cartSheet"><div class="cartHead"><span>🛒 Cart (<span id="cCount2">0</span>)</span><span onclick="openCart()" style="cursor:pointer">✕</span></div><div class="cartBody" id="cartItems"></div><div class="checkoutFooter"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div><div id="couponRow" style="display:flex;justify-content:space-between;margin-bottom:5px;color:#2e7d32;display:none"><span>Coupon (<span id="couponCodeShow"></span>)</span><span>-₹<span id="couponAmt">0</span></span></div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div><div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div><div id="step1"><div class="couponBox"><input id="couponInput" class="input" style="margin:0" placeholder="Coupon code?"><button onclick="applyCoupon()" style="padding:12px 16px;border-radius:10px;border:0;background:#000;color:#fff;font-weight:bold">Apply</button></div><button onclick="goCheckout()" style="width:100%;background:#000;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">Proceed to Checkout →</button></div><div id="step2" style="display:none">
+<div class="payBox"><button id="payUPI" class="activePay" onclick="setPay('UPI')">💳 UPI QR</button><button id="payCOD" onclick="setPay('COD')">💵 COD</button></div>
+<div id="qrBox" style="text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366"><p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p><img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px"><p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karo</p></div>
+<div id="upiFields"><input id="utrNo" class="input" placeholder="UTR / Transaction ID * (12 digit)"><label style="font-size:12px">Payment Slip Screenshot *</label><input id="slipFile" type="file" accept="image/*" class="input"><img id="slipPreview" style="width:100%;max-height:150px;object-fit:contain;display:none;border-radius:10px;margin-bottom:8px"></div>
+<input id="custName" class="input" placeholder="1. Full Name *"><input id="custPO" class="input" placeholder="2. P.O. (Post Office) *"><input id="custVill" class="input" placeholder="3. Vill / City *"><input id="custDist" class="input" placeholder="4. District *"><input id="custState" class="input" placeholder="5. State *"><input id="custPin" class="input" placeholder="6. Pincode *"><small id="pinErr" style="color:#ff4444;display:none;margin:-4px 0 8px 0">⚠️ Is pincode pe delivery nahi hai</small><input id="custMobile" class="input" placeholder="Mobile Number *">
+<button id="placeBtn" onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">✅ Order Confirm Karo</button><button onclick="backToCart()" style="width:100%;background:#eee;padding:10px;border:0;border-radius:10px;margin-top:8px;margin-bottom:40px">← Back to Cart</button></div></div></div>
+<div id="successModal"><div style="background:#fff;padding:25px;border-radius:16px;width:100%;max-width:360px;text-align:center"><h2>🎉 Order Placed!</h2><p>Order ID:</p><h1 id="finalOrderId" style="background:#000;color:#fff;padding:10px;border-radius:10px">#0000</h1><p id="finalMsg" style="font-size:13px;color:#666">Admin abhi confirm karega</p><button onclick="closeSuccess()" style="width:100%;background:#000;color:#fff;padding:12px;border:0;border-radius:10px;margin-top:10px;font-weight:bold">Shop Continue Karo</button></div></div>
+<a class="wa-float" id="waSupport" href="#" target="_blank">💬</a>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, update, push, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyB80lKiUQA_t2IhXBgZjPI2kPQKqc1xSF8", authDomain: "gaon-organic.firebaseapp.com", databaseURL: "https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "gaon-organic", storageBucket: "gaon-organic.firebasestorage.app", messagingSenderId: "29340220943", appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a" };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
-let productsObj = {}; let products = []; let settings = {orderNo:"916395856099",supportNo:"916395856099",shopName:"Gaon Organic",pincodes:"",couponCode:"GAON20",couponDiscount:"20"};
-let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]'); let sortType='', minPrice=0, maxPrice=999999; let discount=0, appliedCoupon='';
+let productsObj = {}; let products = []; let settings = {orderNo:"916395856099",supportNo:"916395856099",shopName:"Gaon Organic",pincodes:"",couponCode:"GAON20",couponDiscount:"20",codEnabled:true};
+let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]'); let sortType='', minPrice=0, maxPrice=999999; let discount=0, appliedCoupon=''; let paymentMode='UPI'; let compressedSlip='';
 onValue(ref(db, 'products'), (snap)=>{ productsObj = snap.val() || {}; products = Object.values(productsObj); renderShop(); });
-onValue(ref(db, 'settings'), (snap)=>{ if(snap.val()){ settings = snap.val(); document.getElementById('shopTitle').innerText='🌿 '+(settings.shopName||'Gaon Organic'); document.getElementById('waSupport').href=`https://wa.me/${settings.supportNo||'916395856099'}?text=Hi Support`; if(settings.qrImage) document.getElementById('showQR').src=settings.qrImage; updateCart(); } });
+onValue(ref(db, 'settings'), (snap)=>{ if(snap.val()){ settings = snap.val(); document.getElementById('shopTitle').innerText='🌿 '+(settings.shopName||'Gaon Organic'); document.getElementById('waSupport').href=`https://wa.me/${settings.supportNo||'916395856099'}?text=Hi Support`; if(settings.qrImage) document.getElementById('showQR').src=settings.qrImage; if(settings.codEnabled===false){document.getElementById('payCOD').style.display='none'; paymentMode='UPI';} else document.getElementById('payCOD').style.display='block'; updateCart(); } });
 window.toggleFilter = ()=>{let m=document.getElementById('filterMenu'); m.style.display=m.style.display=='block'?'none':'block';}
 window.setSort = (t)=>{sortType=t; toggleFilter(); renderShop();}
 window.setPriceRange = (a,b)=>{minPrice=a; maxPrice=b; toggleFilter(); renderShop();}
@@ -63,9 +72,90 @@ window.updateCart = ()=>{ let subtotal=0,count=0; let div=document.getElementByI
 window.applyCoupon = ()=>{ let code=document.getElementById('couponInput').value.trim().toUpperCase(); if(!code) return; if(settings.couponCode && code===settings.couponCode.toUpperCase()){ let subtotal=0; cart.forEach(it=>subtotal+=it.price*it.qty); discount = Math.round(subtotal * (parseInt(settings.couponDiscount||20)/100)); appliedCoupon=code; alert('Coupon lag gaya! ₹'+discount+' off'); } else { discount=0; appliedCoupon=''; alert('Galat coupon'); } saveCart(); }
 window.chg = (i,d)=>{ let prod=products.find(x=>x.id==cart[i].id); if(d>0 && prod && cart[i].qty>=prod.stock) return alert('Stock khatam'); cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); saveCart(); }
 window.openCart = (forceOpen)=>{ let s=document.getElementById('cartSheet'); if(forceOpen===true) s.classList.add('open'); else s.classList.toggle('open'); document.getElementById('toast').classList.remove('show'); if(!s.classList.contains('open')){ document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; } }
-window.goCheckout = ()=>{ if(cart.length==0) return alert('Cart khali hai'); document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block'; document.getElementById('qrBox').style.display = (settings.qrImage && document.getElementById('total').innerText>0)? 'block' : 'none'; }
+window.goCheckout = ()=>{ if(cart.length==0) return alert('Cart khali hai'); document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block'; document.getElementById('qrBox').style.display = (paymentMode==='UPI' && settings.qrImage)? 'block' : 'none'; }
 window.backToCart = ()=>{ document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; }
-window.placeOrder = async ()=>{ if(cart.length==0) return alert('Cart khali hai'); let name=document.getElementById('custName').value.trim(); let po=document.getElementById('custPO').value.trim(); let vill=document.getElementById('custVill').value.trim(); let dist=document.getElementById('custDist').value.trim(); let state=document.getElementById('custState').value.trim(); let pin=document.getElementById('custPin').value.trim(); let mobile=document.getElementById('custMobile').value.trim(); if(!name||!po||!vill||!dist||!state||!pin||!mobile) return alert('Saare field bharo *'); if(settings.pincodes && settings.pincodes.trim()!=""){ let allowed = settings.pincodes.split(',').map(s=>s.trim()); if(!allowed.includes(pin)){ document.getElementById('pinErr').style.display='block'; return alert('Is pincode ('+pin+') pe delivery nahi hai. Allowed: '+settings.pincodes); } } document.getElementById('pinErr').style.display='none'; let subtotal=0; cart.forEach(it=>subtotal+=it.price*it.qty); let delivery = subtotal >= 1000? 0 : 50; let grandTotal = subtotal - discount + delivery; for(let c of cart){ let p = productsObj[c.id]; if(p){ let newStock = Math.max(0, (p.stock||0) - c.qty); await update(ref(db, 'products/'+c.id), {stock: newStock}); } } let bill=cart.map(i=>{let u=i.unit?`(${i.unit})`:''; return `${i.name} ${u} x ${i.qty} = ₹${i.price*i.qty}`;}).join('%0A'); let couponText = discount>0? `%0ACoupon ${appliedCoupon}: -₹${discount}` : ''; let msg=`🌿 ${settings.shopName} - New Order%0A%0AName: ${name}%0AMobile: ${mobile}%0AP.O.: ${po}%0AVill/City: ${vill}%0ADist: ${dist}%0AState: ${state}%0APin: ${pin}%0A%0ABILL:%0A${bill}${couponText}%0ATotal: ₹${grandTotal}%0APayment: UPI QR Done`; window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank'); cart=[]; discount=0; appliedCoupon=''; saveCart(); }
+window.setPay = (m)=>{ paymentMode=m; document.getElementById('payUPI').classList.toggle('activePay',m==='UPI'); document.getElementById('payCOD').classList.toggle('activePay',m==='COD'); document.getElementById('upiFields').style.display=m==='UPI'?'block':'none'; document.getElementById('qrBox').style.display=(m==='UPI' && settings.qrImage)?'block':'none'; document.getElementById('placeBtn').innerText= m==='UPI'?'✅ Order Confirm Karo':'💵 COD Order Confirm Karo'; }
+
+async function generateOrderId(){
+  let id, exists=true, tries=0;
+  while(exists && tries<20){
+    id = Math.floor(1000 + Math.random()*9000);
+    let snap = await get(ref(db,'orders'));
+    let found=false;
+    if(snap.val()){ Object.values(snap.val()).forEach(o=>{ if(o.orderId===id) found=true; });}
+    exists=found; tries++;
+  }
+  return id;
+}
+document.getElementById('slipFile').addEventListener('change',function(e){
+  let file=e.target.files[0]; if(!file) return;
+  let reader=new FileReader();
+  reader.onload=function(ev){
+    let img=new Image();
+    img.onload=function(){
+      let canvas=document.createElement('canvas'); let maxW=600;
+      let scale=Math.min(maxW/img.width,maxW/img.height,1);
+      canvas.width=img.width*scale; canvas.height=img.height*scale;
+      let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      compressedSlip=canvas.toDataURL('image/jpeg',0.6);
+      document.getElementById('slipPreview').src=compressedSlip;
+      document.getElementById('slipPreview').style.display='block';
+    }; img.src=ev.target.result;
+  }; reader.readAsDataURL(file);
+});
+
+window.placeOrder = async ()=>{
+  if(cart.length==0) return alert('Cart khali hai');
+  let name=document.getElementById('custName').value.trim();
+  let po=document.getElementById('custPO').value.trim();
+  let vill=document.getElementById('custVill').value.trim();
+  let dist=document.getElementById('custDist').value.trim();
+  let state=document.getElementById('custState').value.trim();
+  let pin=document.getElementById('custPin').value.trim();
+  let mobile=document.getElementById('custMobile').value.trim();
+  let utr=document.getElementById('utrNo').value.trim();
+  if(!name||!po||!vill||!dist||!state||!pin||!mobile) return alert('Saare address field bharo *');
+  if(paymentMode==='UPI'){
+    if(!utr) return alert('UTR daalo bhai');
+    if(!compressedSlip) return alert('Slip ka screenshot upload karo');
+  }
+  if(settings.pincodes && settings.pincodes.trim()!=""){
+    let allowed = settings.pincodes.split(',').map(s=>s.trim());
+    if(!allowed.includes(pin)){ document.getElementById('pinErr').style.display='block'; return alert('Is pincode ('+pin+') pe delivery nahi hai. Allowed: '+settings.pincodes); }
+  }
+  document.getElementById('pinErr').style.display='none';
+  let subtotal=0; cart.forEach(it=>subtotal+=it.price*it.qty);
+  let delivery = subtotal >= 1000? 0 : 50;
+  let grandTotal = subtotal - discount + delivery;
+  document.getElementById('placeBtn').innerText='Order ho raha hai...'; document.getElementById('placeBtn').disabled=true;
+
+  // Generate Random Order ID 1000-9999
+  let orderId = await generateOrderId();
+
+  // Stock minus
+  for(let c of cart){ let p = productsObj[c.id]; if(p){ let newStock = Math.max(0, (p.stock||0) - c.qty); await update(ref(db, 'products/'+c.id), {stock: newStock}); } }
+
+  let orderData={
+    key:'', orderId: orderId,
+    name:name, phone:mobile, address:`${po}, ${vill}, ${dist}, ${state}`, pincode:pin, po:po, vill:vill, dist:dist, state:state,
+    items: cart.map(c=>({name:c.name, qty:c.qty, price:c.price, unit:c.unit||''})),
+    subtotal:subtotal, delivery:delivery, discount:discount, coupon:appliedCoupon, total:grandTotal,
+    payment:paymentMode, utr:paymentMode==='UPI'?utr:'COD', slipUrl:paymentMode==='UPI'?compressedSlip:'',
+    status:'pending', createdAt: Date.now(), dateStr: new Date().toLocaleString('en-IN'),
+    cancelReason:''
+  };
+  let newOrderRef=push(ref(db,'orders'));
+  orderData.key=newOrderRef.key;
+  await set(newOrderRef, orderData);
+
+  // Success
+  document.getElementById('finalOrderId').innerText='#'+orderId;
+  document.getElementById('successModal').style.display='flex';
+  document.getElementById('placeBtn').innerText='✅ Order Confirm Karo'; document.getElementById('placeBtn').disabled=false;
+  cart=[]; discount=0; appliedCoupon=''; compressedSlip=''; saveCart();
+  document.getElementById('cartSheet').classList.remove('open');
+}
+window.closeSuccess=()=>{document.getElementById('successModal').style.display='none'; document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none';}
 updateCart();
 document.addEventListener('click',e=>{if(!e.target.closest('header')) document.getElementById('filterMenu').style.display='none';});
 </script></body></html>
