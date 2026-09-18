@@ -21,7 +21,7 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 #toast{position:fixed;left:12px;right:12px;bottom:18px;background:#111;color:#fff;padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;transform:translateY(150px);transition:0.3s;z-index:70;box-shadow:0 8px 20px #0004}
 #toast.show{transform:translateY(0)}
 #toast button{background:#fff;color:#000;border:0;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer}
-.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;margin-bottom:10px}
+.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;margin-bottom:8px}
 </style>
 </head><body>
 <header>
@@ -40,11 +40,7 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 </header>
 
 <div class="grid" id="grid"></div>
-
-<div id="toast">
-  <span id="toastText">Added to cart</span>
-  <button onclick="openCart(true)">View Cart</button>
-</div>
+<div id="toast"><span id="toastText">Added to cart</span><button onclick="openCart(true)">View Cart</button></div>
 
 <div id="cartSheet">
   <div class="cartHead"><span>🛒 Cart (<span id="cCount2">0</span>)</span><span onclick="openCart()" style="cursor:pointer">✕</span></div>
@@ -54,19 +50,31 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
     <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div>
     <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div>
 
-    <!-- QR BOX - Admin se ayega to dikhega -->
-    <div id="qrBox" style="display:none;text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366">
-      <p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p>
-      <img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px">
-      <p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karke screenshot bhej do</p>
+    <!-- STEP 1 -->
+    <div id="step1">
+      <button onclick="goCheckout()" style="width:100%;background:#000;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">Proceed to Checkout →</button>
+      <small style="display:block;text-align:center;margin-top:6px;color:#666">Cart check karo phir proceed karo</small>
     </div>
-    
-    <input id="custName" class="input" placeholder="Aapka Naam *">
-    <input id="custMobile" class="input" placeholder="Mobile Number *" type="tel">
-    <textarea id="custAddress" class="input" placeholder="Pura Address - Gaon, City, Pincode *" rows="3"></textarea>
-    
-    <button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">WhatsApp pe Order Bhejo</button>
-    <small style="display:block;text-align:center;margin-top:6px;color:#666">1000+ pe Delivery FREE • QR se pay free hai</small>
+
+    <!-- STEP 2 -->
+    <div id="step2" style="display:none">
+      <div id="qrBox" style="display:none;text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366">
+        <p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p>
+        <img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px">
+        <p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karke screenshot bhej do</p>
+      </div>
+      
+      <input id="custName" class="input" placeholder="1. Full Name *">
+      <input id="custPO" class="input" placeholder="2. P.O. (Post Office) *">
+      <input id="custVill" class="input" placeholder="3. Vill / City *">
+      <input id="custDist" class="input" placeholder="4. District *">
+      <input id="custState" class="input" placeholder="5. State *">
+      <input id="custPin" class="input" placeholder="6. Pincode *">
+      <input id="custMobile" class="input" placeholder="Mobile Number *">
+      
+      <button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">✅ WhatsApp pe Order Bhejo</button>
+      <button onclick="backToCart()" style="width:100%;background:#eee;padding:10px;border:0;border-radius:10px;margin-top:8px">← Back to Cart</button>
+    </div>
   </div>
 </div>
 
@@ -98,8 +106,7 @@ function renderShop(){
 function addToCart(id){
   let prod=products.find(x=>x.id==id); if(!prod||prod.stock==0) return;
   let it=cart.find(x=>x.id==id); if(it) it.qty++; else cart.push({...prod,qty:1});
-  saveCart();
-  showToast(prod.name);
+  saveCart(); showToast(prod.name);
 }
 let toastTimer;
 function showToast(name){
@@ -116,62 +123,46 @@ function updateCart(){
   });
   let delivery = subtotal >= 1000 || subtotal==0 ? 0 : 50;
   let grandTotal = subtotal + delivery;
-  
   document.getElementById('subtotal').innerText=subtotal;
   document.getElementById('total').innerText=grandTotal;
   document.getElementById('deliveryText').innerText= delivery==0 ? (subtotal==0 ? '₹0' : 'FREE') : `₹${delivery}`;
   document.getElementById('cartCount').innerText=count;
   document.getElementById('cCount2').innerText=count;
-
-  // QR dikhana
-  let qrBox=document.getElementById('qrBox');
-  let showQR=document.getElementById('showQR');
-  if(settings.qrImage && subtotal>0){
-    qrBox.style.display='block';
-    showQR.src=settings.qrImage;
-    document.getElementById('qrAmt').innerText=grandTotal;
-  } else {
-    qrBox.style.display='none';
-  }
+  document.getElementById('qrAmt').innerText=grandTotal;
+  if(settings.qrImage) document.getElementById('showQR').src=settings.qrImage;
 }
 function chg(i,d){cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); saveCart();}
 function openCart(forceOpen){
   let s=document.getElementById('cartSheet');
-  if(forceOpen===true) s.classList.add('open');
-  else s.classList.toggle('open');
+  if(forceOpen===true) s.classList.add('open'); else s.classList.toggle('open');
   document.getElementById('toast').classList.remove('show');
+  if(!s.classList.contains('open')){ document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; }
 }
+function goCheckout(){
+  if(cart.length==0) return alert('Cart khali hai');
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  document.getElementById('qrBox').style.display = (settings.qrImage && document.getElementById('total').innerText>0) ? 'block' : 'none';
+}
+function backToCart(){ document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; }
+
 function placeOrder(){
   settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
   if(cart.length==0) return alert('Cart khali hai');
-  
   let name=document.getElementById('custName').value.trim();
+  let po=document.getElementById('custPO').value.trim();
+  let vill=document.getElementById('custVill').value.trim();
+  let dist=document.getElementById('custDist').value.trim();
+  let state=document.getElementById('custState').value.trim();
+  let pin=document.getElementById('custPin').value.trim();
   let mobile=document.getElementById('custMobile').value.trim();
-  let address=document.getElementById('custAddress').value.trim();
-  
-  if(!name) return alert('Naam likho');
-  if(!mobile || mobile.length<10) return alert('Sahi mobile number likho');
-  if(!address) return alert('Address likho');
+  if(!name||!po||!vill||!dist||!state||!pin||!mobile) return alert('Saare field bharo *');
 
-  let subtotal=0;
-  cart.forEach(it=>subtotal+=it.price*it.qty);
+  let subtotal=0; cart.forEach(it=>subtotal+=it.price*it.qty);
   let delivery = subtotal >= 1000 ? 0 : 50;
   let grandTotal = subtotal + delivery;
-  
   let bill=cart.map(i=>`${i.name} (${i.unit}) x ${i.qty} = ₹${i.price*i.qty}`).join('%0A');
-  let deliveryStr = delivery==0 ? 'FREE (1000+ order)' : `₹${delivery}`;
-  let payMethod = settings.qrImage ? 'UPI QR + COD' : 'COD';
-  
-  let msg=`🌿 ${settings?.shopName || 'Gaon Organic'} - New Order%0A%0A` +
-          `Name: ${name}%0A` +
-          `Mobile: ${mobile}%0A` +
-          `Address: ${address}%0A%0A` +
-          `BILL:%0A${bill}%0A%0A` +
-          `Subtotal: ₹${subtotal}%0A` +
-          `Delivery: ${deliveryStr}%0A` +
-          `TOTAL: ₹${grandTotal}%0A%0A` +
-          `Payment: ${payMethod}`;
-          
+  let msg=`🌿 ${settings.shopName} - New Order%0A%0AName: ${name}%0AMobile: ${mobile}%0AP.O.: ${po}%0AVill/City: ${vill}%0ADist: ${dist}%0AState: ${state}%0APin: ${pin}%0A%0ABILL:%0A${bill}%0ATotal: ₹${grandTotal}%0APayment: UPI QR Done`;
   window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank');
 }
 document.getElementById('waSupport').href=`https://wa.me/${settings.supportNo}?text=Hi Support`;
