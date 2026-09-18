@@ -18,10 +18,10 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 .cartBody{overflow:auto;padding:15px;flex:1}
 .wa-float{position:fixed;bottom:20px;right:15px;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;text-decoration:none;z-index:40}
 .badge{background:#000;color:#fff;padding:2px 7px;border-radius:10px;font-size:12px;cursor:pointer}
-/* CHHOTA POPUP - ADD TO CART KE BAAD */
 #toast{position:fixed;left:12px;right:12px;bottom:18px;background:#111;color:#fff;padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;transform:translateY(150px);transition:0.3s;z-index:70;box-shadow:0 8px 20px #0004}
 #toast.show{transform:translateY(0)}
 #toast button{background:#fff;color:#000;border:0;padding:7px 12px;border-radius:20px;font-weight:bold;cursor:pointer}
+.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;margin-bottom:10px}
 </style>
 </head><body>
 <header>
@@ -41,20 +41,25 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 
 <div class="grid" id="grid"></div>
 
-<!-- CHHOTA ADD TO CART POPUP -->
 <div id="toast">
   <span id="toastText">Added to cart</span>
   <button onclick="openCart(true)">View Cart</button>
 </div>
 
-<!-- PURA CART - SIRF VIEW CART DABANE PE KHULEGA -->
 <div id="cartSheet">
   <div class="cartHead"><span>🛒 Cart (<span id="cCount2">0</span>)</span><span onclick="openCart()" style="cursor:pointer">✕</span></div>
   <div class="cartBody" id="cartItems"></div>
   <div style="padding:15px;border-top:1px solid #eee">
-    <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:10px"><span>Total</span><span>₹<span id="total">0</span></span></div>
-    <input id="custName" placeholder="Naam + Address" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div>
+    <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div>
+    
+    <input id="custName" class="input" placeholder="Aapka Naam *">
+    <input id="custMobile" class="input" placeholder="Mobile Number *" type="tel">
+    <textarea id="custAddress" class="input" placeholder="Pura Address - Gaon, City, Pincode *" rows="3"></textarea>
+    
     <button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">WhatsApp pe Order Bhejo</button>
+    <small style="display:block;text-align:center;margin-top:6px;color:#666">1000+ pe Delivery FREE</small>
   </div>
 </div>
 
@@ -62,7 +67,7 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 
 <script>
 let products=JSON.parse(localStorage.getItem('gaon_products')||'[]');
-let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"6395856099","supportNo":"6395856099","shopName":"Gaon Organic"}');
+let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
 let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]');
 let sortType='', minPrice=0, maxPrice=999999;
 document.getElementById('shopTitle').innerText='🌿 '+(settings.shopName||'Gaon Organic');
@@ -87,7 +92,7 @@ function addToCart(id){
   let prod=products.find(x=>x.id==id); if(!prod||prod.stock==0) return;
   let it=cart.find(x=>x.id==id); if(it) it.qty++; else cart.push({...prod,qty:1});
   saveCart();
-  showToast(prod.name); // SIRF CHHOTA POPUP DIKHEGA, PURA CART NAHI
+  showToast(prod.name);
 }
 let toastTimer;
 function showToast(name){
@@ -97,11 +102,17 @@ function showToast(name){
 }
 function saveCart(){localStorage.setItem('gaon_cart',JSON.stringify(cart)); updateCart();}
 function updateCart(){
-  let total=0,count=0; let div=document.getElementById('cartItems'); div.innerHTML='';
-  cart.forEach((it,idx)=>{total+=it.price*it.qty; count+=it.qty;
+  let subtotal=0,count=0; let div=document.getElementById('cartItems'); div.innerHTML='';
+  cart.forEach((it,idx)=>{subtotal+=it.price*it.qty; count+=it.qty;
     div.innerHTML+=`<div style="display:flex;gap:10px;margin-bottom:12px;align-items:center"><img src="${it.img}" style="width:55px;height:55px;border-radius:8px;object-fit:cover"><div style="flex:1"><b>${it.name}</b><br><small>₹${it.price} x ${it.qty} = ₹${it.price*it.qty}</small></div><button onclick="chg(${idx},1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">+</button><button onclick="chg(${idx},-1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">-</button></div>`;
   });
-  document.getElementById('total').innerText=total;
+  let delivery = subtotal >= 1000 || subtotal==0 ? 0 : 50;
+  let grandTotal = subtotal + delivery;
+  
+  document.getElementById('subtotal').innerText=subtotal;
+  document.getElementById('total').innerText=grandTotal;
+  document.getElementById('deliveryText').innerText= delivery==0 ? (subtotal==0 ? '₹0' : 'FREE') : `₹${delivery}`;
+  
   document.getElementById('cartCount').innerText=count;
   document.getElementById('cCount2').innerText=count;
 }
@@ -113,12 +124,35 @@ function openCart(forceOpen){
   document.getElementById('toast').classList.remove('show');
 }
 function placeOrder(){
-  settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"6395856099","supportNo":"6395856099"}');
+  settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
   if(cart.length==0) return alert('Cart khali hai');
-  let name=document.getElementById('custName').value||'Customer';
+  
+  let name=document.getElementById('custName').value.trim();
+  let mobile=document.getElementById('custMobile').value.trim();
+  let address=document.getElementById('custAddress').value.trim();
+  
+  if(!name) return alert('Naam likho');
+  if(!mobile || mobile.length<10) return alert('Sahi mobile number likho');
+  if(!address) return alert('Address likho');
+
+  let subtotal=0;
+  cart.forEach(it=>subtotal+=it.price*it.qty);
+  let delivery = subtotal >= 1000 ? 0 : 50;
+  let grandTotal = subtotal + delivery;
+  
   let bill=cart.map(i=>`${i.name} (${i.unit}) x ${i.qty} = ₹${i.price*i.qty}`).join('%0A');
-  let total=document.getElementById('total').innerText;
-  let msg=`🌿 ${settings?.shopName || 'Organic Pahadi'} - New Order%0AName: ${name}%0A%0ABILL:%0A${bill}%0A%0ATOTAL: ₹${total}`;
+  let deliveryStr = delivery==0 ? 'FREE (1000+ order)' : `₹${delivery}`;
+  
+  let msg=`🌿 ${settings?.shopName || 'Gaon Organic'} - New Order%0A%0A` +
+          `Name: ${name}%0A` +
+          `Mobile: ${mobile}%0A` +
+          `Address: ${address}%0A%0A` +
+          `BILL:%0A${bill}%0A%0A` +
+          `Subtotal: ₹${subtotal}%0A` +
+          `Delivery: ${deliveryStr}%0A` +
+          `TOTAL: ₹${grandTotal}%0A%0A` +
+          `Payment: COD`;
+          
   window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank');
 }
 document.getElementById('waSupport').href=`https://wa.me/${settings.supportNo}?text=Hi Support`;
