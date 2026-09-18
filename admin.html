@@ -12,8 +12,25 @@ img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
 .section{display:none}.section.show{display:block}
 #preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}
 .qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}
+#lock{position:fixed;inset:0;background:#000000f2;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
 </style></head><body>
+
+<!-- PASSWORD LOCK -->
+<div id="lock">
+  <div style="background:#fff;padding:25px;border-radius:16px;width:100%;max-width:340px;text-align:center">
+    <h2 style="margin:0">🔒 Admin Login</h2>
+    <p style="color:#666;font-size:13px">Gaon Organic</p>
+    <input id="pass" type="password" placeholder="Password daalo" style="margin-top:10px">
+    <button class="primary" onclick="checkPass()">Login</button>
+    <p id="err" style="color:#ff4444;font-size:13px;display:none;margin-top:8px">❌ Galat password</p>
+  </div>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center">
 <h2>🌿 Admin</h2>
+<button onclick="logout()" style="background:#eee;border:0;padding:8px 12px;border-radius:8px">Logout</button>
+</div>
+
 <div class="tab">
   <button id="t1" class="active" onclick="showTab('prod')">Products</button>
   <button id="t2" onclick="showTab('sett')">Settings</button>
@@ -44,6 +61,16 @@ img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
     <label>Shop Name</label><input id="shopName" placeholder="Gaon Organic">
 
     <hr style="margin:15px 0">
+    <h3>📍 Delivery Pincode</h3>
+    <label>Allowed Pincodes (comma se)</label><input id="pincodes" placeholder="221001,221002,273001 - Khali chhodo to sab jagah delivery">
+    <small style="color:#666">Ex: 221001,273001 - Sirf ye pincode pe order lega</small>
+
+    <hr style="margin:15px 0">
+    <h3>🎁 Coupon Code</h3>
+    <label>Coupon Code</label><input id="couponCode" placeholder="GAON20">
+    <label>Discount %</label><input id="couponDiscount" type="number" placeholder="20">
+
+    <hr style="margin:15px 0">
     <h3>💳 UPI QR Code (FREE Payment)</h3>
     <label>QR Upload Karo (PhonePe / GPay ka QR)</label>
     <input id="qrInput" type="file" accept="image/*">
@@ -54,14 +81,29 @@ img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
     </div>
     <p id="qrStatus" style="font-size:13px;color:green"></p>
 
-    <button class="primary" onclick="saveSettings()">Save Settings</button>
+    <button class="primary" onclick="saveSettings()" style="margin-top:15px">Save Settings</button>
     <p id="settStatus" style="color:green"></p>
   </div>
 </div>
 
 <script>
+const ADMIN_PASS = "asdf@1234";
+function checkPass(){
+  if(document.getElementById('pass').value===ADMIN_PASS){
+    localStorage.setItem('admin_ok','yes');
+    document.getElementById('lock').style.display='none';
+  } else {
+    document.getElementById('err').style.display='block';
+  }
+}
+function logout(){
+  localStorage.removeItem('admin_ok');
+  location.reload();
+}
+if(localStorage.getItem('admin_ok')=='yes') document.getElementById('lock').style.display='none';
+
 let products=JSON.parse(localStorage.getItem('gaon_products')||'[]');
-let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
+let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic","pincodes":"","couponCode":"GAON20","couponDiscount":"20"}');
 let compressedImage=''; let editId=null; let compressedQR='';
 
 function showTab(t){
@@ -73,6 +115,9 @@ function showTab(t){
     document.getElementById('orderNo').value=settings.orderNo||'';
     document.getElementById('supportNo').value=settings.supportNo||'';
     document.getElementById('shopName').value=settings.shopName||'';
+    document.getElementById('pincodes').value=settings.pincodes||'';
+    document.getElementById('couponCode').value=settings.couponCode||'GAON20';
+    document.getElementById('couponDiscount').value=settings.couponDiscount||'20';
     if(settings.qrImage){
       document.getElementById('qrPreview').src=settings.qrImage;
       document.getElementById('qrBoxDiv').style.display='block';
@@ -83,9 +128,12 @@ function saveSettings(){
   settings.orderNo=document.getElementById('orderNo').value.replace(/[^0-9]/g,'');
   settings.supportNo=document.getElementById('supportNo').value.replace(/[^0-9]/g,'');
   settings.shopName=document.getElementById('shopName').value||'Gaon Organic';
+  settings.pincodes=document.getElementById('pincodes').value.trim();
+  settings.couponCode=document.getElementById('couponCode').value.trim().toUpperCase()||'GAON20';
+  settings.couponDiscount=document.getElementById('couponDiscount').value.trim()||'20';
   if(compressedQR) settings.qrImage=compressedQR;
   localStorage.setItem('gaon_settings',JSON.stringify(settings));
-  document.getElementById('settStatus').innerText='✓ Saved! QR bhi save ho gaya';
+  document.getElementById('settStatus').innerText='✓ Saved! Pincode/Coupon/QR save ho gaya';
   setTimeout(()=>document.getElementById('settStatus').innerText='',3000);
 }
 
@@ -100,7 +148,6 @@ function removeQR(){
   }
 }
 
-// QR COMPRESS
 document.getElementById('qrInput').addEventListener('change', function(e){
   let file=e.target.files[0]; if(!file) return;
   document.getElementById('qrStatus').innerText='Compressing QR...';
@@ -123,7 +170,6 @@ document.getElementById('qrInput').addEventListener('change', function(e){
   reader.readAsDataURL(file);
 });
 
-// PRODUCT PHOTO COMPRESS
 document.getElementById('file').addEventListener('change', function(e){
   let file=e.target.files[0]; if(!file) return;
   document.getElementById('status').innerText='Compressing...';
@@ -155,7 +201,6 @@ function addProduct(){
   let c=document.getElementById('cat').value;
   if(!n ||!p){ alert('Name aur Price daalo'); return; }
   if(!editId &&!compressedImage){ alert('Photo select karo'); return; }
-
   if(editId){
     let pr=products.find(x=>x.id==editId);
     pr.name=n; pr.price=parseInt(p); pr.unit=u; pr.stock=parseInt(s); pr.cat=c;
@@ -188,11 +233,5 @@ function render(){
   });
 }
 render();
-document.getElementById('orderNo').value=settings.orderNo||'';
-document.getElementById('supportNo').value=settings.supportNo||'';
-document.getElementById('shopName').value=settings.shopName||'';
-if(settings.qrImage){
-  document.getElementById('qrPreview').src=settings.qrImage;
-  document.getElementById('qrBoxDiv').style.display='block';
-}
+showTab('prod');
 </script></body></html>
