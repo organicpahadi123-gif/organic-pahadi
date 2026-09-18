@@ -12,10 +12,12 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 .card{background:#fff;border-radius:14px;padding:10px}
 .card img{width:100%;height:130px;object-fit:cover;border-radius:10px}
 .add{width:100%;background:#000;color:#fff;border:0;padding:9px;border-radius:20px;margin-top:8px;font-weight:bold;cursor:pointer}
-#cartSheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -5px 30px #0003;transform:translateY(100%);transition:0.35s;z-index:60;max-height:85vh;display:flex;flex-direction:column}
+/* FIX - height badhaya aur scroll lagaya */
+#cartSheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -5px 30px #0003;transform:translateY(100%);transition:0.35s;z-index:60;height:92vh;display:flex;flex-direction:column}
 #cartSheet.open{transform:translateY(0)}
-.cartHead{display:flex;justify-content:space-between;padding:18px;border-bottom:1px solid #eee;font-weight:bold}
-.cartBody{overflow:auto;padding:15px;flex:1}
+.cartHead{flex-shrink:0;display:flex;justify-content:space-between;padding:18px;border-bottom:1px solid #eee;font-weight:bold}
+.cartBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:15px}
+.checkoutFooter{flex-shrink:0;max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-top:1px solid #eee;padding:15px;background:#fff}
 .wa-float{position:fixed;bottom:20px;right:15px;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;text-decoration:none;z-index:40}
 .badge{background:#000;color:#fff;padding:2px 7px;border-radius:10px;font-size:12px;cursor:pointer}
 #toast{position:fixed;left:12px;right:12px;bottom:18px;background:#111;color:#fff;padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;transform:translateY(150px);transition:0.3s;z-index:70;box-shadow:0 8px 20px #0004}
@@ -45,25 +47,22 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
 <div id="cartSheet">
   <div class="cartHead"><span>🛒 Cart (<span id="cCount2">0</span>)</span><span onclick="openCart()" style="cursor:pointer">✕</span></div>
   <div class="cartBody" id="cartItems"></div>
-  <div style="padding:15px;border-top:1px solid #eee">
+  <div class="checkoutFooter">
     <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
     <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div>
     <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div>
 
-    <!-- STEP 1 -->
     <div id="step1">
       <button onclick="goCheckout()" style="width:100%;background:#000;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">Proceed to Checkout →</button>
       <small style="display:block;text-align:center;margin-top:6px;color:#666">Cart check karo phir proceed karo</small>
     </div>
 
-    <!-- STEP 2 -->
     <div id="step2" style="display:none">
       <div id="qrBox" style="display:none;text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366">
         <p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p>
         <img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px">
         <p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karke screenshot bhej do</p>
       </div>
-      
       <input id="custName" class="input" placeholder="1. Full Name *">
       <input id="custPO" class="input" placeholder="2. P.O. (Post Office) *">
       <input id="custVill" class="input" placeholder="3. Vill / City *">
@@ -71,9 +70,8 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
       <input id="custState" class="input" placeholder="5. State *">
       <input id="custPin" class="input" placeholder="6. Pincode *">
       <input id="custMobile" class="input" placeholder="Mobile Number *">
-      
       <button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">✅ WhatsApp pe Order Bhejo</button>
-      <button onclick="backToCart()" style="width:100%;background:#eee;padding:10px;border:0;border-radius:10px;margin-top:8px">← Back to Cart</button>
+      <button onclick="backToCart()" style="width:100%;background:#eee;padding:10px;border:0;border-radius:10px;margin-top:8px;margin-bottom:40px">← Back to Cart</button>
     </div>
   </div>
 </div>
@@ -86,7 +84,6 @@ let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"9163
 let cart=JSON.parse(localStorage.getItem('gaon_cart')||'[]');
 let sortType='', minPrice=0, maxPrice=999999;
 document.getElementById('shopTitle').innerText='🌿 '+(settings.shopName||'Gaon Organic');
-
 function toggleFilter(){let m=document.getElementById('filterMenu'); m.style.display=m.style.display=='block'?'none':'block';}
 function setSort(t){sortType=t; toggleFilter(); renderShop();}
 function setPriceRange(a,b){minPrice=a; maxPrice=b; toggleFilter(); renderShop();}
@@ -100,7 +97,8 @@ function renderShop(){
   g.innerHTML=''; f.forEach(p=>{
     let st=p.stock==0?'Out of Stock':p.stock<=3?`Only ${p.stock} left`:'In Stock';
     let cl=p.stock==0?'#ff4444':p.stock<=3?'#ff9800':'#2e7d32';
-    g.innerHTML+=`<div class="card"><img src="${p.img}"><div style="font-weight:bold;margin-top:6px">${p.name}</div><small>${p.cat} • ${p.unit}</small><div style="display:flex;justify-content:space-between;margin-top:4px"><b>₹${p.price}</b><small style="color:${cl};font-weight:bold">${st}</small></div><button class="add" ${p.stock==0?'disabled style="background:#ccc"':''} onclick="addToCart(${p.id})">${p.stock==0?'Out of Stock':'Add to Cart'}</button></div>`;
+    let cat = p.cat||''; let unit = p.unit||'';
+    g.innerHTML+=`<div class="card"><img src="${p.img}"><div style="font-weight:bold;margin-top:6px">${p.name}</div><small>${cat} ${unit? '• '+unit:''}</small><div style="display:flex;justify-content:space-between;margin-top:4px"><b>₹${p.price}</b><small style="color:${cl};font-weight:bold">${st}</small></div><button class="add" ${p.stock==0?'disabled style="background:#ccc"':''} onclick="addToCart(${p.id})">${p.stock==0?'Out of Stock':'Add to Cart'}</button></div>`;
   });
 }
 function addToCart(id){
@@ -119,13 +117,14 @@ function updateCart(){
   settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
   let subtotal=0,count=0; let div=document.getElementById('cartItems'); div.innerHTML='';
   cart.forEach((it,idx)=>{subtotal+=it.price*it.qty; count+=it.qty;
-    div.innerHTML+=`<div style="display:flex;gap:10px;margin-bottom:12px;align-items:center"><img src="${it.img}" style="width:55px;height:55px;border-radius:8px;object-fit:cover"><div style="flex:1"><b>${it.name}</b><br><small>₹${it.price} x ${it.qty} = ₹${it.price*it.qty}</small></div><button onclick="chg(${idx},1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">+</button><button onclick="chg(${idx},-1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">-</button></div>`;
+    let unit = it.unit||'';
+    div.innerHTML+=`<div style="display:flex;gap:10px;margin-bottom:12px;align-items:center"><img src="${it.img}" style="width:55px;height:55px;border-radius:8px;object-fit:cover"><div style="flex:1"><b>${it.name}</b><br><small>₹${it.price} ${unit} x ${it.qty} = ₹${it.price*it.qty}</small></div><button onclick="chg(${idx},1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">+</button><button onclick="chg(${idx},-1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">-</button></div>`;
   });
-  let delivery = subtotal >= 1000 || subtotal==0 ? 0 : 50;
+  let delivery = subtotal >= 1000 || subtotal==0? 0 : 50;
   let grandTotal = subtotal + delivery;
   document.getElementById('subtotal').innerText=subtotal;
   document.getElementById('total').innerText=grandTotal;
-  document.getElementById('deliveryText').innerText= delivery==0 ? (subtotal==0 ? '₹0' : 'FREE') : `₹${delivery}`;
+  document.getElementById('deliveryText').innerText= delivery==0? (subtotal==0? '₹0' : 'FREE') : `₹${delivery}`;
   document.getElementById('cartCount').innerText=count;
   document.getElementById('cCount2').innerText=count;
   document.getElementById('qrAmt').innerText=grandTotal;
@@ -142,10 +141,10 @@ function goCheckout(){
   if(cart.length==0) return alert('Cart khali hai');
   document.getElementById('step1').style.display='none';
   document.getElementById('step2').style.display='block';
-  document.getElementById('qrBox').style.display = (settings.qrImage && document.getElementById('total').innerText>0) ? 'block' : 'none';
+  document.getElementById('qrBox').style.display = (settings.qrImage && document.getElementById('total').innerText>0)? 'block' : 'none';
+  document.querySelector('.checkoutFooter').scrollTop = 0;
 }
 function backToCart(){ document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; }
-
 function placeOrder(){
   settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
   if(cart.length==0) return alert('Cart khali hai');
@@ -157,11 +156,10 @@ function placeOrder(){
   let pin=document.getElementById('custPin').value.trim();
   let mobile=document.getElementById('custMobile').value.trim();
   if(!name||!po||!vill||!dist||!state||!pin||!mobile) return alert('Saare field bharo *');
-
   let subtotal=0; cart.forEach(it=>subtotal+=it.price*it.qty);
-  let delivery = subtotal >= 1000 ? 0 : 50;
+  let delivery = subtotal >= 1000? 0 : 50;
   let grandTotal = subtotal + delivery;
-  let bill=cart.map(i=>`${i.name} (${i.unit}) x ${i.qty} = ₹${i.price*i.qty}`).join('%0A');
+  let bill=cart.map(i=>{let u=i.unit?`(${i.unit})`:''; return `${i.name} ${u} x ${i.qty} = ₹${i.price*i.qty}`;}).join('%0A');
   let msg=`🌿 ${settings.shopName} - New Order%0A%0AName: ${name}%0AMobile: ${mobile}%0AP.O.: ${po}%0AVill/City: ${vill}%0ADist: ${dist}%0AState: ${state}%0APin: ${pin}%0A%0ABILL:%0A${bill}%0ATotal: ₹${grandTotal}%0APayment: UPI QR Done`;
   window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank');
 }
