@@ -53,13 +53,20 @@ header{display:flex;gap:10px;align-items:center;padding:12px 15px;background:#ff
     <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Subtotal</span><span>₹<span id="subtotal">0</span></span></div>
     <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Delivery</span><span id="deliveryText">₹50</span></div>
     <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:18px;margin-bottom:12px"><span>Total</span><span>₹<span id="total">0</span></span></div>
+
+    <!-- QR BOX - Admin se ayega to dikhega -->
+    <div id="qrBox" style="display:none;text-align:center;background:#f0fdf4;padding:12px;border-radius:12px;margin-bottom:10px;border:1px dashed #25D366">
+      <p style="margin:0 0 8px 0;font-weight:bold">📱 UPI QR se Pay Karo</p>
+      <img id="showQR" style="width:180px;border-radius:12px;background:#fff;padding:5px">
+      <p style="font-size:12px;color:#444;margin:6px 0 0 0">Total ₹<span id="qrAmt">0</span> pay karke screenshot bhej do</p>
+    </div>
     
     <input id="custName" class="input" placeholder="Aapka Naam *">
     <input id="custMobile" class="input" placeholder="Mobile Number *" type="tel">
     <textarea id="custAddress" class="input" placeholder="Pura Address - Gaon, City, Pincode *" rows="3"></textarea>
     
     <button onclick="placeOrder()" style="width:100%;background:#25D366;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:bold;font-size:16px">WhatsApp pe Order Bhejo</button>
-    <small style="display:block;text-align:center;margin-top:6px;color:#666">1000+ pe Delivery FREE</small>
+    <small style="display:block;text-align:center;margin-top:6px;color:#666">1000+ pe Delivery FREE • QR se pay free hai</small>
   </div>
 </div>
 
@@ -102,6 +109,7 @@ function showToast(name){
 }
 function saveCart(){localStorage.setItem('gaon_cart',JSON.stringify(cart)); updateCart();}
 function updateCart(){
+  settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
   let subtotal=0,count=0; let div=document.getElementById('cartItems'); div.innerHTML='';
   cart.forEach((it,idx)=>{subtotal+=it.price*it.qty; count+=it.qty;
     div.innerHTML+=`<div style="display:flex;gap:10px;margin-bottom:12px;align-items:center"><img src="${it.img}" style="width:55px;height:55px;border-radius:8px;object-fit:cover"><div style="flex:1"><b>${it.name}</b><br><small>₹${it.price} x ${it.qty} = ₹${it.price*it.qty}</small></div><button onclick="chg(${idx},1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">+</button><button onclick="chg(${idx},-1)" style="padding:6px 10px;border-radius:50%;border:1px solid #ccc">-</button></div>`;
@@ -112,9 +120,19 @@ function updateCart(){
   document.getElementById('subtotal').innerText=subtotal;
   document.getElementById('total').innerText=grandTotal;
   document.getElementById('deliveryText').innerText= delivery==0 ? (subtotal==0 ? '₹0' : 'FREE') : `₹${delivery}`;
-  
   document.getElementById('cartCount').innerText=count;
   document.getElementById('cCount2').innerText=count;
+
+  // QR dikhana
+  let qrBox=document.getElementById('qrBox');
+  let showQR=document.getElementById('showQR');
+  if(settings.qrImage && subtotal>0){
+    qrBox.style.display='block';
+    showQR.src=settings.qrImage;
+    document.getElementById('qrAmt').innerText=grandTotal;
+  } else {
+    qrBox.style.display='none';
+  }
 }
 function chg(i,d){cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); saveCart();}
 function openCart(forceOpen){
@@ -142,6 +160,7 @@ function placeOrder(){
   
   let bill=cart.map(i=>`${i.name} (${i.unit}) x ${i.qty} = ₹${i.price*i.qty}`).join('%0A');
   let deliveryStr = delivery==0 ? 'FREE (1000+ order)' : `₹${delivery}`;
+  let payMethod = settings.qrImage ? 'UPI QR + COD' : 'COD';
   
   let msg=`🌿 ${settings?.shopName || 'Gaon Organic'} - New Order%0A%0A` +
           `Name: ${name}%0A` +
@@ -151,7 +170,7 @@ function placeOrder(){
           `Subtotal: ₹${subtotal}%0A` +
           `Delivery: ${deliveryStr}%0A` +
           `TOTAL: ₹${grandTotal}%0A%0A` +
-          `Payment: COD`;
+          `Payment: ${payMethod}`;
           
   window.open(`https://wa.me/${settings.orderNo}?text=${msg}`,'_blank');
 }
