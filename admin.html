@@ -11,6 +11,7 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-r
 img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
 .section{display:none}.section.show{display:block}
 #preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}
+.qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}
 </style></head><body>
 <h2>🌿 Admin</h2>
 <div class="tab">
@@ -38,9 +39,21 @@ img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
 <div id="sett" class="section">
   <div style="background:#fff;padding:15px;border-radius:12px">
     <h3>WhatsApp Numbers</h3>
-    <label>Order wala Number</label><input id="orderNo">
-    <label>Support wala Number</label><input id="supportNo">
-    <label>Shop Name</label><input id="shopName">
+    <label>Order wala Number</label><input id="orderNo" placeholder="916395856099">
+    <label>Support wala Number</label><input id="supportNo" placeholder="916395856099">
+    <label>Shop Name</label><input id="shopName" placeholder="Gaon Organic">
+
+    <hr style="margin:15px 0">
+    <h3>💳 UPI QR Code (FREE Payment)</h3>
+    <label>QR Upload Karo (PhonePe / GPay ka QR)</label>
+    <input id="qrInput" type="file" accept="image/*">
+    <div id="qrBoxDiv" class="qrBox" style="display:none">
+      <img id="qrPreview" style="width:180px;border-radius:10px"><br>
+      <small>Yehi QR customer ko dikhega</small><br>
+      <button onclick="removeQR()" style="margin-top:8px;background:#ff4444;color:#fff;border:0;padding:6px 12px;border-radius:6px">QR Hatao</button>
+    </div>
+    <p id="qrStatus" style="font-size:13px;color:green"></p>
+
     <button class="primary" onclick="saveSettings()">Save Settings</button>
     <p id="settStatus" style="color:green"></p>
   </div>
@@ -48,25 +61,69 @@ img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}
 
 <script>
 let products=JSON.parse(localStorage.getItem('gaon_products')||'[]');
-let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"6395856099","supportNo":"6395856099","shopName":"Gaon Organic"}');
-let compressedImage=''; let editId=null;
+let settings=JSON.parse(localStorage.getItem('gaon_settings')||'{"orderNo":"916395856099","supportNo":"916395856099","shopName":"Gaon Organic"}');
+let compressedImage=''; let editId=null; let compressedQR='';
 
 function showTab(t){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('show'));
   document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('active'));
   document.getElementById(t).classList.add('show');
   document.getElementById(t=='prod'?'t1':'t2').classList.add('active');
-  if(t=='sett'){ orderNo.value=settings.orderNo; supportNo.value=settings.supportNo; shopName.value=settings.shopName; }
+  if(t=='sett'){
+    document.getElementById('orderNo').value=settings.orderNo||'';
+    document.getElementById('supportNo').value=settings.supportNo||'';
+    document.getElementById('shopName').value=settings.shopName||'';
+    if(settings.qrImage){
+      document.getElementById('qrPreview').src=settings.qrImage;
+      document.getElementById('qrBoxDiv').style.display='block';
+    }
+  }
 }
 function saveSettings(){
   settings.orderNo=document.getElementById('orderNo').value.replace(/[^0-9]/g,'');
   settings.supportNo=document.getElementById('supportNo').value.replace(/[^0-9]/g,'');
   settings.shopName=document.getElementById('shopName').value||'Gaon Organic';
+  if(compressedQR) settings.qrImage=compressedQR;
   localStorage.setItem('gaon_settings',JSON.stringify(settings));
-  settStatus.innerText='✓ Saved!'; setTimeout(()=>settStatus.innerText='',2000);
+  document.getElementById('settStatus').innerText='✓ Saved! QR bhi save ho gaya';
+  setTimeout(()=>document.getElementById('settStatus').innerText='',3000);
 }
 
-// PHOTO COMPRESS - GALLERY FIX
+function removeQR(){
+  if(confirm('QR hatana hai?')){
+    delete settings.qrImage;
+    localStorage.setItem('gaon_settings',JSON.stringify(settings));
+    document.getElementById('qrBoxDiv').style.display='none';
+    document.getElementById('qrInput').value='';
+    compressedQR='';
+    document.getElementById('qrStatus').innerText='QR hata diya';
+  }
+}
+
+// QR COMPRESS
+document.getElementById('qrInput').addEventListener('change', function(e){
+  let file=e.target.files[0]; if(!file) return;
+  document.getElementById('qrStatus').innerText='Compressing QR...';
+  let reader=new FileReader();
+  reader.onload=function(ev){
+    let img=new Image();
+    img.onload=function(){
+      let canvas=document.createElement('canvas');
+      let maxW=600;
+      let scale=Math.min(maxW/img.width, maxW/img.height, 1);
+      canvas.width=img.width*scale; canvas.height=img.height*scale;
+      let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      compressedQR=canvas.toDataURL('image/jpeg',0.7);
+      document.getElementById('qrPreview').src=compressedQR;
+      document.getElementById('qrBoxDiv').style.display='block';
+      document.getElementById('qrStatus').innerText='✓ QR Ready - Save Settings dabao';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+// PRODUCT PHOTO COMPRESS
 document.getElementById('file').addEventListener('change', function(e){
   let file=e.target.files[0]; if(!file) return;
   document.getElementById('status').innerText='Compressing...';
@@ -131,5 +188,11 @@ function render(){
   });
 }
 render();
-orderNo.value=settings.orderNo; supportNo.value=settings.supportNo; shopName.value=settings.shopName;
+document.getElementById('orderNo').value=settings.orderNo||'';
+document.getElementById('supportNo').value=settings.supportNo||'';
+document.getElementById('shopName').value=settings.shopName||'';
+if(settings.qrImage){
+  document.getElementById('qrPreview').src=settings.qrImage;
+  document.getElementById('qrBoxDiv').style.display='block';
+}
 </script></body></html>
