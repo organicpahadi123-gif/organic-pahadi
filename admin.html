@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title>
-<style>body{font-family:system-ui;max-width:650px;margin:auto;padding:15px;background:#f9f9f9}.tab{display:flex;gap:10px;margin:15px 0}.tab button{flex:1;padding:12px;border:0;border-radius:10px;background:#ddd;font-weight:bold}.tab button.active{background:#000;color:#fff}.card{background:#fff;padding:12px;border-radius:10px;margin:10px 0;display:flex;gap:12px;align-items:center}input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}.primary{background:#000;color:#fff;width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0}img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}.section{display:none}.section.show{display:block}#preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}.qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}#lock{position:fixed;inset:0;background:#000000f2;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}</style></head><body>
+<style>body{font-family:system-ui;max-width:750px;margin:auto;padding:15px;background:#f9f9f9}.tab{display:flex;gap:10px;margin:15px 0}.tab button{flex:1;padding:12px;border:0;border-radius:10px;background:#ddd;font-weight:bold}.tab button.active{background:#000;color:#fff}.card{background:#fff;padding:12px;border-radius:10px;margin:10px 0;display:flex;gap:12px;align-items:center;box-shadow:0 2px 8px #0000000d}input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}.primary{background:#000;color:#fff;width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0}img.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px}.section{display:none}.section.show{display:block}#preview{width:100%;max-height:200px;object-fit:contain;display:none;margin:10px 0;border-radius:10px}.qrBox{background:#f0fdf4;border:1px dashed #25D366;padding:10px;border-radius:10px;text-align:center;margin:10px 0}#lock{position:fixed;inset:0;background:#000000f2;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.saleGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.saleCard{background:#fff;padding:12px;border-radius:10px;text-align:center;border-left:4px solid #000}.saleCard b{font-size:20px;display:block}
+.orderTab{display:flex;gap:8px;overflow:auto;margin:10px 0}.orderTab button{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:#fff}
+.orderTab button.active2{background:#000;color:#fff;border-color:#000}
+#orderDetail{position:fixed;inset:0;background:#00000080;z-index:100;display:none;overflow:auto;padding:15px}
+.detailBox{background:#fff;border-radius:14px;max-width:500px;margin:auto;padding:15px;max-height:90vh;overflow:auto}
+#denyModal{position:fixed;inset:0;background:#00000080;z-index:101;display:none;align-items:center;justify-content:center;padding:15px}
+</style></head><body>
 <div id="lock"><div style="background:#fff;padding:25px;border-radius:16px;width:100%;max-width:340px;text-align:center"><h2 style="margin:0">🔒 Admin Login</h2><p style="color:#666;font-size:13px">Firebase Secure</p><input id="email" type="email" placeholder="Email" value="organicpahadi123@gmail.com" style="margin-top:10px"><input id="pass" type="password" placeholder="Password"><button class="primary" onclick="login()" id="loginBtn">Login</button><p id="err" style="color:#ff4444;font-size:13px;display:none;margin-top:8px"></p></div></div>
 <div style="display:flex;justify-content:space-between;align-items:center"><h2>🌿 Admin</h2><button onclick="logout()" style="background:#eee;border:0;padding:8px 12px;border-radius:8px">Logout</button></div>
-<div class="tab"><button id="t1" class="active" onclick="showTab('prod')">Products</button><button id="t2" onclick="showTab('sett')">Settings</button></div>
+<div class="tab"><button id="t1" class="active" onclick="showTab('prod')">Products</button><button id="t2" onclick="showTab('orders')">Orders <span id="pendingCount" style="background:red;color:#fff;border-radius:10px;padding:2px 6px;font-size:11px;display:none">0</span></button><button id="t3" onclick="showTab('sett')">Settings</button></div>
+
 <div id="prod" class="section show"><input id="name" placeholder="Product Name"><input id="price" type="number" placeholder="Price"><input id="unit" placeholder="Unit - 1 KG" value="1 KG"><input id="stock" type="number" placeholder="Stock" value="10"><select id="cat"><option>Dal</option><option>Anaj</option><option>Masale</option></select><label style="font-size:13px">Photo:</label><input id="file" type="file" accept="image/*"><img id="preview"><p id="status" style="font-size:13px;color:green"></p><button class="primary" onclick="addProduct()" id="addBtn">Add Product</button><p><a href="index.html">→ Shop Dekho</a></p><div id="list"></div></div>
-<div id="sett" class="section"><div style="background:#fff;padding:15px;border-radius:12px"><h3>WhatsApp Numbers</h3><label>Order wala Number</label><input id="orderNo" placeholder="916395856099"><label>Support wala Number</label><input id="supportNo" placeholder="916395856099"><label>Shop Name</label><input id="shopName" placeholder="Gaon Organic"><hr><h3>📍 Delivery Pincode</h3><label>Allowed Pincodes</label><input id="pincodes" placeholder="221001,221002"><hr><h3>🎁 Coupon Code</h3><label>Coupon Code</label><input id="couponCode" placeholder="GAON20"><label>Discount %</label><input id="couponDiscount" type="number" placeholder="20"><hr><h3>💳 UPI QR Code</h3><label>QR Upload</label><input id="qrInput" type="file" accept="image/*"><div id="qrBoxDiv" class="qrBox" style="display:none"><img id="qrPreview" style="width:180px;border-radius:10px"><br><small>Yehi QR customer ko dikhega</small><br><button onclick="removeQR()" style="margin-top:8px;background:#ff4444;color:#fff;border:0;padding:6px 12px;border-radius:6px">QR Hatao</button></div><p id="qrStatus" style="font-size:13px;color:green"></p><hr><h3>🔑 Password Change</h3><label>New Password (min 6)</label><input id="newPass" type="password" placeholder="Naya password"><label>Confirm New Password</label><input id="newPass2" type="password" placeholder="Confirm karo"><button onclick="changePass()" style="background:#111;color:#fff;width:100%;padding:12px;border-radius:10px;font-weight:bold;border:0;margin-top:8px">Update Password</button><p id="passStatus" style="font-size:13px"></p><button class="primary" onclick="saveSettings()" style="margin-top:15px">Save Settings</button><p id="settStatus" style="color:green"></p></div></div>
+
+<div id="orders" class="section">
+  <div class="saleGrid">
+    <div class="saleCard"><small>Today Sale</small><b id="todaySale">₹0</b></div>
+    <div class="saleCard"><small>7 Days Sale</small><b id="weekSale">₹0</b></div>
+    <div class="saleCard"><small>30 Days Sale</small><b id="monthSale">₹0</b></div>
+    <div class="saleCard" style="border-left-color:green"><small>Total Sale</small><b id="totalSale">₹0</b></div>
+  </div>
+  <div class="orderTab"><button class="active2" onclick="filterOrders('all',this)">All</button><button onclick="filterOrders('pending',this)">Pending</button><button onclick="filterOrders('confirmed',this)">Confirmed</button><button onclick="filterOrders('out_for_delivery',this)">Out for Delivery</button><button onclick="filterOrders('delivered',this)">Delivered</button><button onclick="filterOrders('cancelled',this)">Cancelled</button></div>
+  <div id="orderList"></div>
+</div>
+
+<div id="sett" class="section"><div style="background:#fff;padding:15px;border-radius:12px"><h3>WhatsApp Numbers</h3><label>Order wala Number</label><input id="orderNo" placeholder="916395856099"><label>Support wala Number</label><input id="supportNo" placeholder="916395856099"><label>Shop Name</label><input id="shopName" placeholder="Gaon Organic"><hr><h3>📍 Delivery Pincode</h3><label>Allowed Pincodes</label><input id="pincodes" placeholder="221001,221002"><hr><h3>⚙️ Payment Setting</h3><label style="display:flex;align-items:center;gap:10px;background:#f9f9f9;padding:10px;border-radius:8px"><input id="codEnabled" type="checkbox" style="width:auto;margin:0"> COD Enable / Disable</label><hr><h3>🎁 Coupon Code</h3><label>Coupon Code</label><input id="couponCode" placeholder="GAON20"><label>Discount %</label><input id="couponDiscount" type="number" placeholder="20"><hr><h3>💳 UPI QR Code</h3><label>QR Upload</label><input id="qrInput" type="file" accept="image/*"><div id="qrBoxDiv" class="qrBox" style="display:none"><img id="qrPreview" style="width:180px;border-radius:10px"><br><small>Yehi QR customer ko dikhega</small><br><button onclick="removeQR()" style="margin-top:8px;background:#ff4444;color:#fff;border:0;padding:6px 12px;border-radius:6px">QR Hatao</button></div><p id="qrStatus" style="font-size:13px;color:green"></p><hr><h3>🔑 Password Change</h3><label>New Password (min 6)</label><input id="newPass" type="password" placeholder="Naya password"><label>Confirm New Password</label><input id="newPass2" type="password" placeholder="Confirm karo"><button onclick="changePass()" style="background:#111;color:#fff;width:100%;padding:12px;border-radius:10px;font-weight:bold;border:0;margin-top:8px">Update Password</button><p id="passStatus" style="font-size:13px"></p><button class="primary" onclick="saveSettings()" style="margin-top:15px">Save Settings</button><p id="settStatus" style="color:green"></p></div></div>
+
+<div id="orderDetail"><div class="detailBox"><div style="display:flex;justify-content:space-between"><h3 id="dTitle">Order #0000</h3><button onclick="closeDetail()" style="background:#eee;border:0;padding:6px 10px;border-radius:8px">X</button></div><div id="dBody"></div></div></div>
+<div id="denyModal"><div style="background:#fff;padding:20px;border-radius:14px;width:100%;max-width:380px"><h3>Deny Reason</h3><div style="display:grid;gap:8px;margin:10px 0"><button onclick="setDeny('Payment nahi mila')" style="padding:10px;text-align:left;border:1px solid #ddd;border-radius:8px">Payment nahi mila</button><button onclick="setDeny('Out of Stock')" style="padding:10px;text-align:left;border:1px solid #ddd;border-radius:8px">Out of Stock</button><button onclick="setDeny('Wrong Address')" style="padding:10px;text-align:left;border:1px solid #ddd;border-radius:8px">Wrong Address</button><button onclick="setDeny('Customer ne cancel bola')" style="padding:10px;text-align:left;border:1px solid #ddd;border-radius:8px">Customer ne cancel bola</button></div><label>Extra Note:</label><input id="denyNote" placeholder="Jaise - UTR galat hai"><div style="display:flex;gap:10px;margin-top:10px"><button onclick="closeDeny()" style="flex:1;padding:12px;background:#eee;border:0;border-radius:8px">Cancel</button><button onclick="confirmDeny()" style="flex:1;padding:12px;background:#ff4444;color:#fff;border:0;border-radius:8px;font-weight:bold">Deny Confirm</button></div></div></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, push, set, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyB80lKiUQA_t2IhXBgZjPI2kPQKqc1xSF8", authDomain: "gaon-organic.firebaseapp.com", databaseURL: "https://gaon-organic-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "gaon-organic", storageBucket: "gaon-organic.firebasestorage.app", messagingSenderId: "29340220943", appId: "1:29340220943:web:7cc9a5a9b8329bcef9ad7a" };
 const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
-let products = {}; let settings = {}; let compressedImage = ''; let editId = null; let compressedQR = '';
+let products = {}; let settings = {}; let orders = {}; let compressedImage = ''; let editId = null; let compressedQR = ''; let currentFilter='all'; let currentDenyId=null; let denyReason='';
+
 window.login = async () => { const email=document.getElementById('email').value.trim(); const pass=document.getElementById('pass').value.trim(); const err=document.getElementById('err'); const btn=document.getElementById('loginBtn'); if(!email||!pass){err.innerText='Email / Password daalo';err.style.display='block';return;} btn.innerText='Logging...';btn.disabled=true; try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){err.innerText='❌ '+e.message.replace('Firebase: ','');err.style.display='block';btn.innerText='Login';btn.disabled=false;}};
 window.logout = async () => { await signOut(auth); location.reload(); };
 onAuthStateChanged(auth,(user)=>{ if(user && user.email.toLowerCase()==='organicpahadi123@gmail.com'){document.getElementById('lock').style.display='none';initData();}else if(user){document.getElementById('err').innerText='❌ Ye admin email nahi hai';document.getElementById('err').style.display='block';signOut(auth);}else{document.getElementById('lock').style.display='flex';document.getElementById('loginBtn').innerText='Login';document.getElementById('loginBtn').disabled=false;}});
-function initData(){ onValue(ref(db,'products'),(snap)=>{products=snap.val()||{};render();}); onValue(ref(db,'settings'),(snap)=>{settings=snap.val()||{orderNo:"916395856099",supportNo:"916395856099",shopName:"Gaon Organic",pincodes:"",couponCode:"GAON20",couponDiscount:"20"}; if(document.getElementById('sett').classList.contains('show')) fillSettings();});}
+
+function initData(){
+  onValue(ref(db,'products'),(snap)=>{products=snap.val()||{};render();});
+  onValue(ref(db,'settings'),(snap)=>{settings=snap.val()||{orderNo:"916395856099",supportNo:"916395856099",shopName:"Gaon Organic",pincodes:"",couponCode:"GAON20",couponDiscount:"20",codEnabled:true}; if(document.getElementById('sett').classList.contains('show')) fillSettings();});
+  onValue(ref(db,'orders'),(snap)=>{orders=snap.val()||{};renderOrders();calcSale();});
+}
+
 window.changePass = async () => { const np=document.getElementById('newPass').value.trim(); const np2=document.getElementById('newPass2').value.trim(); const st=document.getElementById('passStatus'); if(!np||np.length<6){st.style.color='red';st.innerText='❌ Min 6 character';return;} if(np!==np2){st.style.color='red';st.innerText='❌ Dono same nahi';return;} st.style.color='green';st.innerText='Updating...'; try{ await updatePassword(auth.currentUser,np); st.style.color='green';st.innerText='✓ Password update ho gaya!'; document.getElementById('newPass').value='';document.getElementById('newPass2').value=''; }catch(e){ if(e.code==='auth/requires-recent-login'){ const cur=prompt('Purana password daalo:'); if(!cur){st.innerText='❌ Cancelled';return;} try{ const cred=EmailAuthProvider.credential(auth.currentUser.email,cur); await reauthenticateWithCredential(auth.currentUser,cred); await updatePassword(auth.currentUser,np); st.style.color='green';st.innerText='✓ Password update ho gaya!'; document.getElementById('newPass').value='';document.getElementById('newPass2').value=''; }catch(e2){st.style.color='red';st.innerText='❌ '+e2.message;}} else { st.style.color='red';st.innerText='❌ '+e.message;}}};
-window.showTab = (t) => { document.querySelectorAll('.section').forEach(s=>s.classList.remove('show')); document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('active')); document.getElementById(t).classList.add('show'); document.getElementById(t=='prod'?'t1':'t2').classList.add('active'); if(t=='sett') fillSettings(); }
-function fillSettings(){ document.getElementById('orderNo').value=settings.orderNo||''; document.getElementById('supportNo').value=settings.supportNo||''; document.getElementById('shopName').value=settings.shopName||''; document.getElementById('pincodes').value=settings.pincodes||''; document.getElementById('couponCode').value=settings.couponCode||'GAON20'; document.getElementById('couponDiscount').value=settings.couponDiscount||'20'; if(settings.qrImage){document.getElementById('qrPreview').src=settings.qrImage;document.getElementById('qrBoxDiv').style.display='block';}}
-window.saveSettings = async () => { const newSet={ orderNo:document.getElementById('orderNo').value.replace(/[^0-9]/g,''), supportNo:document.getElementById('supportNo').value.replace(/[^0-9]/g,''), shopName:document.getElementById('shopName').value||'Gaon Organic', pincodes:document.getElementById('pincodes').value.trim(), couponCode:document.getElementById('couponCode').value.trim().toUpperCase()||'GAON20', couponDiscount:document.getElementById('couponDiscount').value.trim()||'20', qrImage:compressedQR||settings.qrImage||'' }; if(!newSet.qrImage) delete newSet.qrImage; await set(ref(db,'settings'),newSet); document.getElementById('settStatus').innerText='✓ Saved to Firebase!'; setTimeout(()=>document.getElementById('settStatus').innerText='',3000); };
+
+window.showTab = (t) => { document.querySelectorAll('.section').forEach(s=>s.classList.remove('show')); document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('active')); document.getElementById(t).classList.add('show'); document.getElementById(t=='prod'?'t1':t=='orders'?'t2':'t3').classList.add('active'); if(t=='sett') fillSettings(); if(t=='orders') renderOrders(); }
+function fillSettings(){ document.getElementById('orderNo').value=settings.orderNo||''; document.getElementById('supportNo').value=settings.supportNo||''; document.getElementById('shopName').value=settings.shopName||''; document.getElementById('pincodes').value=settings.pincodes||''; document.getElementById('couponCode').value=settings.couponCode||'GAON20'; document.getElementById('couponDiscount').value=settings.couponDiscount||'20'; document.getElementById('codEnabled').checked = settings.codEnabled!==false; if(settings.qrImage){document.getElementById('qrPreview').src=settings.qrImage;document.getElementById('qrBoxDiv').style.display='block';}}
+window.saveSettings = async () => { const newSet={ orderNo:document.getElementById('orderNo').value.replace(/[^0-9]/g,''), supportNo:document.getElementById('supportNo').value.replace(/[^0-9]/g,''), shopName:document.getElementById('shopName').value||'Gaon Organic', pincodes:document.getElementById('pincodes').value.trim(), couponCode:document.getElementById('couponCode').value.trim().toUpperCase()||'GAON20', couponDiscount:document.getElementById('couponDiscount').value.trim()||'20', codEnabled:document.getElementById('codEnabled').checked, qrImage:compressedQR||settings.qrImage||'' }; if(!newSet.qrImage) delete newSet.qrImage; await set(ref(db,'settings'),newSet); document.getElementById('settStatus').innerText='✓ Saved to Firebase!'; setTimeout(()=>document.getElementById('settStatus').innerText='',3000); };
 window.removeQR = async () => { if(confirm('QR hatana hai?')){ compressedQR=''; const updated={...settings}; delete updated.qrImage; await set(ref(db,'settings'),updated); document.getElementById('qrBoxDiv').style.display='none'; document.getElementById('qrInput').value=''; document.getElementById('qrStatus').innerText='QR hata diya'; }};
 document.getElementById('qrInput').addEventListener('change',function(e){ let file=e.target.files[0];if(!file)return;document.getElementById('qrStatus').innerText='Compressing QR...';let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let maxW=600;let scale=Math.min(maxW/img.width,maxW/img.height,1);canvas.width=img.width*scale;canvas.height=img.height*scale;let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);compressedQR=canvas.toDataURL('image/jpeg',0.7);document.getElementById('qrPreview').src=compressedQR;document.getElementById('qrBoxDiv').style.display='block';document.getElementById('qrStatus').innerText='✓ QR Ready - Save Settings dabao';};img.src=ev.target.result;};reader.readAsDataURL(file);});
 document.getElementById('file').addEventListener('change',function(e){ let file=e.target.files[0];if(!file)return;document.getElementById('status').innerText='Compressing...';let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let maxW=800;let scale=Math.min(maxW/img.width,maxW/img.height,1);canvas.width=img.width*scale;canvas.height=img.height*scale;let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);compressedImage=canvas.toDataURL('image/jpeg',0.6);document.getElementById('preview').src=compressedImage;document.getElementById('preview').style.display='block';document.getElementById('status').innerText='✓ Photo Ready - '+Math.round(compressedImage.length/1024)+' KB';};img.src=ev.target.result;};reader.readAsDataURL(file);});
@@ -28,5 +60,83 @@ window.addProduct = async () => { let n=document.getElementById('name').value.tr
 window.del = async (id) => { if(confirm('Delete?')){ await remove(ref(db,'products/'+id)); } };
 window.edit = (id) => { let p=products[id]; document.getElementById('name').value=p.name; document.getElementById('price').value=p.price; document.getElementById('unit').value=p.unit; document.getElementById('stock').value=p.stock; document.getElementById('cat').value=p.cat; document.getElementById('preview').src=p.img; document.getElementById('preview').style.display='block'; editId=id; document.getElementById('addBtn').innerText='Update Product'; document.getElementById('status').innerText='Editing: '+p.name; window.scrollTo(0,0); };
 function render(){ let list=document.getElementById('list'); const count=Object.keys(products).length; list.innerHTML='<h3>Products ('+count+') - Firebase Live</h3>'; Object.values(products).reverse().forEach(p=>{ list.innerHTML+=`<div class="card"><img class="thumb" src="${p.img}"><div style="flex:1"><b>${p.name}</b><br>₹${p.price} / ${p.unit}<br><small>${p.cat} • Stock ${p.stock}</small></div><button onclick="edit('${p.id}')" style="background:#eee;padding:8px 10px;border-radius:6px;border:0">Edit</button><button onclick="del('${p.id}')" style="background:#ff4444;color:#fff;padding:8px 10px;border-radius:6px;border:0">X</button></div>`;});}
+
+// --- NEW ORDER SYSTEM ---
+window.filterOrders = (status, btn) => { currentFilter=status; document.querySelectorAll('.orderTab button').forEach(b=>b.classList.remove('active2')); btn.classList.add('active2'); renderOrders(); }
+function renderOrders(){
+  const list=document.getElementById('orderList'); if(!list) return;
+  let arr=Object.values(orders).sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
+  if(currentFilter!=='all') arr=arr.filter(o=>o.status===currentFilter);
+  let pending = Object.values(orders).filter(o=>o.status==='pending').length;
+  const badge=document.getElementById('pendingCount'); if(pending>0){badge.innerText=pending;badge.style.display='inline-block';} else badge.style.display='none';
+  if(arr.length===0){list.innerHTML='<p style="text-align:center;color:#888;margin-top:20px">Koi order nahi hai is tab me</p>';return;}
+  list.innerHTML='';
+  arr.forEach(o=>{
+    let color = o.status==='pending'?'#ff9800':o.status==='confirmed'?'#2196F3':o.status==='out_for_delivery'?'#9c27b0':o.status==='delivered'?'#4CAF50':'#f44336';
+    list.innerHTML+=`<div class="card" style="flex-direction:column;align-items:stretch" onclick="openDetail('${o.key}')">
+      <div style="display:flex;justify-content:space-between"><b>Order #${o.orderId||'----'}</b><span style="background:${color};color:#fff;padding:3px 8px;border-radius:10px;font-size:11px">${o.status}</span></div>
+      <div style="font-size:13px;margin-top:6px">${o.name} • ${o.phone}<br>${(o.items||[]).map(i=>i.name).join(', ')} • <b>₹${o.total}</b> • ${o.payment}${o.utr?' • UTR:'+o.utr:''}</div>
+      <small style="color:#888">${o.dateStr||''}</small></div>`;
+  });
+}
+function calcSale(){
+  let now=new Date(); let todayStr=now.toDateString();
+  let t=0,w=0,m=0,total=0;
+  Object.values(orders).forEach(o=>{
+    if(o.status==='cancelled') return;
+    let amt=parseInt(o.total||0); total+=amt;
+    let d=o.createdAt?new Date(o.createdAt):new Date();
+    if(d.toDateString()===todayStr) t+=amt;
+    if((now-d)/(1000*60*60*24)<=7) w+=amt;
+    if((now-d)/(1000*60*60*24)<=30) m+=amt;
+  });
+  document.getElementById('todaySale').innerText='₹'+t;
+  document.getElementById('weekSale').innerText='₹'+w;
+  document.getElementById('monthSale').innerText='₹'+m;
+  document.getElementById('totalSale').innerText='₹'+total;
+}
+window.openDetail = (key) => {
+  let o=orders[key]; if(!o) return;
+  document.getElementById('dTitle').innerText='Order #'+(o.orderId||'');
+  document.getElementById('dBody').innerHTML=`
+    <p><b>Name:</b> ${o.name}<br><b>Phone:</b> ${o.phone}<br><b>Address:</b> ${o.address||''}<br><b>Pincode:</b> ${o.pincode||''}</p>
+    <hr><b>Items:</b><br>${(o.items||[]).map(i=>`${i.name} x${i.qty} - ₹${i.price*i.qty}`).join('<br>')}<br><br><b>Total: ₹${o.total}</b><br><b>Payment:</b> ${o.payment} ${o.utr?'<br><b>UTR:</b> '+o.utr:''} ${o.coupon?'<br><b>Coupon:</b> '+o.coupon:''}
+    ${o.slipUrl?`<br><br><b>Payment Slip:</b><br><img src="${o.slipUrl}" style="width:100%;border-radius:10px;border:1px solid #ddd">`:''}
+    ${o.cancelReason?`<br><br><b style="color:red">Cancel Reason:</b> ${o.cancelReason}`:''}
+    <hr><p><b>Status:</b> ${o.status} | <small>${o.dateStr||''}</small></p>
+    <div style="display:grid;gap:8px">
+      ${o.status==='pending'?`<button onclick="updateStatus('${o.key}','confirmed')" style="background:#2196F3;color:#fff;padding:12px;border:0;border-radius:8px;font-weight:bold">✓ Confirm Order</button><button onclick="openDeny('${o.key}')" style="background:#ff4444;color:#fff;padding:12px;border:0;border-radius:8px">✕ Deny Order</button>`:''}
+      ${o.status==='confirmed'?`<button onclick="updateStatus('${o.key}','out_for_delivery')" style="background:#9c27b0;color:#fff;padding:12px;border:0;border-radius:8px;font-weight:bold">🚚 Out for Delivery</button>`:''}
+      ${o.status==='out_for_delivery'?`<button onclick="updateStatus('${o.key}','delivered')" style="background:#4CAF50;color:#fff;padding:12px;border:0;border-radius:8px;font-weight:bold">✓ Mark Delivered</button>`:''}
+      <button onclick="printSlip('${o.key}')" style="background:#000;color:#fff;padding:12px;border:0;border-radius:8px">🖨️ Print Slip - Chipkane ke liye</button>
+    </div>
+  `;
+  document.getElementById('orderDetail').style.display='block';
+}
+window.closeDetail=()=>document.getElementById('orderDetail').style.display='none';
+window.updateStatus=async(key,status)=>{ if(!confirm('Status '+status+' karna hai?'))return; await update(ref(db,'orders/'+key),{status:status}); closeDetail(); }
+window.openDeny=(key)=>{currentDenyId=key;document.getElementById('denyModal').style.display='flex';}
+window.closeDeny=()=>{document.getElementById('denyModal').style.display='none';denyReason='';currentDenyId=null;document.getElementById('denyNote').value='';}
+window.setDeny=(r)=>{denyReason=r;document.querySelectorAll('#denyModal button').forEach(b=>{if(b.innerText===r)b.style.background='#000',b.style.color='#fff'});}
+window.confirmDeny=async()=>{let extra=document.getElementById('denyNote').value.trim();let finalReason=denyReason+(extra?' - '+extra:'');if(!finalReason){alert('Reason select karo');return;} await update(ref(db,'orders/'+currentDenyId),{status:'cancelled',cancelReason:finalReason});closeDeny();closeDetail();}
+
+// PRINT SLIP 58mm THERMAL
+window.printSlip=(key)=>{
+  let o=orders[key]; if(!o) return;
+  let w=window.open('','_blank','width=300,height=600');
+  w.document.write(`<html><head><title>Slip #${o.orderId}</title><style>@media print{body{margin:0}}body{font-family:monospace;width:280px;padding:8px;font-size:12px;color:#000}</style></head><body>
+  <center><b style="font-size:14px">${settings.shopName||'GAON ORGANIC'}</b><br>Order #${o.orderId}<br>${o.dateStr||''}</center>
+  <div style="border-top:1px dashed #000;margin:8px 0"></div>
+  <b>TO:</b><br>${o.name}<br>${o.phone}<br>${o.address||''}<br>Pin: ${o.pincode||''}
+  <div style="border-top:1px dashed #000;margin:8px 0"></div>
+  ${(o.items||[]).map(i=>`${i.name}<br>${i.qty} x ${i.price} = ${i.qty*i.price}`).join('<br>')}
+  <div style="border-top:1px dashed #000;margin:8px 0"></div>
+  TOTAL: <b>₹${o.total}</b><br>PAY: ${o.payment} ${o.utr?'<br>UTR:'+o.utr:''}<br>
+  <div style="border-top:1px dashed #000;margin:8px 0"></div>
+  <center>Thank You! 🙏</center>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`);
+}
+
 showTab('prod');
 </script></body></html>
